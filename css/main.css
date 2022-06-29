@@ -1093,12 +1093,12 @@ header.header {
 }
 @media (min-width: 1200px) {
   .header-inner {
-    width: 1160px;
+    width: 1080px;
   }
 }
 @media (min-width: 1600px) {
   .header-inner {
-    width: 1160px;
+    width: 1080px;
   }
 }
 .site-brand-container {
@@ -1536,12 +1536,12 @@ header.header {
 }
 @media (min-width: 1200px) {
   .footer-inner {
-    width: 1160px;
+    width: 1080px;
   }
 }
 @media (min-width: 1600px) {
   .footer-inner {
-    width: 1160px;
+    width: 1080px;
   }
 }
 .use-motion .footer {
@@ -2396,12 +2396,12 @@ ul.breadcrumb li:last-child {
 }
 @media (min-width: 1200px) {
   .main {
-    width: 1160px;
+    width: 1080px;
   }
 }
 @media (min-width: 1600px) {
   .main {
-    width: 1160px;
+    width: 1080px;
   }
 }
 @media (max-width: 991px) {
@@ -2670,6 +2670,10 @@ blockquote p {
   margin: 0;
   padding: 10px 0;
 }
+pre {
+  font-family: Consolas, "Courier New", "Microsoft Yahei", monospace;
+  font-size: 13px;
+}
 .post-copyright ul {
   border-left: 3px solid #399c9c;
   font-size: 13px;
@@ -2693,7 +2697,9 @@ code {
   margin-top: 20px;
 }
 .post-body {
-  font-size: 16px;
+  font-size: 15px;
+  color: #403e3e;
+  line-height: 1.7em;
 }
 .pagination .page-number.current {
   background: #399c9c;
