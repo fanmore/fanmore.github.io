@@ -17,6 +17,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha256-DfWjNxDkM94fVBWx1H5BMMp0Zq7luBlV8QRcSES7s+0=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"fanmr.cn","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.12.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
 
@@ -27,11 +28,15 @@
 <meta property="og:site_name" content="范先生的博客">
 <meta property="og:description" content="使用了Hexo+Next的组合搭建了博客平台后，发现有些地方和样式不是很喜欢，于是进行了深层的自定义，Next测试版本为8.8.2  CSS样式调整在文件source&#x2F;css&#x2F;main.styl中的末尾增加自己喜欢的样式如： 123456789101112131415161718192021222324252627282930313233body &amp;#123;  &#x2F;* 字体调整 *&#x2F;  font">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/fanmore/images/1656567374682.png">
 <meta property="article:published_time" content="2022-06-28T06:16:30.000Z">
 <meta property="article:modified_time" content="2022-06-28T06:16:26.000Z">
 <meta property="article:author" content="范先生">
-<meta property="article:tag" content="博客 编程">
+<meta property="article:tag" content="博客">
+<meta property="article:tag" content="Next主题">
+<meta property="article:tag" content="Hexo">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/fanmore/images/1656567374682.png">
 
 
 <link rel="canonical" href="https://fanmr.cn/article/20220628141630.html">
@@ -86,7 +91,7 @@
 
 
 <nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-导航"><a href="/nav" rel="section"><i class="fa fa-paper-plane fa-fw"></i>导航</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-作者"><a href="/author" rel="section"><i class="fa fa-user fa-fw"></i>作者</a></li>
+  <ul class="main-menu menu"><li class="menu-item menu-item-导航"><a href="/nav" rel="section"><i class="fa fa-paper-plane fa-fw"></i>导航</a></li><li class="menu-item menu-item-archives"><a href="/archives" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-作者"><a href="/author" rel="section"><i class="fa fa-user fa-fw"></i>作者</a></li>
   </ul>
 </nav>
 
@@ -94,10 +99,11 @@
 
 
 </div>
+
       
       <div class="header-inner myCate"><div class="category-all-page">
   <div class="category-all">
-    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E2%85%A0%E9%9A%8F%E7%AC%94/">Ⅰ随笔</a><span class="category-list-count">3</span></li></ul>
+    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E2%85%A0%E9%9A%8F%E7%AC%94/">Ⅰ随笔</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E2%85%A1%E5%89%8D%E7%AB%AF/">Ⅱ前端</a><span class="category-list-count">1</span></li></ul>
   </div>
 </div></div>
         
@@ -138,20 +144,28 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives">
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
         <a href="https://github.com/fanmore" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;fanmore" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/riskfan" title="Gitee → https:&#x2F;&#x2F;gitee.com&#x2F;riskfan" rel="noopener" target="_blank"><i class="fab fa-github-alt fa-fw"></i>Gitee</a>
       </span>
   </div>
   <div class="cc-license site-overview-item animated" itemprop="license">
@@ -188,7 +202,12 @@
 
 <div class="post-block">
   
-  
+  <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+    
+    <div class="post-gallery-image">
+      <img src="https://cdn.jsdelivr.net/gh/fanmore/images/1656567374682.png" itemprop="contentUrl">
+    </div>
+    </div>
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://fanmr.cn/article/20220628141630.html">
@@ -264,15 +283,34 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-handlebars"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">  (function()&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">      if(&#x27;</span><span class="template-variable">&#123;&#123; <span class="name">page.password</span> &#125;&#125;</span><span class="language-xml">&#x27;)&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">          if (prompt(&#x27;请输入文章密码&#x27;) !== &#x27;</span><span class="template-variable">&#123;&#123; <span class="name">page.password</span> &#125;&#125;</span><span class="language-xml">&#x27;)&#123;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">              history.back();</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">          &#125;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">      &#125;</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars">  &#125;)();</span></span></span><br><span class="line"><span class="language-xml"><span class="language-handlebars"></span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>然后在文章的头部加上<code>password</code>即可加密文章，在访问时需要输入密码</p>
-<h1 id="自定义分类到侧边"><a href="#自定义分类到侧边" class="headerlink" title="自定义分类到侧边"></a>自定义分类到侧边</h1><p>个人对于文章的管理喜欢从分类中查找，觉得更加的便捷，但是<code>Next</code>的分类需要多点击一次，无法直接查看，所以将分类提取到了侧边</p>
-<p>编辑<code>layout/_layout.njk</code>，在<code>&lt;header&gt;</code>中加入以下代码：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">header</span> <span class="attr">class</span>=<span class="string">&quot;header&quot;</span> <span class="attr">itemscope</span> <span class="attr">itemtype</span>=<span class="string">&quot;http://schema.org/WPHeader&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;header-inner&quot;</span>&gt;</span></span><br><span class="line">    &#123;%- include &#x27;_partials/header/index.njk&#x27; -%&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  &#123;# 自定义分类 #&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;header-inner myCate&quot;</span>&gt;</span>&#123;% include &#x27;_partials/page/categories2.njk&#x27; %&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  &#123;%- if theme.sidebar.display !== &#x27;remove&#x27; %&#125;</span><br><span class="line">    &#123;% block sidebar %&#125;&#123;% endblock %&#125;</span><br><span class="line">  &#123;%- endif %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h1 id="自定义分类到侧边"><a href="#自定义分类到侧边" class="headerlink" title="自定义分类到侧边"></a>自定义分类到侧边</h1><p>个人对于文章的管理喜欢从分类中查找，这样更加便捷，但是<code>Next</code>的分类需要多点击一次，无法直接查看，所以将分类提取到了侧边</p>
+<img style="width:250px " data-src="https://cdn.jsdelivr.net/gh/fanmore/images/1656566039755.png" />  
 
-<p>然后创建<code>layout/_partials/page/categories2.njk</code>文件，内容为：</p>
+
+<p>编辑<code>layout/_layout.njk</code>，在<code>&lt;header&gt;</code>中加入以下代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">header</span> <span class="attr">class</span>=<span class="string">&quot;header&quot;</span> <span class="attr">itemscope</span> <span class="attr">itemtype</span>=<span class="string">&quot;http://schema.org/WPHeader&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;header-inner&quot;</span>&gt;</span></span><br><span class="line">    &#123;%- include &#x27;_partials/header/index.njk&#x27; -%&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  &#123;# 自定义分类 #&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;header-inner myCate&quot;</span>&gt;</span>&#123;% include &#x27;_partials/page/categoriesCustom.njk&#x27; %&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">  &#123;%- if theme.sidebar.display !== &#x27;remove&#x27; %&#125;</span><br><span class="line">    &#123;% block sidebar %&#125;&#123;% endblock %&#125;</span><br><span class="line">  &#123;%- endif %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">header</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后创建<code>layout/_partials/page/categoriesCustom.njk</code>文件，内容为：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;category-all-page&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;category-all&quot;</span>&gt;</span></span><br><span class="line">    &#123;&#123; list_categories() &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>然后就可以把导航中的分类隐藏了，并对样式做相应的调整：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">// 自定义分类样式调整</span><br><span class="line"><span class="selector-class">.myCate</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">12px</span>;</span><br><span class="line">  <span class="attribute">box-sizing</span>: border-box;  </span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">5px</span> <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">1px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.cate-title</span> &#123;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">0.8125em</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">20px</span> <span class="number">10px</span> <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">font-weight</span>: bold;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-tag">li</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">23px</span>;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">32px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-item</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">transition</span>: all .<span class="number">2s</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-item</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#F5F5F5</span>;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-all</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br><span class="line">// 自定义分类统计靠右</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-count</span> &#123;</span><br><span class="line">  <span class="attribute">float</span>: right;  </span><br><span class="line">&#125;</span><br><span class="line">// 自定义分类下划线</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-link</span> &#123;</span><br><span class="line">  <span class="attribute">border-bottom</span>: none;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">0.8125em</span>;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-count</span> &#123;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">0.8125em</span>;  </span><br><span class="line">&#125;</span><br><span class="line">// 去除文章数量的括号</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-count</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.myCate</span> <span class="selector-class">.category-list-count</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line">// 取消代码行数字，兼容横向滑动</span><br><span class="line"><span class="selector-class">.table-container</span> <span class="selector-class">.gutter</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: none <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调整分类中的时间显示格式，在<code>layout/_macro/post-collapse.njk</code>将格式化更改为<code>YYYY-MM-DD</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;post-meta-container&quot;&gt;</span><br><span class="line">  &lt;time itemprop=&quot;dateCreated&quot;</span><br><span class="line">        datetime=&quot;&#123;&#123; moment(post.date).format() &#125;&#125;&quot;</span><br><span class="line">        content=&quot;&#123;&#123; date(post.date, config.date_format) &#125;&#125;&quot;&gt;</span><br><span class="line">    &#123;&#123; date(post.date, &#x27;YYYY-MM-DD&#x27;) &#125;&#125;</span><br><span class="line">  &lt;/time&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当文章的年份不一样时，会出现以下情况，不是很美观</p>
+<img style="width:400px" data-src="https://cdn.jsdelivr.net/gh/fanmore/images/1656565186296.png" />  
+
+<p>所以建议将年取消，在<code>layout/_macro/post-collapse.njk</code>将以下代码删除</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;%- if year !== current_year %&#125;</span><br><span class="line">  &#123;%- set current_year = year %&#125;</span><br><span class="line">  &lt;div class=&quot;collection-year&quot;&gt;</span><br><span class="line">    &lt;span class=&quot;collection-header&quot;&gt;&#123;&#123; current_year &#125;&#125;&lt;/span&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&#123;%- endif %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时对样式进行调整：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 调整分类中文章间隔</span><br><span class="line"><span class="selector-class">.posts-collapse</span> <span class="selector-class">.post-content</span> <span class="selector-class">.post-header</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">15px</span> <span class="number">0px</span> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 修复分类中文章做出小点位置</span><br><span class="line"><span class="selector-class">.posts-collapse</span> <span class="selector-class">.post-content</span> <span class="selector-class">.post-header</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">  <span class="attribute">left</span>: -<span class="number">4px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后样子</p>
+<img style="width:400px" data-src="https://cdn.jsdelivr.net/gh/fanmore/images/1656565558788.png" />  
+
 
     </div>
 
@@ -281,18 +319,23 @@
     
 
     <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%9A%E5%AE%A2/" rel="tag"><i class="fa fa-tag"></i> 博客</a>
+              <a href="/tags/Next%E4%B8%BB%E9%A2%98/" rel="tag"><i class="fa fa-tag"></i> Next主题</a>
+              <a href="/tags/Hexo/" rel="tag"><i class="fa fa-tag"></i> Hexo</a>
+          </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/article/20220628094710.html" rel="prev" title="Hexo博客系列：静态博客">
-                  <i class="fa fa-chevron-left"></i> Hexo博客系列：静态博客
+                <a href="/article/20220628112244.html" rel="prev" title="Hexo博客系列：Next主题">
+                  <i class="fa fa-chevron-left"></i> Hexo博客系列：Next主题
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/article/20220629112244.html" rel="next" title="Hexo博客系列：Next主题">
-                  Hexo博客系列：Next主题 <i class="fa fa-chevron-right"></i>
+                <a href="/article/20220630130956.html" rel="next" title="HTML常用知识">
+                  HTML常用知识 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
@@ -311,12 +354,14 @@
   <footer class="footer">
     <div class="footer-inner">
 
+  <div class="beian"><a href="https://beian.miit.gov.cn/" rel="noopener" target="_blank">黔ICP备2021005697号 </a>
+  </div>
 
 <div class="copyright">
   &copy; 
   <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-globe"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">范先生</span>
 </div>
@@ -329,6 +374,8 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
 <script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
 
@@ -336,6 +383,7 @@
 
 
 
+  <script src="/js/third-party/fancybox.js"></script>
 
 
   

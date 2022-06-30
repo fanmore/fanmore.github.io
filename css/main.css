@@ -1564,7 +1564,7 @@ header.header {
   width: 100%;
 }
 .with-love {
-  color: #f00;
+  color: #555;
   display: inline-block;
   margin: 0 5px;
 }
@@ -2718,7 +2718,7 @@ code {
   padding-top: 0;
 }
 .posts-expand .post-title {
-  margin-bottom: 10px;
+  margin: 15px 0;
 }
 .post-meta {
   margin-bottom: 10px;
@@ -2730,9 +2730,6 @@ code {
 }
 .post-body p a:hover {
   border-bottom: 1px solid #999;
-}
-.post-body img {
-  border: 1px solid rgba(0,0,0,0.1);
 }
 .headband {
   display: none;
@@ -2798,4 +2795,22 @@ code {
 }
 .table-container .gutter {
   display: none !important;
+}
+.posts-collapse .post-content .post-header {
+  margin: 15px 0px;
+}
+.posts-collapse .post-content .post-header::before {
+  left: -4px;
+}
+th,
+td {
+  border-bottom: 1px solid #ddd;
+}
+caption,
+th,
+td {
+  padding: 5px 8px;
+}
+.links-of-author-item {
+  width: 35%;
 }
