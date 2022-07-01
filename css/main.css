@@ -2687,6 +2687,9 @@ code {
   background: #eff2f3;
   margin: 2px;
 }
+.post-gallery .post-gallery-image img {
+  width: 80%;
+}
 .posts-expand .post-gallery {
   margin-bottom: 10px;
 }
@@ -2707,11 +2710,11 @@ code {
   color: #fff;
 }
 .post-button .btn {
-  border-color: #399c9c;
-  color: #399c9c;
+  border-color: #3b6d4a;
+  color: #3b6d4a;
 }
 .post-button .btn:hover {
-  background-color: #399c9c;
+  background-color: #3b6d4a;
   color: #fff;
 }
 .post-block:first-of-type {

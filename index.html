@@ -538,21 +538,12 @@
     
     <div class="post-body" itemprop="articleBody">
           <blockquote>
-<p>静态博客生成器，相较于其他生成器来说速度是最快的，Hexo使用版本：6.2.0</p>
+<p>静态博客生成器，相较于其他生成器来说速度是最快的，文章对应使用Hexo版本为6.2.0</p>
 </blockquote>
-<h1 id="Hexo安装"><a href="#Hexo安装" class="headerlink" title="Hexo安装"></a>Hexo安装</h1><p><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a>静态博客生成器依赖<a target="_blank" rel="noopener" href="https://nodejs.org/en/">Node.js</a>，官网建议使用<code>Node.js 12.0</code>及以上版本，同时需要安装<a target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git</a>来进行代码管理</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 默认安装最新的版本</span><br><span class="line">npm install hexo-cli -g</span><br><span class="line">// 指定版本进行安装</span><br><span class="line">npm install -g hexo@5.4.0</span><br></pre></td></tr></table></figure>
+<h1 id="Hexo安装"><a href="#Hexo安装" class="headerlink" title="Hexo安装"></a>Hexo安装</h1><p><a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/">Hexo</a>静态博客生成器需要<a target="_blank" rel="noopener" href="https://nodejs.org/en/">Node.js</a>环境，官网建议使用<code>Node.js 12.0</code>及以上版本，同时需要安装<a target="_blank" rel="noopener" href="https://git-scm.com/download/win">Git</a>来进行代码管理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 默认安装最新的版本</span><br><span class="line">npm install hexo-cli -g</span><br><span class="line">// 指定版本进行安装</span><br><span class="line">npm install -g hexo@6.2.0</span><br></pre></td></tr></table></figure>
 
 <p>这里的<code>-g</code>表示全局安装（系统任何地方可使用），不建议局部安装（仅项目文件夹中可用），局部安装无法直接使用<code>hexo</code>命令，需要配置环境变量，较为复杂</p>
-<h1 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h1><ul>
-<li>项目生成：<code>hexo init [name]</code></li>
-<li>本地启动：<code>hexo s</code></li>
-<li>本地打包：<code>hexo g</code></li>
-<li>清除打包：<code>hexo clean</code></li>
-<li>部署网站：<code>hexo d</code></li>
-<li>创建导航：<code>hexo n page xxx</code></li>
-</ul>
-<p>使用<code>hexo init</code>初始化文档项目时可能因为网络原因较为慢，建议多尝试几次</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/article/20220628094710.html#more" rel="contents">
