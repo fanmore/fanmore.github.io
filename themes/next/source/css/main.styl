@@ -1,0 +1,336 @@
+// CSS Style Guide: https://codeguide.co/#css
+
+
+$scheme = hexo-config('scheme') ? hexo-config('scheme') : 'Muse';
+
+
+// Variables Layer
+// --------------------------------------------------
+@import '_variables/base';
+@import '_variables/' + $scheme;
+for $inject_variable in hexo-config('injects.variable')
+  @import $inject_variable;
+
+// Mixins Layer
+// --------------------------------------------------
+@import '_mixins';
+for $inject_mixin in hexo-config('injects.mixin')
+  @import $inject_mixin;
+
+// Dark mode colors
+// --------------------------------------------------
+@import '_colors';
+
+// Common Layer
+// --------------------------------------------------
+
+// Scaffolding
+@import '_common/scaffolding';
+
+// Layout
+@import '_common/outline';
+
+// Components
+@import '_common/components';
+
+
+// Schemes Layer
+// --------------------------------------------------
+@import '_schemes/' + $scheme;
+
+
+// Custom Layer
+// --------------------------------------------------
+for $inject_style in hexo-config('injects.style')
+  @import $inject_style;
+
+
+
+
+body {
+  /* 字体调整 */
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  /* 防止页面因没有滚动条导致的右移现象 */
+  min-height: 101vh;
+}
+
+/* 定义滚动条宽度（竖向）、高度（横向）及背景（容器） */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  background-color: #f5f6f7;
+  border-radius: 10px;
+}
+
+/* 定义滚动条轨道 */
+::-webkit-scrollbar-track {
+  background-color: #f5f6f7;
+  border-radius: 10px;
+}
+
+/* 定义滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  background-color: #0003;
+  transition: all .2s;
+  border-radius: 10px;
+}
+
+/* 滑块hover效果 */
+::-webkit-scrollbar-thumb:hover {
+  background: #B2B2B2;
+}
+
+// 侧边网站标题背景
+.site-brand-container {
+  background: #3B6D4A;
+}
+
+// 引用样式
+blockquote {
+  border-left: 4px solid #399C9C;
+  background-color: #eee;
+  margin-bottom: 20px;
+}
+
+// 引用距离调整
+blockquote p {
+  margin: 0;
+  padding: 10px 0;
+}
+
+// 代码字体
+pre {
+  font-family: Consolas, "Courier New", "Microsoft Yahei", monospace;
+  font-size: 13px;
+}
+
+// 版权
+.post-copyright ul {
+  border-left: 3px solid #399C9C;
+  font-size: 13px
+}
+
+// 选中文字颜色
+::selection {
+    background:#3390FF; 
+    color:#FFF;
+}
+
+// 行内代码块
+code {
+    color: #ff7600;
+    background: #EFF2F3;
+    margin: 2px;
+}
+
+// 首页文章图片大小
+.post-gallery .post-gallery-image img {
+  width: 80%;
+}
+
+// 首页文章标题与图片距离
+.posts-expand .post-gallery {
+  margin-bottom: 10px;
+}
+
+// 首页文章标题与简介距离
+.posts-expand .post-header {
+  margin-bottom: 10px;
+}
+
+// 首页文章简介与阅读更多按钮距离
+.post-button {
+  margin-top: 20px;  
+}
+
+// 文章整体字体大小和颜色
+.post-body {
+  font-size: 15px;
+  color: #403e3e;
+  line-height: 1.7em;
+}
+
+// 分页颜色
+.pagination .page-number.current {
+  background: #399C9C;
+  border-color: #399C9C;
+  color: #fff;  
+}
+
+// 阅读全文按钮样式
+.post-button .btn {
+  border-color: #3B6D4A;
+  color: #3B6D4A;
+}
+.post-button .btn:hover {
+  background-color: #3B6D4A;
+  color: #fff;
+}
+
+// 文章标题距离顶部
+.post-block:first-of-type {
+  padding-top: 0;
+}
+.posts-expand .post-title {
+  margin: 15px 0;
+}
+.post-meta {
+  margin-bottom: 10px;
+}
+
+// 文字链接
+.post-body p a {
+  color: #65a1d6;
+  transition: all .1s;
+  border-bottom: none;
+}
+.post-body p a:hover {
+  border-bottom: 1px solid #999;
+}
+
+// 取消顶部横条
+.headband {
+  display: none;  
+}
+
+// 隐藏作者名字（底部有名字）
+.site-author-name {
+  display: none;
+}
+
+// 底部调整为一列展示
+.footer-inner {
+  display: block;
+}
+.footer-inner div {
+  display: inline-block
+}
+
+// 对作者描述文字进行靠左处理（字数少不建议）
+.site-description {
+  text-align: left;
+  text-indent: 2em;
+  margin-top: 10px;
+  font-size: 0.85em;
+  padding: 0 15px;
+}
+
+// 自定义分类样式调整
+.myCate {
+  margin-top: 12px;
+  box-sizing: border-box;  
+  padding: 5px 0;
+  border-radius: 1px;
+}
+.cate-title {
+  height: 20px;
+  width: 100%;
+  font-size: 0.8125em;
+  padding: 0 20px 10px 20px;
+  font-weight: bold;
+}
+.myCate li {
+  padding: 0 23px;
+  line-height: 32px;
+}
+.myCate .category-list-item {
+  margin: 0;
+  transition: all .2s;
+}
+.myCate .category-list-item:hover {
+  background-color: #F5F5F5;  
+}
+.myCate .category-all {
+  margin-top: 0;  
+}
+
+// 自定义分类统计靠右
+.myCate .category-list-count {
+  float: right;  
+}
+
+// 自定义分类下划线
+.myCate .category-list-link {
+  border-bottom: none;
+  font-size: 0.8125em;  
+}
+.myCate .category-list-count {
+  font-size: 0.8125em;  
+}
+
+// 自定义分类去除文章数量的括号
+.myCate .category-list-count::before {
+  content: '';
+}
+.myCate .category-list-count::after {
+  content: '';
+}
+
+// 取消代码行数字，兼容横向滑动
+.table-container .gutter {
+  display: none !important;
+}
+
+// 调整分类中文章间隔
+.posts-collapse .post-content .post-header {
+  margin: 15px 0px 
+}
+
+// 修复分类中文章做出小点位置
+.posts-collapse .post-content .post-header::before {
+  left: -4px;
+}
+
+// 表格样式
+th, td {
+  border-bottom: 1px solid #ddd;
+}
+
+caption, th, td {
+  padding: 5px 8px;
+}
+
+// 多个侧边社交的间距
+.links-of-author-item {
+  width: 35%;
+}
+
+.post-content code {
+  color: #fc6423;
+  font-size: 14px;
+}
+
+// 1级标题
+.post-body h1 {
+  font-size: 1.4em;
+  color: #555;
+  padding-top: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  line-height: 1.5;
+}
+
+.post-body h1:after {
+  content: 'h1';
+  color: rgba(0, 0, 0, .2);
+  font-size: 14px;
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: top;
+}
+
+// 2级标题
+.post-body h2 {
+  font-size: 1.2em;
+  line-height: 1.5;
+  color: #555;
+}
+
+.post-body h2:after {
+  content: 'h2';
+  color: rgba(0, 0, 0, .2);
+  font-size: 14px;
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: top;
+}
