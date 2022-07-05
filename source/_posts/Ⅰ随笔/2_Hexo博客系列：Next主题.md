@@ -222,3 +222,28 @@ font:
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
   host: //fonts.lug.ustc.edu.cn
 ```
+
+# 开启搜索功能
+
+安装插件：`npm install hexo-generator-searchdb`，然后在配置文件中开启
+
+```yml
+local_search:
+	enable: true
+```
+
+及其样式调整
+
+```css
+// 搜索样式
+.search-active {
+  // 防闪动
+  padding-right: 7px;
+  transition: none;
+}
+
+.search-popup {
+  // 字体大小
+  font-size: 15px;
+}
+```
