@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/static/logo.png">
+  <title>基于MyBatisPlus的正向工程 | FANMR.CN</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100.1vh;
+      font-family: Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      /* background-color: #f6f6f7; */
+      background-color: #fff;
+      color: #4c4b52;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* 定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+      background-color: #0003;
+      border-radius: 10px;
+    }
+
+    /* 滑块hover效果 */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B2B2B2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* 布局 */
+    .container {
+      width: 1380px;
+      display: flex;
+      margin: 0 auto;
+    }
+
+    .left {
+      width: 260px;
+      height: 100vh;
+      padding-right: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    .center {
+      width: 840px;
+      background-color: #fff;
+    }
+
+    .right {
+      width: 260px;
+      height: 100vh;
+      padding-left: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    /* 网站名称 */
+    .site {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+    }
+
+    .site a {
+      color: #4c4b52;
+      font-size: 18px;
+      font-weight: bold;
+
+    }
+
+    .site span {
+      display: inline-block;
+      font-size: 13px;
+      color: #999;
+      margin-left: 20px;
+    }
+
+    /* 导航 */
+    .nav {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      text-align: right;
+    }
+
+    .nav a {
+      font-size: 18px;
+      display: inline-block;
+      margin-left: 15px;
+      position: relative;
+    }
+
+    .nav a::after {
+      content: '';
+      display: block;
+      width: 35px;
+      height: 35px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 13px;
+      left: -6px;
+      transition: all .25s;
+    }
+
+    .nav a:hover::after {
+      border: 1px solid #dfdfe1;
+    }
+
+    /* 分类 */
+    .category {
+      margin-top: 15px;
+      font-size: 13.5px;
+      padding: 5px;
+      max-height: 70vh;
+      overflow: scroll;
+    }
+
+    /* 定义滚动条宽度（竖向）、高度（横向）及背景（容器） */
+    .category::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条轨道 */
+    .category::-webkit-scrollbar-track {
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    .category::-webkit-scrollbar-thumb {
+      background-color: #fff;
+      transition: all .2s;
+      border-radius: 10px;
+    }
+
+    .category:hover::-webkit-scrollbar {
+      background-color: #f5f6f7;
+    }
+
+    .category:hover::-webkit-scrollbar-thumb {
+      background-color: #0003;
+    }
+
+    .category-item {
+      margin: 3px 0;
+      padding: 2px 0;
+    }
+
+
+    .category-item-text {
+      color: #555;
+      cursor: pointer;
+      transition: all .1s;
+    }
+
+    .category-item-text span:nth-child(2) {
+      float: right;
+      color: #999;
+    }
+
+    .category-item-text:hover,
+    .category-item-text:hover span:nth-child(2) {
+      color: #ec5c30;
+    }
+
+    .category-child {
+      display: none;
+    }
+
+    .category-child a {
+      font-size: 13.5px;
+      display: block;
+      margin-left: 16px;
+      color: #555;
+      padding: 5px 0;
+      transition: all .1s;
+    }
+
+    .category-child a:first-child {
+      margin-top: 7px;
+    }
+
+    .category-child a:last-child {
+      margin-bottom: 7px;
+    }
+
+    .category-child a:hover {
+      color: #ec5c30;
+    }
+
+    .category-child-active {
+      color: #ec5c30 !important;
+    }
+
+    /* 中间内容 */
+    .content {
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      margin: 20px 0 15px 0;
+      text-align: center;
+    }
+
+    .content-info {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .content-info span {
+      margin: 0 5px;
+      color: #222;
+    }
+
+    /* 大纲 */
+    #outline {
+      margin-top: 15px;
+      padding: 3px 5px 3px 10px;
+      max-height: 70vh;
+      position: relative;
+
+    }
+
+    #ouline:hover::after {
+      background-color: #c5c5c6;
+    }
+
+    /* 定义滚动条 */
+    #outline::-webkit-scrollbar {
+      width: 0;
+    }
+
+    #outline a {
+      display: block;
+      font-size: 13.5px;
+      color: #4c4b52;
+      padding: 3px 5px;
+      margin: 2px 0;
+      border-radius: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+
+    #outline a:hover {
+      color: #ec5c30;
+    }
+
+    .outline-active {
+      color: #23a057 !important;
+      position: relative;
+      background-color: #def1e6;
+    }
+
+    .outline-2 {
+      padding-left: 30px !important;
+    }
+
+    #backTop {
+      cursor: pointer;
+      width: 100%;
+      height: 30px;
+      text-align: center;
+      line-height: 32px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    #backTop:hover {
+      color: #23a057;
+    }
+
+    /* 底部 */
+    .footer {
+      width: 1380px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+      border-top: 1px solid #dfdfe1;
+      margin-left: -270px;
+      padding: 20px 0;
+      background-color: #fff;
+    }
+
+    .footer a {
+      color: #4c4b52;
+    }
+
+
+
+    /* 文章样式 */
+    .article-content {
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* 1级标题 */
+    .article-content h1 {
+      font-size: 1.4em;
+      padding-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .article-content h1:after {
+      content: 'h1';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 2级标题 */
+    .article-content h2 {
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+
+    .article-content h2:after {
+      content: 'h2';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 引用 */
+    .article-content blockquote {
+      border-left: 5px solid #1a8971;
+      background-color: #eff2f3;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .article-content blockquote p {
+      margin: 0;
+    }
+
+    /* 图片 */
+    .article-content img {
+      max-width: 100%;
+      display: block;
+      margin: 10px auto;
+      cursor: pointer;
+      border: 1px solid #eee;
+    }
+
+    /* 代码 */
+    .article-content code {
+      line-height: 1.6;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+      background-color: #eff2f3;
+    }
+
+    .article-content pre {
+      background: #eff2f3;
+      overflow: auto;
+      padding: 1em;
+      line-height: 1.5 !important;
+    }
+
+    .article-content pre::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .article-content p code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    .article-content li code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    code span {
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+    }
+
+    /* 表格 */
+    .article-content table {
+      width: 100%;
+      border-right: 1px solid #EBEEF5;
+      border-top: 1px solid #EBEEF5;
+      border-collapse: collapse;
+    }
+
+    .article-content th,
+    .article-content td {
+      text-align: center;
+      border-left: 1px solid #EBEEF5;
+      border-bottom: 1px solid #EBEEF5;
+      padding: 7px 10px !important;
+    }
+
+    .article-content th {
+      font-weight: bold !important;
+      background-color: #f8f8f8;
+    }
+
+    .article-content a {
+      color: #34a9d8;
+      text-decoration: none;
+    }
+
+    .article-content a:hover {
+      color: #ff7600;
+    }
+
+    /* 代办事项 */
+    .article-content input {
+      position: relative;
+      top: 1px;
+    }
+
+    input[type='checkbox'] {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    input[type='checkbox']::after {
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      background-color: white;
+      color: #000;
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      visibility: visible;
+      padding-left: 0;
+      text-align: center;
+      content: ' ';
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    input[type='checkbox']:checked::before {
+      content: '✓';
+      font-size: 13px;
+      font-weight: bold;
+      color: #ff7600;
+      position: absolute;
+      display: inline-block;
+      z-index: 10;
+      top: -2px;
+      left: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="site"><a href="/">🥝FANMR.CN</a><span>热爱，追求</span></div>
+      <div class="category"><div class="category-item"><div class="category-item-text"><span>杂文随笔</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230213110145.html" class="">Hexo博客：静态博客</a><a href="/article/20230214142334.html" class="">Hexo博客：Next主题</a><a href="/article/20230214142852.html" class="">Hexo博客：进阶使用</a><a href="/article/20230214142904.html" class="">Hexo博客：高级配置</a><a href="/article/20230214171402.html" class="">基于Node的静态博客</a></div></div><div class="category-item"><div class="category-item-text"><span>前端基础</span><span>10</span></div><div class="category-child" style="display:none"><a href="/article/20230214142926.html" class="">HTML知识</a><a href="/article/20230214142938.html" class="">CSS知识</a><a href="/article/20230214142943.html" class="">JS常用知识</a><a href="/article/20230214142952.html" class="">JS格式化时间戳</a><a href="/article/20230214143001.html" class="">JS获取浏览器窗口宽高</a><a href="/article/20230214143007.html" class="">JQ常用操作</a><a href="/article/20230214143014.html" class="">JQ复制到剪切板插件</a><a href="/article/20230214143021.html" class="">Three.js基础知识</a><a href="/article/20230214143028.html" class="">TypeScript基础知识</a><a href="/article/20230309185839.html" class="">Electron</a></div></div><div class="category-item"><div class="category-item-text"><span>Vue相关</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143114.html" class="">Vite使用及扩展</a><a href="/article/20230214143120.html" class="">Vue3知识及其新特性</a><a href="/article/20230214143125.html" class="">Vue3父子组件</a><a href="/article/20230214143130.html" class="">Vue常用知识积累</a><a href="/article/20230214143135.html" class="">Vue初始化页面动画</a><a href="/article/20230214143140.html" class="">Axios表单提交</a><a href="/article/20230214143147.html" class="">Element表格</a><a href="/article/20230214143153.html" class="">Element级联下拉</a><a href="/article/20230214143159.html" class="">Element文件上传</a><a href="/article/20230214143205.html" class="">Element对话框</a><a href="/article/20230214143213.html" class="">Vue二维码解决方案</a><a href="/article/20230214143222.html" class="">Vue3中使用TinyMCE富文本</a><a href="/article/20230214143227.html" class="">NProgress加载条</a><a href="/article/20230214143234.html" class="">Vue3框架动态菜单实现</a><a href="/article/20230214143240.html" class="">Vue3使用Echarts</a><a href="/article/20230214143246.html" class="">Vue3处理Excel导入导出</a><a href="/article/20230326162835.html" class="">Uniapp</a></div></div><div class="category-item"><div class="category-item-text"><span>Java基础</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143300.html" class="">Java入门知识</a><a href="/article/20230215151103.html" class="">Java常用API</a><a href="/article/20230223141136.html" class="">Java集合</a><a href="/article/20230214143305.html" class="">Java常用知识积累</a><a href="/article/20230214143309.html" class="">Lambda表达式</a><a href="/article/20230214143430.html" class="">try-with-resource</a><a href="/article/20230214143437.html" class="">Java注解</a><a href="/article/20230214143442.html" class="">Java反射</a><a href="/article/20230214143448.html" class="">Java多线程</a><a href="/article/20230214143453.html" class="">JUC并发工具包</a><a href="/article/20230214143457.html" class="">静态代理模式</a><a href="/article/20230214143501.html" class="">动态代理模式</a><a href="/article/20230214143506.html" class="">JVM结构</a><a href="/article/20230326164410.html" class="">JVM垃圾回收器</a><a href="/article/20230214143513.html" class="">树结构数据生成工具</a><a href="/article/20230214143518.html" class="">经纬度计算工具</a><a href="/article/20230214143914.html" class="">Tomcat安装</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringBoot</span><span>20</span></div><div class="category-child" style="display:none"><a href="/article/20230328161840.html" class="">Spring介绍</a><a href="/article/20230214143924.html" class="">application配置</a><a href="/article/20230214143930.html" class="">Lombok中的Builder</a><a href="/article/20230214143934.html" class="">AOP打印请求响应耗时</a><a href="/article/20230214143942.html" class="">RestTemplate</a><a href="/article/20230214143947.html" class="">SpringBoot开发中常见工具类</a><a href="/article/20230214143952.html" class="">分布式锁</a><a href="/article/20230214143957.html" class="">邮件功能</a><a href="/article/20230214144002.html" class="">定时任务</a><a href="/article/20230214144009.html" class="">异步</a><a href="/article/20230214144013.html" class="">JPA</a><a href="/article/20230214144018.html" class="">基于hutool读excel</a><a href="/article/20230214144026.html" class="">省市区三级数据来源</a><a href="/article/20230214144031.html" class="">JSR303</a><a href="/article/20230214144036.html" class="">在线预览解决方案</a><a href="/article/20230214144041.html" class="">WebSocket</a><a href="/article/20230214144046.html" class="">全局异常处理</a><a href="/article/20230319144046.html" class="">支付相关</a><a href="/article/20230326164910.html" class="">SpringDoc</a><a href="/article/20230326174228.html" class="">knife4j</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringMVC</span><span>6</span></div><div class="category-child" style="display:none"><a href="/article/20230214144055.html" class="">Thymeaf</a><a href="/article/20230214144101.html" class="">跨域处理</a><a href="/article/20230214144108.html" class="">拦截器</a><a href="/article/20230214144113.html" class="">伪前后端分离</a><a href="/article/20230214144120.html" class="">基于拦截器做权限校验</a><a href="/article/20230214144125.html" class="">REST风格</a></div></div><div class="category-item"><div class="category-item-text"><span>MyBatis</span><span>5</span></div><div class="category-child" style="display:block"><a href="/article/20230214144134.html" class="">MyBatis基本使用与配置</a><a href="/article/20230214144139.html" class="">Mapper使用相关</a><a href="/article/20230214144144.html" class="">MaBatis多数据源配置</a><a href="/article/20230214144149.html" class="">MyBatisPlus</a><a href="/article/20230214144153.html" class="category-child-active">基于MyBatisPlus的正向工程</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Netflix</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144200.html" class="">微服务</a><a href="/article/20230214144205.html" class="">服务的消费与提供</a><a href="/article/20230214144209.html" class="">Eureka</a><a href="/article/20230214144213.html" class="">Actuator</a><a href="/article/20230214144218.html" class="">Ribbon</a><a href="/article/20230214144223.html" class="">Feign</a><a href="/article/20230214144229.html" class="">Zuul</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Alibaba</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144237.html" class="">简介与搭建</a><a href="/article/20230214144242.html" class="">Nacos注册中心</a><a href="/article/20230214144247.html" class="">Ribbon</a><a href="/article/20230214144252.html" class="">OpenFeign</a><a href="/article/20230214144258.html" class="">Nacos配置中心</a><a href="/article/20230214144306.html" class="">Geteway</a><a href="/article/20230214144310.html" class="">Sentinel</a></div></div><div class="category-item"><div class="category-item-text"><span>Netty</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144318.html" class="">Netty入门知识</a></div></div><div class="category-item"><div class="category-item-text"><span>RocketMQ</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144323.html" class="">RocketMQ介绍与安装</a></div></div><div class="category-item"><div class="category-item-text"><span>MySQL</span><span>16</span></div><div class="category-child" style="display:none"><a href="/article/20230214144332.html" class="">MySQL基础知识</a><a href="/article/20230224103504.html" class="">MySQL多表查询</a><a href="/article/20230214144340.html" class="">MySQL常用函数及解决方案</a><a href="/article/20230214144346.html" class="">MySQL视图</a><a href="/article/20230214144351.html" class="">MySQL索引</a><a href="/article/20230214144356.html" class="">MySQL存储引擎</a><a href="/article/20230214144402.html" class="">ContOS安装MySQL</a><a href="/article/20230226101051.html" class="">SQL优化</a><a href="/article/20230226145552.html" class="">MySQL存储过程</a><a href="/article/20230226153640.html" class="">MySQL触发器</a><a href="/article/20230226154033.html" class="">MySQL锁</a><a href="/article/20230302103809.html" class="">MySQL管理相关</a><a href="/article/20230302111501.html" class="">MySQL-运维-日志</a><a href="/article/20230302112331.html" class="">MySQL-运维-主从复制</a><a href="/article/20230302122646.html" class="">MySQL-运维-分库分表及MyCat</a><a href="/article/20230302222752.html" class="">MySQL-运维-读写分离</a></div></div><div class="category-item"><div class="category-item-text"><span>Redis</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144409.html" class="">Redis介绍和安装</a><a href="/article/20230214144414.html" class="">Redis配置文件</a><a href="/article/20230214144421.html" class="">Redis持久化</a><a href="/article/20230214144425.html" class="">Redis集群</a><a href="/article/20230214144429.html" class="">Redis语法基础</a><a href="/article/20230214144434.html" class="">Redis进阶使用</a><a href="/article/20230214144439.html" class="">Redis相关问题及解决方案</a></div></div><div class="category-item"><div class="category-item-text"><span>MongoDB</span><span>8</span></div><div class="category-child" style="display:none"><a href="/article/20230214144446.html" class="">Linux安装MongoDB</a><a href="/article/20230214144452.html" class="">MongoDB基础语法</a><a href="/article/20230214144457.html" class="">MongoTemplate</a><a href="/article/20230214144501.html" class="">MongoTemplate中Update操作</a><a href="/article/20230214144509.html" class="">MongoTemplate中聚合查询</a><a href="/article/20230214144515.html" class="">MongoTemplate中日期归档示例</a><a href="/article/20230214144521.html" class="">MongoTemplate使用相关知识归纳</a><a href="/article/20230214144525.html" class="">地理位置存储与距离查询</a></div></div><div class="category-item"><div class="category-item-text"><span>Linux相关</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144537.html" class="">Linux常用命令</a><a href="/article/20230214144546.html" class="">Jar启动脚本</a><a href="/article/20230214144550.html" class="">VirtualBox安装CentOS</a><a href="/article/20230214144556.html" class="">CentOS安装Node</a><a href="/article/20230214144601.html" class="">CentOS中的防火墙</a><a href="/article/20230214144607.html" class="">ArchLinux系统安装</a><a href="/article/20230214144612.html" class="">ArchLinux系统使用</a></div></div><div class="category-item"><div class="category-item-text"><span>工具合集</span><span>13</span></div><div class="category-child" style="display:none"><a href="/article/20230214144620.html" class="">IDEA</a><a href="/article/20230214144625.html" class="">Maven介绍</a><a href="/article/20230303154310.html" class="">Maven安装</a><a href="/article/20230214144630.html" class="">Gradle</a><a href="/article/20230214144635.html" class="">Git</a><a href="/article/20230214144532.html" class="">H2数据库</a><a href="/article/20230214144646.html" class="">Nginx安装</a><a href="/article/20230214144650.html" class="">Nginx配置</a><a href="/article/20230214144656.html" class="">VSCode编辑器</a><a href="/article/20230214144701.html" class="">JMeter压测</a><a href="/article/20230214144707.html" class="">smart-doc文档</a><a href="/article/20230214144712.html" class="">Docker</a><a href="/article/20230214144717.html" class="">抓包工具Charles</a></div></div><div class="category-item"><div class="category-item-text"><span>面试题</span><span>6</span></div><div class="category-child" style="display:none"><a href="/article/20230312102225.html" class="">Java基础</a><a href="/article/20230326162650.html" class="">Java集合</a><a href="/article/20230326162733.html" class="">Java多线程</a><a href="/article/20230326162756.html" class="">JVM</a><a href="/article/20230327214859.html" class="">Spring</a><a href="/article/20230328135936.html" class="">计算机网络</a></div></div></div>
+    </div>
+    <div class="center">
+      <div class="content">
+        <div class="content-title">基于MyBatisPlus的正向工程</div>
+        <div class="content-info">
+          <span>📚MyBatis</span>
+          <span>⏱2023/02/14</span>
+          
+        </div>
+        <div class="article-content" id="content"><h1 id="项目作用">项目作用</h1>
+<p>数据库的正向工程，自动根据实体类维护表结构，支持H2和MySQL</p>
+<h1 id="项目前提">项目前提</h1>
+<ul>
+<li>项目引入了<code>MyBatis-Plus</code></li>
+<li>主键使用的是<code>MyBatis-Plus</code>的默认ID策略（雪花算法）</li>
+</ul>
+<!-- more -->
+
+<h1 id="新增结构">新增结构</h1>
+<img width="250px" src="../../../images/20230204134420.png" />  
+
+<h2 id="autotable">AutoTable</h2>
+<p>表注解，使用在类上</p>
+<pre><code class="language-java">import java.lang.annotation.*;
+
+/**
+ * 指定实体类为表
+ * &lt;p&gt;
+ * 实体类中所有属性均为表中字段，下划线命名
+ * &lt;p&gt;
+ * 会自动增加表的主键，字段名为id，使用MyBatis-Plus的默认主键策略
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface AutoTable {
+
+    /**
+     * 表名，默认为实体类名，自动转换下划线命名，自定义请遵循下划线命名
+     */
+    String value() default &quot;&quot;;
+
+}
+</code></pre>
+<h2 id="autotablecolumn">AutoTableColumn</h2>
+<p>列注解，使用在属性上</p>
+<pre><code>import java.lang.annotation.*;
+
+/**
+ * 表列字段注解
+ */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface AutoTableColumn {
+
+    /**
+     * 表名，默认为字段名，驼峰命名自动转换下划线命名
+     */
+    String value() default &quot;&quot;;
+
+    /**
+     * 数据类型，不区分大小写，请与数据库中显示类型对应一致
+     * &lt;p&gt;
+     * 此处可扩展其他属性，如：
+     * &lt;p&gt;
+     * varchar(100) not null
+     * &lt;p&gt;
+     * int default 0
+     */
+    String type() default &quot;&quot;;
+
+}
+</code></pre>
+<h2 id="autotablecolumnmap">AutoTableColumnMap</h2>
+<pre><code class="language-java">import lombok.Data;
+
+/**
+ * 数据库列字段映射
+ */
+@Data
+public class AutoTableColumnMap {
+
+    /**
+     * 表名
+     */
+    private String tableName;
+
+    /**
+     * 字段名
+     */
+    private String columnName;
+
+    /**
+     * 数据类型
+     */
+    private String dataType;
+
+}
+</code></pre>
+<h2 id="ddlmapper">DDLMapper</h2>
+<pre><code class="language-java">import com.fan.autoTable.AutoTableColumnMap;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+
+/**
+ * DDL语句相关
+ */
+public interface DDLMapper {
+
+    /**
+     * 查询DDL结构
+     */
+    @Select(&quot;${sql}&quot;)
+    List&lt;AutoTableColumnMap&gt; execSelectSql(String sql);
+
+    /**
+     * 执行SQL语句
+     */
+    @Update(&quot;${sql}&quot;)
+    void execUpdateSql(String sql);
+
+}
+</code></pre>
+<h2 id="autotabletaskconfig">AutoTableTaskConfig</h2>
+<pre><code class="language-java">import com.fan.mapper.DDLMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+
+/**
+ * 自动维护表结构（项目启动执行）
+ * &lt;p&gt;
+ * 只做新增，不做修改
+ */
+@Slf4j
+@Component
+public class AutoTableTaskConfig implements ApplicationRunner {
+
+    @Resource
+    private Environment environment;
+
+    @Resource
+    private DDLMapper ddlMapper;
+
+    // 数据库字段查询语句
+    private static String COLUMN_SELECT_SQL =
+            &quot;select table_name,column_name from information_schema.columns where table_schema=&quot;;
+
+    // 指定扫描的实体类包名
+    private String packName;
+
+    @Override
+    public void run(ApplicationArguments args) {
+        try {
+            System.out.println(&quot;┌─┐┬ ┬┌┬┐┌─┐  ┌┬┐┌─┐┌┐ ┬  ┌─┐&quot;);
+            System.out.println(&quot;├─┤│ │ │ │ │   │ ├─┤├┴┐│  ├┤ &quot;);
+            System.out.println(&quot;┴ ┴└─┘ ┴ └─┘   ┴ ┴ ┴└─┘┴─┘└─┘&quot;);
+            System.out.println(&quot;                       v1.0.0&quot;);
+            // 获取配置的数据库类型，仅支持H2、MySQL
+            String dbType = environment.getProperty(&quot;autoTable.dbType&quot;);
+            // 获取配置的数据库名称
+            String dbName = environment.getProperty(&quot;autoTable.dbName&quot;);
+            // 获取配置的实体类包位置
+            packName = environment.getProperty(&quot;autoTable.tablePack&quot;);
+            if (Objects.isNull(dbType)) {
+                log.info(&quot;表自动维护未指定数据库类型，任务结束&quot;);
+                return;
+            }
+            if (Objects.isNull(dbName)) {
+                log.info(&quot;表自动维护未指定数据库名称，任务结束&quot;);
+                return;
+            }
+            if (Objects.isNull(packName)) {
+                log.info(&quot;表自动维护未指定扫描包位置，任务结束&quot;);
+                return;
+            }
+            // 区分H2数据库和MySQL数据库查询方式
+            if (Objects.equals(dbType.toUpperCase(), &quot;H2&quot;)) {
+                COLUMN_SELECT_SQL += &quot;&#39;PUBLIC&#39;&quot;;
+            } else if (Objects.equals(dbType.toUpperCase(), &quot;MYSQL&quot;)) {
+                COLUMN_SELECT_SQL += &quot;&#39;&quot; + dbName + &quot;&#39;&quot;;
+            } else {
+                log.info(&quot;表自动维护不能支持该数据库类型，任务结束&quot;);
+                return;
+            }
+            long startTime = System.currentTimeMillis();
+            int res = deal();
+            if (res == 1) {
+                log.info(&quot;表结构维护完成，累计耗时：{}ms&quot;, System.currentTimeMillis() - startTime);
+            } else if (res == 2) {
+                log.info(&quot;表结构没有新增，累计耗时：{}ms&quot;, System.currentTimeMillis() - startTime);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 处理
+     *
+     * @return 0-失败、1-执行完毕、2-不需要执行
+     */
+    private int deal() {
+        try {
+            // 获取表所有已有字段
+            long startTime = System.currentTimeMillis();
+            List&lt;AutoTableColumnMap&gt; dbColumnList = ddlMapper.execSelectSql(COLUMN_SELECT_SQL);
+            log.info(&quot;查询数据库已有表结构耗时：{}ms&quot;, System.currentTimeMillis() - startTime);
+            // 获取使用 AutoTable 注解类的集合
+            Set&lt;Class&lt;?&gt;&gt; classes = getAnnotationClasses(packName, AutoTable.class);
+            // 最后生成的 DDL SQL 语句
+            StringBuilder sql = new StringBuilder();
+            // 所有实体类的表名
+            ArrayList&lt;String&gt; tableNameList = new ArrayList&lt;&gt;();
+            // 数据库中存在的所有表名
+            List&lt;String&gt; dbTableNameList = dbColumnList.stream()
+                    .map(AutoTableColumnMap::getTableName).collect(Collectors.toList());
+            for (Class&lt;?&gt; cls : classes) {
+                // 注解表名
+                AutoTable annotation = cls.getAnnotation(AutoTable.class);
+                // 表名，自定义优先，否则实体类名转下划线命名风格
+                String tableName = annotation.value().length() &gt; 0
+                        ? annotation.value() : underscoreName(cls.getSimpleName());
+                // 查询注解的表名是否重复
+                if (tableNameList.stream().anyMatch(item -&gt; item.equals(tableName))) {
+                    throw new RuntimeException(&quot;表名重复：&quot; + tableName);
+                } else {
+                    tableNameList.add(tableName);
+                }
+                // 该表的所有列字段数据
+                ArrayList&lt;AutoTableColumnMap&gt; columnList = new ArrayList&lt;&gt;();
+                Field[] declaredFields = cls.getDeclaredFields();
+                for (Field declaredField : declaredFields) {
+                    // 列注解
+                    AutoTableColumn dataType = declaredField.getAnnotation(AutoTableColumn.class);
+                    // 未指定注解的字段不做处理
+                    if (Objects.isNull(dataType)) {
+                        continue;
+                    }
+                    // 列名，自定义优先，否则字段转下划线命名风格
+                    String columnName = dataType.value().length() &gt; 0 ?
+                            dataType.value() : underscoreName(declaredField.getName());
+                    // 排除名为ID的字段，默认生成
+                    if (Objects.equals(columnName, &quot;id&quot;)) {
+                        continue;
+                    }
+                    AutoTableColumnMap columnVo = new AutoTableColumnMap();
+                    columnVo.setTableName(tableName);
+                    columnVo.setColumnName(columnName);
+                    // 数据类型
+                    if (dataType.type().length() &gt; 0) {
+                        columnVo.setDataType(dataType.type().toUpperCase());
+                    } else {
+                        // 未指定类型的字段不做处理
+                        continue;
+                    }
+                    columnList.add(columnVo);
+                }
+                // 查询数据库中是否存在该表名
+                boolean exist = dbTableNameList.stream().anyMatch(item -&gt; item.equalsIgnoreCase(tableName));
+                if (!exist &amp;&amp; columnList.size() &gt; 0) {
+                    // 表名不存在且有字段，新建表并添加字段，自动添加ID字段
+                    sql.append(&quot;create table &quot;).append(&quot;`&quot;).append(tableName).append(&quot;`&quot;)
+                            .append(&quot;(`id` bigint primary key,&quot;);
+                    for (int i = 0; i &lt; columnList.size(); i++) {
+                        if (i &gt; 0) {
+                            sql.append(&quot;,&quot;);
+                        }
+                        // 列名
+                        sql.append(&quot;`&quot;).append(columnList.get(i).getColumnName()).append(&quot;` &quot;);
+                        // 数据类型
+                        sql.append(columnList.get(i).getDataType());
+                    }
+                    sql.append(&quot;);&quot;);
+                } else if (exist) {
+                    // 表名存在，进行列添加
+                    for (AutoTableColumnMap columnVo : columnList) {
+                        // 列名
+                        String columnName = columnVo.getColumnName();
+                        // 是否存在
+                        List&lt;AutoTableColumnMap&gt; collect = dbColumnList.stream().filter(item -&gt;
+                                        item.getTableName().equalsIgnoreCase(tableName)
+                                                &amp;&amp; item.getColumnName().equalsIgnoreCase(columnName))
+                                .collect(Collectors.toList());
+                        if (collect.size() == 0) {
+                            // 字段不存在
+                            sql.append(&quot;alter table &quot;).append(&quot;`&quot;).append(tableName).append(&quot;` &quot;);
+                            // 添加字段
+                            sql.append(&quot;add column&quot;);
+                            // 列名
+                            sql.append(&quot; `&quot;).append(columnVo.getColumnName()).append(&quot;` &quot;);
+                            // 数据类型
+                            sql.append(columnVo.getDataType());
+                            sql.append(&quot;;&quot;);
+                        }
+                        // 不做列修改
+                    }
+                }
+            }
+            // 执行DDL语句
+            if (sql.length() &gt; 0) {
+                try {
+                    ddlMapper.execUpdateSql(sql.toString());
+                    return 1;
+                } catch (Exception e) {
+                    log.info(&quot;表维护失败：{}&quot;, e.getMessage());
+                    return 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 2;
+    }
+
+    public &lt;A extends Annotation&gt; Set&lt;Class&lt;?&gt;&gt; getAnnotationClasses(String packageName, Class&lt;A&gt; annotationClass)
+            throws Exception {
+        //找用了annotationClass注解的类
+        Set&lt;Class&lt;?&gt;&gt; controllers = new HashSet&lt;&gt;();
+        Set&lt;Class&lt;?&gt;&gt; clsList = getClasses(packageName);
+        if (clsList.size() &gt; 0) {
+            for (Class&lt;?&gt; cls : clsList) {
+                if (cls.getAnnotation(annotationClass) != null) {
+                    controllers.add(cls);
+                }
+            }
+        }
+        return controllers;
+    }
+
+    /**
+     * 从包package中获取全部的Class
+     */
+    private Set&lt;Class&lt;?&gt;&gt; getClasses(String packageName) throws Exception {
+        // 第一个class类的集合
+        Set&lt;Class&lt;?&gt;&gt; classes = new HashSet&lt;&gt;();
+        // 获取包的名字 并进行替换
+        String packageDirName = packageName.replace(&#39;.&#39;, &#39;/&#39;);
+        // 定义一个枚举的集合 并进行循环来处理这个目录下的things
+        Enumeration&lt;URL&gt; dirs;
+        try {
+            dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+            // 循环迭代下去
+            while (dirs.hasMoreElements()) {
+                // 获取下一个元素
+                URL url = dirs.nextElement();
+                // 获得协议的名称
+                String protocol = url.getProtocol();
+                // 若是是以文件的形式保存在服务器上
+                if (&quot;file&quot;.equals(protocol)) {
+                    // 获取包的物理路径
+                    String filePath = URLDecoder.decode(url.getFile(), &quot;UTF-8&quot;);
+                    // 以文件的方式扫描整个包下的文件 并添加到集合中
+                    addClass(classes, filePath, packageName);
+                } else if (&quot;jar&quot;.equals(protocol)) {
+                    // 若是是jar包文件
+                    // 定义一个JarFile
+                    JarFile jar;
+                    try {
+                        // 获取jar
+                        jar = ((JarURLConnection) url.openConnection()).getJarFile();
+                        // 今后jar包 获得一个枚举类
+                        Enumeration&lt;JarEntry&gt; entries = jar.entries();
+                        // 一样的进行循环迭代
+                        while (entries.hasMoreElements()) {
+                            // 获取jar里的一个实体 能够是目录 和一些jar包里的其余文件 如META-INF等文件
+                            JarEntry entry = entries.nextElement();
+                            String name = entry.getName();
+                            // 若是是以/开头的
+                            if (name.charAt(0) == &#39;/&#39;) {
+                                // 获取后面的字符串
+                                name = name.substring(1);
+                            }
+                            // 若是前半部分和定义的包名相同
+                            if (name.startsWith(packageDirName)) {
+                                int idx = name.lastIndexOf(&#39;/&#39;);
+                                // 若是以&quot;/&quot;结尾 是一个包
+                                if (idx != -1) {
+                                    // 获取包名 把&quot;/&quot;替换成&quot;.&quot;
+                                    packageName = name.substring(0, idx).replace(&#39;/&#39;, &#39;.&#39;);
+                                }
+                                // 若是能够迭代下去 而且是一个包
+                                // 若是是一个.class文件 并且不是目录
+                                if (name.endsWith(&quot;.class&quot;) &amp;&amp; !entry.isDirectory()) {
+                                    // 去掉后面的&quot;.class&quot; 获取真正的类名
+                                    String className = name.substring(packageName.length() + 1, name.length() - 6);
+                                    try {
+                                        // 添加到classes
+                                        classes.add(Class.forName(packageName + &#39;.&#39; + className));
+                                    } catch (ClassNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return classes;
+    }
+
+    private void addClass(Set&lt;Class&lt;?&gt;&gt; classes, String filePath, String packageName) throws Exception {
+        File[] files = new File(filePath).listFiles(file
+                -&gt; (file.isFile() &amp;&amp; file.getName().endsWith(&quot;.class&quot;)) || file.isDirectory());
+        assert files != null;
+        for (File file : files) {
+            String fileName = file.getName();
+            if (file.isFile()) {
+                String classesName = fileName.substring(0, fileName.lastIndexOf(&quot;.&quot;));
+                if (!packageName.isEmpty()) {
+                    classesName = packageName + &quot;.&quot; + classesName;
+                }
+                doAddClass(classes, classesName);
+            }
+
+        }
+    }
+
+    public void doAddClass(Set&lt;Class&lt;?&gt;&gt; classes, final String classesName) throws Exception {
+        ClassLoader classLoader = new ClassLoader() {
+            @Override
+            public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+                return super.loadClass(name);
+            }
+        };
+        classes.add(classLoader.loadClass(classesName));
+    }
+
+    /**
+     * 将驼峰式命名的字符串转换为下划线小写方式。如果转换前的驼峰式命名的字符串为空，则返回空字符串。
+     * 例如：HelloWorld-&gt;hello_world
+     */
+    private static String underscoreName(String name) {
+        StringBuilder result = new StringBuilder();
+        if (name != null &amp;&amp; name.length() &gt; 0) {
+            // 下划线命名不做处理
+            if (name.contains(&quot;_&quot;)) {
+                return name;
+            }
+            // 将第一个字符处理成小写
+            result.append(name.substring(0, 1).toLowerCase());
+            // 循环处理其余字符
+            for (int i = 1; i &lt; name.length(); i++) {
+                String s = name.substring(i, i + 1);
+                // 在大写字母前添加下划线（非数值）
+                if (s.equals(s.toUpperCase()) &amp;&amp; !Character.isDigit(s.charAt(0))) {
+                    result.append(&quot;_&quot;);
+                }
+                // 其他字符直接转成小写
+                result.append(s.toLowerCase());
+            }
+        }
+        return result.toString();
+    }
+
+}
+</code></pre>
+<h1 id="使用方式">使用方式</h1>
+<h2 id="配置">配置</h2>
+<pre><code class="language-yml"># 自动表维护
+autoTable:
+  dbType: H2
+  dbName: fanning
+  tablePack: com.fan.entity
+</code></pre>
+<h2 id="使用示例">使用示例</h2>
+<pre><code class="language-java">import com.fan.autoTable.AutoTable;
+import com.fan.autoTable.AutoTableColumn;
+import lombok.Data;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * 测试实体类
+ */
+@Data
+@AutoTable
+public class TestTable implements Serializable {
+
+    @AutoTableColumn(exist = false)
+    private static final long serialVersionUID = -3512369734135256213L;
+
+    /**
+     * ID
+     */
+    private String id;
+
+    /**
+     * tinyint
+     */
+    @AutoTableColumn(type = &quot;tinyint default 1&quot;)
+    private Byte sex;
+
+    /**
+     * smallint
+     */
+    @AutoTableColumn(type = &quot;smallint&quot;)
+    private Short count;
+
+    /**
+     * int
+     */
+    @AutoTableColumn(type = &quot;int not null&quot;)
+    private Integer mount;
+
+    /**
+     * bigint
+     */
+    @AutoTableColumn(type = &quot;bigint&quot;)
+    private Long moreTime;
+
+    /**
+     * float
+     */
+    @AutoTableColumn(type = &quot;float&quot;)
+    private Float number1;
+
+    /**
+     * double
+     */
+    @AutoTableColumn(type = &quot;double&quot;)
+    private Double number2;
+
+    /**
+     * decimal
+     */
+    @AutoTableColumn(type = &quot;decimal&quot;)
+    private BigDecimal number3;
+
+    /**
+     * char
+     */
+    @AutoTableColumn(type = &quot;char(20)&quot;)
+    private String forShort;
+
+    /**
+     * varchar
+     */
+    @AutoTableColumn(type = &quot;varchar(200)&quot;)
+    private String name;
+
+    /**
+     * boolean
+     */
+    @AutoTableColumn(type = &quot;boolean&quot;)
+    private Boolean exist;
+
+    /**
+     * 时间
+     */
+    @AutoTableColumn(type = &quot;timestamp&quot;)
+    private Date createTime;
+
+    /**
+     * 大文本
+     */
+    @AutoTableColumn(type = &quot;longtext&quot;)
+    private String html;
+
+}
+</code></pre>
+<h2 id="结果">结果</h2>
+<img src="../../../images/20230204134503.png" />  
+
+<h1 id="附sql类型">附SQL类型</h1>
+<pre><code>MySQL数据类型    对应Java数据类型   支持范围                                             说明
+tinyint         Byte              -128~127
+smallint        Short             -32768~32767
+int             Integer           -2147483648~2147483647
+bigint          Long              -9223372036854775808~9223372036854775807
+float           Float
+double          Double
+decimal         BigDecimal
+char(20)                          0~255字节                                            定长字符串
+varchar(255)    String            0~65535字节                                          变长字符串
+boolean         Boolean           true|false                                           MySQL存的tinyint(1)
+tinytext                          0~255字节                                            变长字符串
+text                              0~65535字节                                          变长字符串
+mediumtext                        0~16777215字节                                       变长字符串
+longtext                          0~4294967295 or 4GB(232−1)字节                       变长字符串
+tinyblob                          0~255字节                                            变长二进制
+blob                              0~65535字节                                          变长二进制
+mediumblob                        0~16777215字节                                       变长二进制
+longblob                          0~4294967295 or 4GB(232−1)字节                       变长二进制
+</code></pre>
+</div>
+      </div>
+      <div class="footer">
+        <a href="https://beian.miit.gov.cn" target="_blank">黔ICP备2021005697号</a> © COPYRIGHT 2022 FANMR.CN
+      </div>
+    </div>
+    <div class="right">
+      <div class="nav">
+        <a href="/" title="首页">🏡</a>
+        <a href="/navigation.html" title="导航">🚴‍♂️</a>
+        <a href="/about.html" title="作者">👨‍🌾</a>
+        <a href="https://github.com/fanmore" target="_blank" title="Github">🐞</a>
+        <a href="https://gitee.com/riskfan" target="_blank" title="Gitee">🎃</a>
+      </div>
+
+      <div id="outline"><a href="#项目作用" id="outline-项目作用" class="">项目作用</a><a href="#项目前提" id="outline-项目前提" class="">项目前提</a><a href="#新增结构" id="outline-新增结构" class="">新增结构</a><a href="#autotable" id="outline-autotable" class="outline-2">AutoTable</a><a href="#autotablecolumn" id="outline-autotablecolumn" class="outline-2">AutoTableColumn</a><a href="#autotablecolumnmap" id="outline-autotablecolumnmap" class="outline-2">AutoTableColumnMap</a><a href="#ddlmapper" id="outline-ddlmapper" class="outline-2">DDLMapper</a><a href="#autotabletaskconfig" id="outline-autotabletaskconfig" class="outline-2">AutoTableTaskConfig</a><a href="#使用方式" id="outline-使用方式" class="">使用方式</a><a href="#配置" id="outline-配置" class="outline-2">配置</a><a href="#使用示例" id="outline-使用示例" class="outline-2">使用示例</a><a href="#结果" id="outline-结果" class="outline-2">结果</a><a href="#附sql类型" id="outline-附sql类型" class="">附SQL类型</a></div>
+      <div id="backTop" onclick="backTop()"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <!-- 图片预览 -->
+  <link rel="stylesheet" href="/static/viewer.min.css">
+  <script src="/static/viewer.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // 分类点击
+      $(".category-item-text").click(function () {
+        let item = $(this).parent().find('.category-child')
+        let allItem = $('.category').find('.category-child')
+        for (const iterator of allItem) {
+          if (item.is(iterator)) {
+            if ($(item).css('display') == 'none') {
+              $(item).slideDown();
+            } else {
+              $(item).slideUp();
+            }
+          } else {
+            $(iterator).slideUp()
+          }
+        }
+      });
+
+      // 获取文章目录
+      let outline = $('#content').find('h1, h2')
+      let outlineId = []
+      for (let item of outline) {
+        outlineId.push($(item).attr('id'))
+      }
+      // 滚动监听
+      $(document).scroll(function () {
+        // 大纲激活项
+        outlineActive()
+
+        // 计算页面滚动比列
+        // 获取窗口高度
+        let bodyHeight = $(document).height()
+        // 获取窗口高度
+        let winHeight = 0
+        if (window.innerHeight) {
+          winHeight = window.innerHeight
+        } else if ((document.body) && (document.body.clientHeight)) {
+          winHeight = document.body.clientHeight
+        }
+        // 获取窗口宽度
+        let winWidth = 0
+        if (window.innerWidth) {
+          winWidth = window.innerWidth
+        } else if ((document.body) && (document.body.clientWidth)) {
+          winWidth = document.body.clientWidth
+        }
+        let scrollRatio = Math.min(parseInt((top / (bodyHeight - winHeight)) * 100) + 1, 100)
+        $('#backTop').html('<svg width="13px" height="13px" style="top:1px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 244l144-144l144 144"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M256 120v292"></path></svg> ' + scrollRatio + '%')
+        if (top > 50 && winWidth > 1100) {
+          $('#backTop').css({ 'display': 'block' })
+        } else {
+          $('#backTop').css({ 'display': 'none' })
+        }
+      })
+
+      // 大纲激活项
+      outlineActive()
+
+      // 大纲激活项
+      function outlineActive() {
+        let top = $(document).scrollTop();
+        if (top < 140) {
+          $('#outline-' + outlineId[0]).addClass('outline-active')
+        } else {
+          for (let i = 0; i < outlineId.length; i++) {
+            // 是最后一个或后一个之前
+            if (top > $('#' + outlineId[i]).offset().top - 1 && (i === outlineId.length - 1 || top < $('#' + outlineId[i + 1]).offset().top - 1)) {
+              $('#outline-' + outlineId[i]).addClass('outline-active')
+            } else {
+              $('#outline-' + outlineId[i]).removeClass('outline-active')
+            }
+          }
+        }
+      }
+    });
+
+    // 返回顶部
+    function backTop() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
+
+    // 代办事项样式
+    $("input[type='checkbox']").parents("li").css({ "list-style-type": "none", "margin-left": "-23px" })
+
+    // 链接新窗口打开
+    $('#content').on('click', 'a', function (e) {
+      e.target.target = '_blank'
+    })
+
+    // 图片放大
+    new Viewer(document.getElementById('content'))
+  </script>
+</body>
+
+</html>

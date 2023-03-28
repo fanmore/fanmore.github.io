@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/static/logo.png">
+  <title>Java多线程 | FANMR.CN</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100.1vh;
+      font-family: Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      /* background-color: #f6f6f7; */
+      background-color: #fff;
+      color: #4c4b52;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* 定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+      background-color: #0003;
+      border-radius: 10px;
+    }
+
+    /* 滑块hover效果 */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B2B2B2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* 布局 */
+    .container {
+      width: 1380px;
+      display: flex;
+      margin: 0 auto;
+    }
+
+    .left {
+      width: 260px;
+      height: 100vh;
+      padding-right: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    .center {
+      width: 840px;
+      background-color: #fff;
+    }
+
+    .right {
+      width: 260px;
+      height: 100vh;
+      padding-left: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    /* 网站名称 */
+    .site {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+    }
+
+    .site a {
+      color: #4c4b52;
+      font-size: 18px;
+      font-weight: bold;
+
+    }
+
+    .site span {
+      display: inline-block;
+      font-size: 13px;
+      color: #999;
+      margin-left: 20px;
+    }
+
+    /* 导航 */
+    .nav {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      text-align: right;
+    }
+
+    .nav a {
+      font-size: 18px;
+      display: inline-block;
+      margin-left: 15px;
+      position: relative;
+    }
+
+    .nav a::after {
+      content: '';
+      display: block;
+      width: 35px;
+      height: 35px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 13px;
+      left: -6px;
+      transition: all .25s;
+    }
+
+    .nav a:hover::after {
+      border: 1px solid #dfdfe1;
+    }
+
+    /* 分类 */
+    .category {
+      margin-top: 15px;
+      font-size: 13.5px;
+      padding: 5px;
+      max-height: 70vh;
+      overflow: scroll;
+    }
+
+    /* 定义滚动条宽度（竖向）、高度（横向）及背景（容器） */
+    .category::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条轨道 */
+    .category::-webkit-scrollbar-track {
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    .category::-webkit-scrollbar-thumb {
+      background-color: #fff;
+      transition: all .2s;
+      border-radius: 10px;
+    }
+
+    .category:hover::-webkit-scrollbar {
+      background-color: #f5f6f7;
+    }
+
+    .category:hover::-webkit-scrollbar-thumb {
+      background-color: #0003;
+    }
+
+    .category-item {
+      margin: 3px 0;
+      padding: 2px 0;
+    }
+
+
+    .category-item-text {
+      color: #555;
+      cursor: pointer;
+      transition: all .1s;
+    }
+
+    .category-item-text span:nth-child(2) {
+      float: right;
+      color: #999;
+    }
+
+    .category-item-text:hover,
+    .category-item-text:hover span:nth-child(2) {
+      color: #ec5c30;
+    }
+
+    .category-child {
+      display: none;
+    }
+
+    .category-child a {
+      font-size: 13.5px;
+      display: block;
+      margin-left: 16px;
+      color: #555;
+      padding: 5px 0;
+      transition: all .1s;
+    }
+
+    .category-child a:first-child {
+      margin-top: 7px;
+    }
+
+    .category-child a:last-child {
+      margin-bottom: 7px;
+    }
+
+    .category-child a:hover {
+      color: #ec5c30;
+    }
+
+    .category-child-active {
+      color: #ec5c30 !important;
+    }
+
+    /* 中间内容 */
+    .content {
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      margin: 20px 0 15px 0;
+      text-align: center;
+    }
+
+    .content-info {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .content-info span {
+      margin: 0 5px;
+      color: #222;
+    }
+
+    /* 大纲 */
+    #outline {
+      margin-top: 15px;
+      padding: 3px 5px 3px 10px;
+      max-height: 70vh;
+      position: relative;
+
+    }
+
+    #ouline:hover::after {
+      background-color: #c5c5c6;
+    }
+
+    /* 定义滚动条 */
+    #outline::-webkit-scrollbar {
+      width: 0;
+    }
+
+    #outline a {
+      display: block;
+      font-size: 13.5px;
+      color: #4c4b52;
+      padding: 3px 5px;
+      margin: 2px 0;
+      border-radius: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+
+    #outline a:hover {
+      color: #ec5c30;
+    }
+
+    .outline-active {
+      color: #23a057 !important;
+      position: relative;
+      background-color: #def1e6;
+    }
+
+    .outline-2 {
+      padding-left: 30px !important;
+    }
+
+    #backTop {
+      cursor: pointer;
+      width: 100%;
+      height: 30px;
+      text-align: center;
+      line-height: 32px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    #backTop:hover {
+      color: #23a057;
+    }
+
+    /* 底部 */
+    .footer {
+      width: 1380px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+      border-top: 1px solid #dfdfe1;
+      margin-left: -270px;
+      padding: 20px 0;
+      background-color: #fff;
+    }
+
+    .footer a {
+      color: #4c4b52;
+    }
+
+
+
+    /* 文章样式 */
+    .article-content {
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* 1级标题 */
+    .article-content h1 {
+      font-size: 1.4em;
+      padding-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .article-content h1:after {
+      content: 'h1';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 2级标题 */
+    .article-content h2 {
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+
+    .article-content h2:after {
+      content: 'h2';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 引用 */
+    .article-content blockquote {
+      border-left: 5px solid #1a8971;
+      background-color: #eff2f3;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .article-content blockquote p {
+      margin: 0;
+    }
+
+    /* 图片 */
+    .article-content img {
+      max-width: 100%;
+      display: block;
+      margin: 10px auto;
+      cursor: pointer;
+      border: 1px solid #eee;
+    }
+
+    /* 代码 */
+    .article-content code {
+      line-height: 1.6;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+      background-color: #eff2f3;
+    }
+
+    .article-content pre {
+      background: #eff2f3;
+      overflow: auto;
+      padding: 1em;
+      line-height: 1.5 !important;
+    }
+
+    .article-content pre::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .article-content p code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    .article-content li code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    code span {
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+    }
+
+    /* 表格 */
+    .article-content table {
+      width: 100%;
+      border-right: 1px solid #EBEEF5;
+      border-top: 1px solid #EBEEF5;
+      border-collapse: collapse;
+    }
+
+    .article-content th,
+    .article-content td {
+      text-align: center;
+      border-left: 1px solid #EBEEF5;
+      border-bottom: 1px solid #EBEEF5;
+      padding: 7px 10px !important;
+    }
+
+    .article-content th {
+      font-weight: bold !important;
+      background-color: #f8f8f8;
+    }
+
+    .article-content a {
+      color: #34a9d8;
+      text-decoration: none;
+    }
+
+    .article-content a:hover {
+      color: #ff7600;
+    }
+
+    /* 代办事项 */
+    .article-content input {
+      position: relative;
+      top: 1px;
+    }
+
+    input[type='checkbox'] {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    input[type='checkbox']::after {
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      background-color: white;
+      color: #000;
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      visibility: visible;
+      padding-left: 0;
+      text-align: center;
+      content: ' ';
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    input[type='checkbox']:checked::before {
+      content: '✓';
+      font-size: 13px;
+      font-weight: bold;
+      color: #ff7600;
+      position: absolute;
+      display: inline-block;
+      z-index: 10;
+      top: -2px;
+      left: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="site"><a href="/">🥝FANMR.CN</a><span>热爱，追求</span></div>
+      <div class="category"><div class="category-item"><div class="category-item-text"><span>杂文随笔</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230213110145.html" class="">Hexo博客：静态博客</a><a href="/article/20230214142334.html" class="">Hexo博客：Next主题</a><a href="/article/20230214142852.html" class="">Hexo博客：进阶使用</a><a href="/article/20230214142904.html" class="">Hexo博客：高级配置</a><a href="/article/20230214171402.html" class="">基于Node的静态博客</a></div></div><div class="category-item"><div class="category-item-text"><span>前端基础</span><span>10</span></div><div class="category-child" style="display:none"><a href="/article/20230214142926.html" class="">HTML知识</a><a href="/article/20230214142938.html" class="">CSS知识</a><a href="/article/20230214142943.html" class="">JS常用知识</a><a href="/article/20230214142952.html" class="">JS格式化时间戳</a><a href="/article/20230214143001.html" class="">JS获取浏览器窗口宽高</a><a href="/article/20230214143007.html" class="">JQ常用操作</a><a href="/article/20230214143014.html" class="">JQ复制到剪切板插件</a><a href="/article/20230214143021.html" class="">Three.js基础知识</a><a href="/article/20230214143028.html" class="">TypeScript基础知识</a><a href="/article/20230309185839.html" class="">Electron</a></div></div><div class="category-item"><div class="category-item-text"><span>Vue相关</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143114.html" class="">Vite使用及扩展</a><a href="/article/20230214143120.html" class="">Vue3知识及其新特性</a><a href="/article/20230214143125.html" class="">Vue3父子组件</a><a href="/article/20230214143130.html" class="">Vue常用知识积累</a><a href="/article/20230214143135.html" class="">Vue初始化页面动画</a><a href="/article/20230214143140.html" class="">Axios表单提交</a><a href="/article/20230214143147.html" class="">Element表格</a><a href="/article/20230214143153.html" class="">Element级联下拉</a><a href="/article/20230214143159.html" class="">Element文件上传</a><a href="/article/20230214143205.html" class="">Element对话框</a><a href="/article/20230214143213.html" class="">Vue二维码解决方案</a><a href="/article/20230214143222.html" class="">Vue3中使用TinyMCE富文本</a><a href="/article/20230214143227.html" class="">NProgress加载条</a><a href="/article/20230214143234.html" class="">Vue3框架动态菜单实现</a><a href="/article/20230214143240.html" class="">Vue3使用Echarts</a><a href="/article/20230214143246.html" class="">Vue3处理Excel导入导出</a><a href="/article/20230326162835.html" class="">Uniapp</a></div></div><div class="category-item"><div class="category-item-text"><span>Java基础</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143300.html" class="">Java入门知识</a><a href="/article/20230215151103.html" class="">Java常用API</a><a href="/article/20230223141136.html" class="">Java集合</a><a href="/article/20230214143305.html" class="">Java常用知识积累</a><a href="/article/20230214143309.html" class="">Lambda表达式</a><a href="/article/20230214143430.html" class="">try-with-resource</a><a href="/article/20230214143437.html" class="">Java注解</a><a href="/article/20230214143442.html" class="">Java反射</a><a href="/article/20230214143448.html" class="">Java多线程</a><a href="/article/20230214143453.html" class="">JUC并发工具包</a><a href="/article/20230214143457.html" class="">静态代理模式</a><a href="/article/20230214143501.html" class="">动态代理模式</a><a href="/article/20230214143506.html" class="">JVM结构</a><a href="/article/20230326164410.html" class="">JVM垃圾回收器</a><a href="/article/20230214143513.html" class="">树结构数据生成工具</a><a href="/article/20230214143518.html" class="">经纬度计算工具</a><a href="/article/20230214143914.html" class="">Tomcat安装</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringBoot</span><span>20</span></div><div class="category-child" style="display:none"><a href="/article/20230328161840.html" class="">Spring介绍</a><a href="/article/20230214143924.html" class="">application配置</a><a href="/article/20230214143930.html" class="">Lombok中的Builder</a><a href="/article/20230214143934.html" class="">AOP打印请求响应耗时</a><a href="/article/20230214143942.html" class="">RestTemplate</a><a href="/article/20230214143947.html" class="">SpringBoot开发中常见工具类</a><a href="/article/20230214143952.html" class="">分布式锁</a><a href="/article/20230214143957.html" class="">邮件功能</a><a href="/article/20230214144002.html" class="">定时任务</a><a href="/article/20230214144009.html" class="">异步</a><a href="/article/20230214144013.html" class="">JPA</a><a href="/article/20230214144018.html" class="">基于hutool读excel</a><a href="/article/20230214144026.html" class="">省市区三级数据来源</a><a href="/article/20230214144031.html" class="">JSR303</a><a href="/article/20230214144036.html" class="">在线预览解决方案</a><a href="/article/20230214144041.html" class="">WebSocket</a><a href="/article/20230214144046.html" class="">全局异常处理</a><a href="/article/20230319144046.html" class="">支付相关</a><a href="/article/20230326164910.html" class="">SpringDoc</a><a href="/article/20230326174228.html" class="">knife4j</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringMVC</span><span>6</span></div><div class="category-child" style="display:none"><a href="/article/20230214144055.html" class="">Thymeaf</a><a href="/article/20230214144101.html" class="">跨域处理</a><a href="/article/20230214144108.html" class="">拦截器</a><a href="/article/20230214144113.html" class="">伪前后端分离</a><a href="/article/20230214144120.html" class="">基于拦截器做权限校验</a><a href="/article/20230214144125.html" class="">REST风格</a></div></div><div class="category-item"><div class="category-item-text"><span>MyBatis</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230214144134.html" class="">MyBatis基本使用与配置</a><a href="/article/20230214144139.html" class="">Mapper使用相关</a><a href="/article/20230214144144.html" class="">MaBatis多数据源配置</a><a href="/article/20230214144149.html" class="">MyBatisPlus</a><a href="/article/20230214144153.html" class="">基于MyBatisPlus的正向工程</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Netflix</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144200.html" class="">微服务</a><a href="/article/20230214144205.html" class="">服务的消费与提供</a><a href="/article/20230214144209.html" class="">Eureka</a><a href="/article/20230214144213.html" class="">Actuator</a><a href="/article/20230214144218.html" class="">Ribbon</a><a href="/article/20230214144223.html" class="">Feign</a><a href="/article/20230214144229.html" class="">Zuul</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Alibaba</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144237.html" class="">简介与搭建</a><a href="/article/20230214144242.html" class="">Nacos注册中心</a><a href="/article/20230214144247.html" class="">Ribbon</a><a href="/article/20230214144252.html" class="">OpenFeign</a><a href="/article/20230214144258.html" class="">Nacos配置中心</a><a href="/article/20230214144306.html" class="">Geteway</a><a href="/article/20230214144310.html" class="">Sentinel</a></div></div><div class="category-item"><div class="category-item-text"><span>Netty</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144318.html" class="">Netty入门知识</a></div></div><div class="category-item"><div class="category-item-text"><span>RocketMQ</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144323.html" class="">RocketMQ介绍与安装</a></div></div><div class="category-item"><div class="category-item-text"><span>MySQL</span><span>16</span></div><div class="category-child" style="display:none"><a href="/article/20230214144332.html" class="">MySQL基础知识</a><a href="/article/20230224103504.html" class="">MySQL多表查询</a><a href="/article/20230214144340.html" class="">MySQL常用函数及解决方案</a><a href="/article/20230214144346.html" class="">MySQL视图</a><a href="/article/20230214144351.html" class="">MySQL索引</a><a href="/article/20230214144356.html" class="">MySQL存储引擎</a><a href="/article/20230214144402.html" class="">ContOS安装MySQL</a><a href="/article/20230226101051.html" class="">SQL优化</a><a href="/article/20230226145552.html" class="">MySQL存储过程</a><a href="/article/20230226153640.html" class="">MySQL触发器</a><a href="/article/20230226154033.html" class="">MySQL锁</a><a href="/article/20230302103809.html" class="">MySQL管理相关</a><a href="/article/20230302111501.html" class="">MySQL-运维-日志</a><a href="/article/20230302112331.html" class="">MySQL-运维-主从复制</a><a href="/article/20230302122646.html" class="">MySQL-运维-分库分表及MyCat</a><a href="/article/20230302222752.html" class="">MySQL-运维-读写分离</a></div></div><div class="category-item"><div class="category-item-text"><span>Redis</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144409.html" class="">Redis介绍和安装</a><a href="/article/20230214144414.html" class="">Redis配置文件</a><a href="/article/20230214144421.html" class="">Redis持久化</a><a href="/article/20230214144425.html" class="">Redis集群</a><a href="/article/20230214144429.html" class="">Redis语法基础</a><a href="/article/20230214144434.html" class="">Redis进阶使用</a><a href="/article/20230214144439.html" class="">Redis相关问题及解决方案</a></div></div><div class="category-item"><div class="category-item-text"><span>MongoDB</span><span>8</span></div><div class="category-child" style="display:none"><a href="/article/20230214144446.html" class="">Linux安装MongoDB</a><a href="/article/20230214144452.html" class="">MongoDB基础语法</a><a href="/article/20230214144457.html" class="">MongoTemplate</a><a href="/article/20230214144501.html" class="">MongoTemplate中Update操作</a><a href="/article/20230214144509.html" class="">MongoTemplate中聚合查询</a><a href="/article/20230214144515.html" class="">MongoTemplate中日期归档示例</a><a href="/article/20230214144521.html" class="">MongoTemplate使用相关知识归纳</a><a href="/article/20230214144525.html" class="">地理位置存储与距离查询</a></div></div><div class="category-item"><div class="category-item-text"><span>Linux相关</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144537.html" class="">Linux常用命令</a><a href="/article/20230214144546.html" class="">Jar启动脚本</a><a href="/article/20230214144550.html" class="">VirtualBox安装CentOS</a><a href="/article/20230214144556.html" class="">CentOS安装Node</a><a href="/article/20230214144601.html" class="">CentOS中的防火墙</a><a href="/article/20230214144607.html" class="">ArchLinux系统安装</a><a href="/article/20230214144612.html" class="">ArchLinux系统使用</a></div></div><div class="category-item"><div class="category-item-text"><span>工具合集</span><span>13</span></div><div class="category-child" style="display:none"><a href="/article/20230214144620.html" class="">IDEA</a><a href="/article/20230214144625.html" class="">Maven介绍</a><a href="/article/20230303154310.html" class="">Maven安装</a><a href="/article/20230214144630.html" class="">Gradle</a><a href="/article/20230214144635.html" class="">Git</a><a href="/article/20230214144532.html" class="">H2数据库</a><a href="/article/20230214144646.html" class="">Nginx安装</a><a href="/article/20230214144650.html" class="">Nginx配置</a><a href="/article/20230214144656.html" class="">VSCode编辑器</a><a href="/article/20230214144701.html" class="">JMeter压测</a><a href="/article/20230214144707.html" class="">smart-doc文档</a><a href="/article/20230214144712.html" class="">Docker</a><a href="/article/20230214144717.html" class="">抓包工具Charles</a></div></div><div class="category-item"><div class="category-item-text"><span>面试题</span><span>6</span></div><div class="category-child" style="display:block"><a href="/article/20230312102225.html" class="">Java基础</a><a href="/article/20230326162650.html" class="">Java集合</a><a href="/article/20230326162733.html" class="category-child-active">Java多线程</a><a href="/article/20230326162756.html" class="">JVM</a><a href="/article/20230327214859.html" class="">Spring</a><a href="/article/20230328135936.html" class="">计算机网络</a></div></div></div>
+    </div>
+    <div class="center">
+      <div class="content">
+        <div class="content-title">Java多线程</div>
+        <div class="content-info">
+          <span>📚面试题</span>
+          <span>⏱2023/03/26</span>
+          
+        </div>
+        <div class="article-content" id="content"><h1 id="进程和线程的区别？">进程和线程的区别？</h1>
+<ol>
+<li>定义：进程是一个独立的程序执行实例，具有独立的内存空间、运行环境等；而线程是进程中的执行单元，共享进程的资源</li>
+<li>资源占用：每个进程都会拥有自己的系统资源，如内存、文件、网络端口等，因此相对于线程来说，进程需要更多的系统资源。而线程只占用一小部分的内存，可以共享进程的资源</li>
+<li>独立性：进程之间互不影响，需要通过进程间通信才能进行数据交换；而线程是共享进程资源的，它们之间可以直接访问共享变量或使用消息传递等方式进行通信</li>
+<li>调度：进程是操作系统进行调度的基本单位，不同的进程之间需要进行切换，而线程则是在进程内部的调度单元，线程之间的切换比进程之间的切换快得多</li>
+<li>安全性：由于线程共享进程的所有资源，如堆、栈、文件、数据库连接等，因此需要对这些资源进行同步处理，避免出现冲突和安全问题；而进程之间相互独立，不需要考虑这些问题</li>
+</ol>
+<h1 id="并发与并行的区别？">并发与并行的区别？</h1>
+<ul>
+<li>并发：多个线程同时操作同一个资源</li>
+<li>并行：在多核CPU下多个线程可以同时执</li>
+</ul>
+<h1 id="创建线程的几种方式？">创建线程的几种方式？</h1>
+<ul>
+<li>继承Thread类并重写run()方法。这是一种最基本的方式，可以通过实例化一个Thread子类对象，并调用start()方法来启动线程</li>
+<li>实现Runnable接口并重写run()方法。这种方式更常见，因为Java不支持多继承，如果你已经有另一个类需要继承，则只能通过实现Runnable接口来创建线程</li>
+<li>使用Callable和Future接口。Callable是与Runnable类似的接口，也可以用于创建线程。不同之处在于，Callable接口的call()方法可以返回值，并且可以抛出异常。Future接口则表示一个异步计算的结果。通过Future.get()方法可以获取异步计算的结果</li>
+<li>使用线程池。在Java中可以使用线程池来管理多个线程。线程池可以避免频繁地创建和销毁线程，从而提高程序的效率。 Java提供了Executor框架来创建和管理线程池</li>
+</ul>
+<h1 id="start和run的区别？">start()和run()的区别？</h1>
+<p>在Java中，start()和run()都是线程的启动方法，但它们之间有着显著的区别。</p>
+<ol>
+<li>start()方法</li>
+</ol>
+<p>start()方法是Thread类提供的一个方法，用于启动一个新的线程，并让该线程执行run()方法中的代码。当调用start()方法时，会创建一个新的线程并使其进入就绪状态，等待被系统调度执行。需要注意的是，不能重复调用start()方法，否则会抛出IllegalThreadStateException异常。</p>
+<ol start="2">
+<li>run()方法</li>
+</ol>
+<p>run()方法是Thread类中定义的一个普通方法，用于存放线程执行的代码。当通过start()方法启动线程时，线程会自动调用run()方法中的代码。如果直接调用run()方法，则该方法只会在当前线程中执行，并不会真正启动一个新的线程。</p>
+<p>因此，可以将start()方法看作是启动一个新线程的命令，而run()方法只是一个普通的方法，如果直接调用run()方法，则只是在当前线程中运行run()方法中的代码，并不会启动一个新的线程。</p>
+<p>总结起来，start()方法是启动一个新的线程，而run()方法只是在线程中执行指定的代码块。一般情况下，使用start()方法启动线程，而不是直接调用run()方法。</p>
+<h1 id="runnable和callable的区别？">Runnable和Callable的区别？</h1>
+<ul>
+<li>返回值：Runnable的run()方法没有返回值，而Callable的call()方法可以返回一个结果对象</li>
+<li>异常处理：Runnable的run()方法不能抛出异常，而Callable的call()方法可以抛出异常。如果需要在执行过程中抛出异常，则需要使用Callable</li>
+<li>使用方式：Runnable通常与Thread一起使用，而Callable通常与ExecutorService一起使用</li>
+<li>等待时间：Callable的call()方法可以设置等待时间，在指定时间内没有获得结果，则会抛出TimeoutException</li>
+</ul>
+<p>综上所述，Runnable适合于那些不需要返回值或者不需要抛出异常的场景，而Callable适合于那些需要返回值或者需要抛出异常的场景。同时，如果需要管理多个线程，建议使用ExecutorService来执行Callable任务</p>
+<h1 id="线程有几种状态？">线程有几种状态？</h1>
+<p>线程的状态总共有6种，分别是：</p>
+<ul>
+<li>新建（New）：当线程对象被创建时，它处于新建状态</li>
+<li>运行（Runnable）：当调用start()方法后，线程进入可运行状态。但是此时线程不一定立即开始执行，需要等待CPU分配时间片之后才会开始执行</li>
+<li>阻塞（Blocked）：当线程等待某个资源或者锁时，当前线程就处于阻塞状态。比如等待用户输入、等待IO操作完成等</li>
+<li>等待（Waiting）：当线程等待某个特定条件满足时，它就处于等待状态。可以调用wait()、join()、park()等方法使线程进入等待状态</li>
+<li>计时等待（Timed Waiting）：当线程等待一个具有超时限制的特定条件时，它就处于计时等待状态。可以调用sleep()、wait(timeout)、join(timeout)、parkNanos()、parkUntil()等方法使线程进入计时等待状态</li>
+<li>终止（Terminated）：当run()方法正常结束或者抛出异常时，线程进入终止状态</li>
+</ul>
+<h1 id="wait和sleep的区别？">wait()和sleep()的区别？</h1>
+<p>wait()和sleep()是Java中用于线程控制的两个方法，它们之间有以下区别：</p>
+<ol>
+<li>wait()方法属于Object类，而sleep()方法属于Thread类</li>
+<li>wait()方法必须在synchronized代码块或方法中调用，而sleep()方法可以在任何地方调用</li>
+<li>wait()方法会释放锁，而sleep()方法不会释放锁。当一个线程调用wait()方法时，它会释放持有的锁，并进入等待状态，直到其他线程调用notify()或notifyAll()方法来唤醒它</li>
+<li>wait()方法只能由其他线程调用notify()或notifyAll()方法来唤醒，而sleep()方法则需要等待指定的时间后自动唤醒</li>
+<li>在使用wait()方法时，通常需要配合notify()或notifyAll()方法一起使用。notify()方法将唤醒一个处于等待状态的线程，而notifyAll()方法则会唤醒所有处于等待状态的线程</li>
+</ol>
+<p>综上所述，wait()方法主要用于线程之间的协作，而sleep()方法主要用于暂停执行一段时间。同时，在使用wait()方法时需要注意避免死锁的问题</p>
+<h1 id="多线程同步有哪些方法？">多线程同步有哪些方法？</h1>
+<ol>
+<li>synchronized关键字：通过synchronized关键字来实现对象级别的锁定，阻塞其他线程的执行，直到获取到锁才能执行代码</li>
+<li>ReentrantLock类：与synchronized相似，但提供了更加灵活的锁控制功能</li>
+<li>volatile关键字：保证每个线程都能看到最新值，避免脏读等问题</li>
+<li>Atomic类：提供了一些原子操作，在多线程环境下保证了操作的原子性，避免了数据竞争</li>
+<li>CountDownLatch类：可以让某个线程等待其他线程完成后再执行</li>
+<li>CyclicBarrier类：可以让多个线程等待彼此达到某个状态后再执行</li>
+<li>分布式锁</li>
+</ol>
+<h1 id="什么是死锁？">什么是死锁？</h1>
+<p>多个线程无限期地阻塞等待对方持有的锁资源，导致程序无法继续执行下去</p>
+<h1 id="如何避免死锁？">如何避免死锁？</h1>
+<ol>
+<li>减少同步代码块中需要占用的锁数量，如果必须要占用多个锁，那么应该按照相同的顺序来获取锁</li>
+<li>避免循环等待：通过定时等待、资源分配序列化等技术来避免多个线程长时间互相等待导致死锁</li>
+<li>使用tryLock()方法来尝试获取锁，如果规定时间内没有获取到就返回false</li>
+<li>使用可重入锁，例如ReentrantLock，在同一线程中可以重复获取锁，避免了死锁发生</li>
+<li>让程序自动恢复，等待一段时间后尝试重新获取锁资源，以此来解除死锁</li>
+</ol>
+<h1 id="synchronized的几种用法？">synchronized的几种用法？</h1>
+<ul>
+<li>锁类</li>
+<li>锁方法</li>
+<li>锁代码块</li>
+</ul>
+<h1 id="forkjoin框架的作用？">Fork/Join框架的作用？</h1>
+<p>大任务自动分散为小任务，并发执行，合并小任务结果</p>
+<h1 id="为什么需要线程池？">为什么需要线程池？</h1>
+<p>在Java中，线程池是一种重要的多线程处理技术，它能够高效地管理和复用线程资源，并且可以避免频繁地创建和销毁线程所带来的开销，从而提高程序的效率和性能</p>
+<p>具体来说，线程池有以下几个优点：</p>
+<ul>
+<li>提高程序的响应速度：线程池中的线程可以立即执行任务，无需等待线程创建的时间</li>
+<li>提高系统的稳定性：线程池可以限制系统中并发执行的线程数量，防止因过多的线程导致系统资源耗尽而崩溃</li>
+<li>提高资源利用率：线程池可以重复使用已经创建的线程，避免了重复创建线程所带来的开销，从而提高了系统的资源利用率</li>
+<li>提高程序的可管理性：线程池可以统计线程的数量、完成的任务数、还剩的任务数等信息，便于监控和调整系统的运行状态</li>
+</ul>
+<h1 id="线程池的分类？">线程池的分类？</h1>
+<p>在Java中，线程池可以根据不同的特点进行分类，主要有以下几种：</p>
+<ol>
+<li>固定大小线程池：固定大小线程池中的线程数量是固定的，即线程池一旦创建就无法进行扩容或缩容。这种线程池适合于任务数比较稳定的场景</li>
+<li>可变大小线程池：可变大小线程池中的线程数量是根据当前任务数进行动态调整的。当任务数增加时，会增加线程数量；当任务数减少时，会自动缩减线程数量。这种线程池适合于任务数不稳定、变化范围比较大的场景</li>
+<li>单线程池：单线程池中只有一个线程在执行任务。当该线程因为异常而退出时，会重新创建一个新的线程来继续执行任务。这种线程池适合于需要保证任务按照指定顺序依次执行的场景</li>
+<li>定时任务线程池：定时任务线程池可以按照指定的时间间隔周期性地执行某项任务。这种线程池适合于需要定期执行任务的场景，比如定时备份数据、清理垃圾等</li>
+<li>工作窃取线程池：工作窃取线程池是JDK7新增的一种线程池类型。它可以让空闲的线程从其他线程的队列中窃取任务来执行，从而提高线程利用率和系统性能</li>
+<li>Fork/Join线程池：Fork/Join线程池也是JDK7新增的一种线程池类型，它主要用于实现分而治之的算法，并行处理大规模数据集。Fork/Join线程池可以将一个大任务分割成多个小任务并行执行，最终合并结果返回</li>
+</ol>
+<h1 id="线程池核心参数？">线程池核心参数？</h1>
+<p>在Java中，线程池的核心参数包括以下几个：</p>
+<ol>
+<li>corePoolSize：线程池的核心线程数，表示线程池可以容纳的最小线程数量</li>
+<li>maximumPoolSize：线程池的最大线程数，表示线程池可以容纳的最大线程数量</li>
+<li>keepAliveTime：线程空闲后存活时间，表示当线程池中的线程数量超过核心线程数时，多余的线程在空闲指定时间后会被回收</li>
+<li>unit：keepAliveTime的时间单位，比如秒、毫秒等</li>
+<li>workQueue：任务队列，用于存储等待执行的任务。常见的任务队列包括ArrayBlockingQueue、LinkedBlockingQueue等</li>
+<li>threadFactory：线程工厂，用于创建新的线程。可以通过实现ThreadFactory接口来自定义线程的创建方式，比如设置线程名、优先级等</li>
+<li>handler：拒绝策略，用于处理任务队列已满而无法继续添加任务的情况。常见的拒绝策略包括AbortPolicy、DiscardPolicy等</li>
+</ol>
+<p>这些参数都是影响线程池性能和行为的重要因素，需要根据具体的应用场景进行调整。例如，在任务量不大但执行时间较长的场景中，可以适当增加corePoolSize和maximumPoolSize参数；在任务量较大且执行时间较短的场景中，则需要考虑使用较大的任务队列和合适的拒绝策略来保证系统稳定运行</p>
+<h1 id="线程池原理？">线程池原理？</h1>
+<p>线程池的原理是将多个任务分配给一组线程来执行，从而避免了线程频繁创建和销毁所带来的开销。当一个任务到达时，如果当前线程池中有空闲线程，则将任务交给其中一个空闲线程来执行；如果当前线程池中没有空闲线程，则任务会被添加到任务队列中等待执行；当任务队列已满且当前线程数量还未达到最大线程数时，会创建新的线程来执行任务；当线程数量超过最大线程数时，会根据拒绝策略对任务进行处理</p>
+<p>具体来说，线程池的工作流程如下：</p>
+<ol>
+<li>当一个任务到达时，首先判断当前线程池中是否有空闲线程可用</li>
+<li>如果有空闲线程，则将任务交给其中一个空闲线程来执行</li>
+<li>如果没有空闲线程，则将任务添加到任务队列中等待执行</li>
+<li>如果任务队列已满，并且当前线程数量还未达到最大线程数，则创建新的线程来执行任务</li>
+<li>如果线程数量已达到最大线程数，并且任务队列已满，则根据拒绝策略对任务进行处理</li>
+<li>当一个线程执行完任务后，会查看任务队列中是否还有待执行的任务，如果有则继续执行下一个任务，否则释放线程资源并进入空闲状态等待下一个任务</li>
+</ol>
+<p>总之，通过合理配置线程池的参数，可以控制线程的数量、任务的排队方式以及任务的拒绝策略，从而提高系统的稳定性和性能。同时，线程池也能够防止因线程频繁创建和销毁所带来的开销，从而提高程序的效率和性能</p>
+<h1 id="拒绝策略？">拒绝策略？</h1>
+<p>在Java中，当线程池的任务队列已满但线程数量已达到最大值时，需要使用拒绝策略来处理无法处理的任务。Java提供了四种常见的拒绝策略：</p>
+<ol>
+<li>AbortPolicy：默认的拒绝策略，直接抛出RejectedExecutionException异常</li>
+<li>CallerRunsPolicy：将任务交给提交任务的线程来执行。也就是说，如果线程池中的线程都在忙碌，那么新的任务将由提交任务的线程来执行</li>
+<li>DiscardOldestPolicy：丢弃任务队列中最早添加的任务，并尝试重新提交当前任务</li>
+<li>DiscardPolicy：直接丢弃无法处理的任务，不做任何处理</li>
+</ol>
+<p>可以根据具体的业务需求选择适合的拒绝策略。例如，AbortPolicy适用于对任务处理要求较高的系统，CallerRunsPolicy适用于任务比较轻量级的系统，DiscardPolicy适用于任务处理要求较低的系统。在使用拒绝策略时，需要注意避免因拒绝任务而导致严重的程序错误</p>
+<h1 id="如何关闭线程池？">如何关闭线程池？</h1>
+<p>在Java中，关闭线程池主要有以下几种方式：</p>
+<ol>
+<li>shutdown()方法：调用该方法可以平缓地关闭线程池，即不再接受新的任务，但会等待已提交的任务执行完毕后再关闭。这个方法将使得ThreadPoolExecutor的isShutdown()返回true</li>
+<li>shutdownNow()方法：调用该方法可以立即关闭线程池，并尝试停止正在执行的任务。这个方法将使得ThreadPoolExecutor的isShutdown()和isTerminated()都返回true</li>
+<li>awaitTermination()方法：该方法用于等待所有已提交的任务执行完毕后关闭线程池，它需要与shutdown()方法一起使用。这个方法接收一个超时时间参数，表示最多等待多长时间，如果等待超时则立即返回
+一般情况下，推荐使用shutdown()方法来关闭线程池，因为这种方式比较平缓、安全，能够确保所有任务被处理完毕再关闭线程池。如果需要立即关闭线程池并且不需要等待任务执行完毕，可以使用shutdownNow()方法。同时，在调用shutdown()方法之后，可以配合awaitTermination()方法来等待任务执行完毕，从而保证线程池能够正确关闭</li>
+</ol>
+<h1 id="线程池阻塞队列的作用？">线程池阻塞队列的作用？</h1>
+<p>线程池的阻塞队列是用来存放等待执行的任务的，它的作用主要有以下几个方面：</p>
+<ol>
+<li>缓冲作用：当任务提交到线程池时，如果当前没有空闲的线程可用，那么任务就会被放入阻塞队列中等待执行。因此，阻塞队列可以作为一个缓冲区，先将任务保存在队列中，等待线程池中的线程处理</li>
+<li>控制任务数量：通过控制阻塞队列的大小，可以限制线程池最多可以处理的任务数量，从而避免线程数量过多导致系统资源浪费或者负载过高导致系统崩溃</li>
+<li>提高系统稳定性：使用阻塞队列可以有效地平衡生产者和消费者之间的速度差异，缓解瞬时任务量的压力，保证系统正常运行，提高系统的稳定性</li>
+<li>提高系统性能：由于阻塞队列可以缓存任务，当线程池中的线程处于忙碌状态时，无法立即处理新的任务，这时候可以通过阻塞队列来暂时保存任务，从而减少线程创建和销毁的开销，提高系统的性能</li>
+</ol>
+<p>综上所述，线程池的阻塞队列可以起到一个缓冲区、任务调度器的作用，控制任务的数量、提高系统的稳定性和性能。不同的应用场景需要选择不同的阻塞队列实现，比如ArrayBlockingQueue适合于固定大小的线程池，LinkedBlockingQueue适合于动态大小的线程池，SynchronousQueue适合于较小的线程池等</p>
+<h1 id="为何先添加队列而不是先创建最大线程？">为何先添加队列而不是先创建最大线程？</h1>
+<p>在Java中，线程池的设计思路是通过重复利用已经创建好的线程来处理任务，而不是频繁地创建和销毁线程。因此，在创建线程池时，先添加到阻塞队列中等待处理的任务数目应该尽可能多，并且在阻塞队列满了以后才考虑增加线程数量</p>
+<p>一方面，如果过早地创建大量线程，会导致系统资源的浪费和操作系统负载的增加，影响系统的稳定性和性能。另一方面，合理利用阻塞队列可以平衡生产者和消费者之间的速度差异，缓解瞬时任务量的压力，保证系统正常运行，提高系统的稳定性</p>
+<h1 id="线程池中线程复用原理？">线程池中线程复用原理？</h1>
+<p>线程池中的线程复用原理是通过将已经创建好的线程分配给新的任务来避免频繁创建和销毁线程，从而提高系统的性能</p>
+<p>具体来说，线程池在初始化时会创建一定数量的核心线程，这些线程可以一直存在，即使没有任务需要执行也不会被销毁，等待新的任务到来。当有新的任务提交到线程池时，线程池会检查当前是否有空闲的线程，如果有，则将任务交给其中一个空闲的线程去处理，否则任务会被添加到阻塞队列中等待处理</p>
+<p>当有新的任务到来时，如果线程池中的线程数量小于最大线程数，则会创建新的线程来处理任务，直到线程数量达到最大线程数为止。如果线程池中的线程数量已经达到最大值，并且阻塞队列也已满，则根据拒绝策略对任务进行处理，例如抛出异常或者直接丢弃任务</p>
+<p>当一个线程处理完一个任务后，它会从阻塞队列中获取下一个任务继续执行，这个过程中线程池会尽可能地复用已经创建好的线程，从而避免了频繁创建和销毁线程的开销，提高了系统的性能</p>
+<p>总之，线程池的线程复用原理是通过将已经创建好的线程分配给新的任务来避免频繁创建和销毁线程，提高系统的性能和效率</p>
+</div>
+      </div>
+      <div class="footer">
+        <a href="https://beian.miit.gov.cn" target="_blank">黔ICP备2021005697号</a> © COPYRIGHT 2022 FANMR.CN
+      </div>
+    </div>
+    <div class="right">
+      <div class="nav">
+        <a href="/" title="首页">🏡</a>
+        <a href="/navigation.html" title="导航">🚴‍♂️</a>
+        <a href="/about.html" title="作者">👨‍🌾</a>
+        <a href="https://github.com/fanmore" target="_blank" title="Github">🐞</a>
+        <a href="https://gitee.com/riskfan" target="_blank" title="Gitee">🎃</a>
+      </div>
+
+      <div id="outline"><a href="#进程和线程的区别？" id="outline-进程和线程的区别？" class="">进程和线程的区别？</a><a href="#并发与并行的区别？" id="outline-并发与并行的区别？" class="">并发与并行的区别？</a><a href="#创建线程的几种方式？" id="outline-创建线程的几种方式？" class="">创建线程的几种方式？</a><a href="#start和run的区别？" id="outline-start和run的区别？" class="">start()和run()的区别？</a><a href="#runnable和callable的区别？" id="outline-runnable和callable的区别？" class="">Runnable和Callable的区别？</a><a href="#线程有几种状态？" id="outline-线程有几种状态？" class="">线程有几种状态？</a><a href="#wait和sleep的区别？" id="outline-wait和sleep的区别？" class="">wait()和sleep()的区别？</a><a href="#多线程同步有哪些方法？" id="outline-多线程同步有哪些方法？" class="">多线程同步有哪些方法？</a><a href="#什么是死锁？" id="outline-什么是死锁？" class="">什么是死锁？</a><a href="#如何避免死锁？" id="outline-如何避免死锁？" class="">如何避免死锁？</a><a href="#synchronized的几种用法？" id="outline-synchronized的几种用法？" class="">synchronized的几种用法？</a><a href="#forkjoin框架的作用？" id="outline-forkjoin框架的作用？" class="">Fork/Join框架的作用？</a><a href="#为什么需要线程池？" id="outline-为什么需要线程池？" class="">为什么需要线程池？</a><a href="#线程池的分类？" id="outline-线程池的分类？" class="">线程池的分类？</a><a href="#线程池核心参数？" id="outline-线程池核心参数？" class="">线程池核心参数？</a><a href="#线程池原理？" id="outline-线程池原理？" class="">线程池原理？</a><a href="#拒绝策略？" id="outline-拒绝策略？" class="">拒绝策略？</a><a href="#如何关闭线程池？" id="outline-如何关闭线程池？" class="">如何关闭线程池？</a><a href="#线程池阻塞队列的作用？" id="outline-线程池阻塞队列的作用？" class="">线程池阻塞队列的作用？</a><a href="#为何先添加队列而不是先创建最大线程？" id="outline-为何先添加队列而不是先创建最大线程？" class="">为何先添加队列而不是先创建最大线程？</a><a href="#线程池中线程复用原理？" id="outline-线程池中线程复用原理？" class="">线程池中线程复用原理？</a></div>
+      <div id="backTop" onclick="backTop()"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <!-- 图片预览 -->
+  <link rel="stylesheet" href="/static/viewer.min.css">
+  <script src="/static/viewer.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // 分类点击
+      $(".category-item-text").click(function () {
+        let item = $(this).parent().find('.category-child')
+        let allItem = $('.category').find('.category-child')
+        for (const iterator of allItem) {
+          if (item.is(iterator)) {
+            if ($(item).css('display') == 'none') {
+              $(item).slideDown();
+            } else {
+              $(item).slideUp();
+            }
+          } else {
+            $(iterator).slideUp()
+          }
+        }
+      });
+
+      // 获取文章目录
+      let outline = $('#content').find('h1, h2')
+      let outlineId = []
+      for (let item of outline) {
+        outlineId.push($(item).attr('id'))
+      }
+      // 滚动监听
+      $(document).scroll(function () {
+        // 大纲激活项
+        outlineActive()
+
+        // 计算页面滚动比列
+        // 获取窗口高度
+        let bodyHeight = $(document).height()
+        // 获取窗口高度
+        let winHeight = 0
+        if (window.innerHeight) {
+          winHeight = window.innerHeight
+        } else if ((document.body) && (document.body.clientHeight)) {
+          winHeight = document.body.clientHeight
+        }
+        // 获取窗口宽度
+        let winWidth = 0
+        if (window.innerWidth) {
+          winWidth = window.innerWidth
+        } else if ((document.body) && (document.body.clientWidth)) {
+          winWidth = document.body.clientWidth
+        }
+        let scrollRatio = Math.min(parseInt((top / (bodyHeight - winHeight)) * 100) + 1, 100)
+        $('#backTop').html('<svg width="13px" height="13px" style="top:1px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 244l144-144l144 144"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M256 120v292"></path></svg> ' + scrollRatio + '%')
+        if (top > 50 && winWidth > 1100) {
+          $('#backTop').css({ 'display': 'block' })
+        } else {
+          $('#backTop').css({ 'display': 'none' })
+        }
+      })
+
+      // 大纲激活项
+      outlineActive()
+
+      // 大纲激活项
+      function outlineActive() {
+        let top = $(document).scrollTop();
+        if (top < 140) {
+          $('#outline-' + outlineId[0]).addClass('outline-active')
+        } else {
+          for (let i = 0; i < outlineId.length; i++) {
+            // 是最后一个或后一个之前
+            if (top > $('#' + outlineId[i]).offset().top - 1 && (i === outlineId.length - 1 || top < $('#' + outlineId[i + 1]).offset().top - 1)) {
+              $('#outline-' + outlineId[i]).addClass('outline-active')
+            } else {
+              $('#outline-' + outlineId[i]).removeClass('outline-active')
+            }
+          }
+        }
+      }
+    });
+
+    // 返回顶部
+    function backTop() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
+
+    // 代办事项样式
+    $("input[type='checkbox']").parents("li").css({ "list-style-type": "none", "margin-left": "-23px" })
+
+    // 链接新窗口打开
+    $('#content').on('click', 'a', function (e) {
+      e.target.target = '_blank'
+    })
+
+    // 图片放大
+    new Viewer(document.getElementById('content'))
+  </script>
+</body>
+
+</html>

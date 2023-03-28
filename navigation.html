@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/static/logo.png">
+  <title>FANMR.CN</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100.1vh;
+      font-family: Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      color: #4c4b52;
+    }
+
+    /* 定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+      background-color: #0003;
+      border-radius: 10px;
+    }
+
+    /* 滑块hover效果 */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B2B2B2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* 布局 */
+    .container {
+      width: 1380px;
+      margin: 0 auto;
+    }
+
+    .header {
+      width: 100%;
+      height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      background-color: #fff;
+      display: flex;
+    }
+
+
+    /* 网站名称 */
+    .site {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      background-color: #fff;
+    }
+
+    .site a {
+      color: #4c4b52;
+      font-size: 18px;
+      font-weight: bold;
+
+    }
+
+    .site span {
+      display: inline-block;
+      font-size: 13px;
+      color: #999;
+      margin-left: 20px;
+    }
+
+    /* 导航 */
+    .nav {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      text-align: right;
+      background-color: #fff;
+      margin-left: auto;
+    }
+
+    .nav a {
+      font-size: 18px;
+      display: inline-block;
+      margin-left: 15px;
+      position: relative;
+    }
+
+    .nav a::after {
+      content: '';
+      display: block;
+      width: 35px;
+      height: 35px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 13px;
+      left: -6px;
+      transition: all .25s;
+    }
+
+    .nav a:hover::after {
+      border: 1px solid #dfdfe1;
+    }
+
+    /* 底部 */
+    .footer {
+      width: 1380px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+      border-top: 1px solid #dfdfe1;
+      padding: 20px 0;
+    }
+
+    .footer a {
+      color: #4c4b52;
+    }
+
+    .content {
+      width: 800px;
+      margin: 30px auto;
+      min-height: 80vh;
+    }
+
+    /* 文章样式 */
+    .article-content {
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* 1级标题 */
+    .article-content h1 {
+      font-size: 1.5em;
+      padding-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .article-content h1:after {
+      content: 'h1';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 2级标题 */
+    .article-content h2 {
+      font-size: 1.375em;
+      line-height: 1.5;
+    }
+
+    .article-content h2:after {
+      content: 'h2';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 引用 */
+    .article-content blockquote {
+      border-left: 5px solid #1a8971;
+      background-color: #eff2f3;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .article-content blockquote p {
+      margin: 0;
+    }
+
+    /* 图片 */
+    .article-content img {
+      max-width: 100%;
+      display: block;
+      margin: 10px auto;
+      cursor: pointer;
+      border: 1px solid #eee;
+    }
+
+    /* 代码 */
+    .article-content code {
+      line-height: 1.6;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+      background-color: #eff2f3;
+    }
+
+    .article-content pre {
+      background: #eff2f3;
+      overflow: auto;
+      padding: 1em;
+      line-height: 1.5 !important;
+    }
+
+    .article-content pre::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .article-content p code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    .article-content li code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    code span {
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+    }
+
+    /* 表格 */
+    .article-content table {
+      width: 100%;
+      border-right: 1px solid #EBEEF5;
+      border-top: 1px solid #EBEEF5;
+      border-collapse: collapse;
+    }
+
+    .article-content th,
+    .article-content td {
+      text-align: center;
+      border-left: 1px solid #EBEEF5;
+      border-bottom: 1px solid #EBEEF5;
+      padding: 7px 10px !important;
+    }
+
+    .article-content th {
+      font-weight: bold !important;
+      background-color: #f8f8f8;
+    }
+
+    .article-content a {
+      color: #34a9d8;
+      text-decoration: none;
+    }
+
+    .article-content a:hover {
+      color: #ff7600;
+    }
+
+    /* 代办事项 */
+    .article-content input {
+      position: relative;
+      top: 1px;
+    }
+
+    input[type='checkbox'] {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    input[type='checkbox']::after {
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      background-color: white;
+      color: #000;
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      visibility: visible;
+      padding-left: 0;
+      text-align: center;
+      content: ' ';
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    input[type='checkbox']:checked::before {
+      content: '✓';
+      font-size: 13px;
+      font-weight: bold;
+      color: #ff7600;
+      position: absolute;
+      display: inline-block;
+      z-index: 10;
+      top: -2px;
+      left: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="site"><a href="/">🥝FANMR.CN</a><span>热爱，追求</span></div>
+      <div class="nav">
+        <a href="/" title="首页">🏡</a>
+        <a href="/navigation.html" title="导航">🚴‍♂️</a>
+        <a href="/about.html" title="作者">👨‍🌾</a>
+        <a href="https://github.com/fanmore" target="_blank" title="Github">🐞</a>
+        <a href="https://gitee.com/riskfan" target="_blank" title="Gitee">🎃</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="article-content" id="content"><h1 id="在线工具集合">在线工具集合</h1>
+<p><a href="https://www.sojson.com/">JSON解析校验工具</a>：检查JSON是否合法，及错误位置定位<br><a href="http://www.json.cn/">JSON格式化</a>：JSON在线格式化，利于JSON层级的查看<br><a href="https://www.box3.cn/">开发工具箱</a>：在线字符串处理，支持JSON等<br><a href="https://tool.lu/timestamp/">时间戳转换工具</a>：时间戳转换工具<br><a href="https://fontawesome.dashgame.com/">FontAwesome图标</a>：提供可缩放的矢量图标<br><a href="https://www.xicons.org/#/">xicons</a>：SVG图标（外网）<br><a href="https://www.iconfont.cn/">阿里图标库</a>：最丰富的图标库<br><a href="https://www.hualigs.cn/">遇见图床</a>：免费的图床<br><a href="https://imgurl.org/">ImgURL图床</a>：免费的图床<br><a href="https://www.processon.com/diagrams">Process在线脑图</a>：方便的在线流程设计<br><a href="https://cowtransfer.com/">奶牛快传</a>：临时文件分享<br><a href="https://picsum.photos/">随机图片接口</a>：可自定义图片尺寸，示例：<a href="https://picsum.photos/1200/720">https://picsum.photos/1200/720</a><br><a href="https://mirror.tuna.tsinghua.edu.cn/">清华大学开源软件镜像站</a>：包含了常用的镜像<br><a href="https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/#features">azure文本转语音工具</a>：推荐云希语音，如果需要下载音频，可看文章<a href="https://www.maxiaobang.com/14236.html">azure文本转语音下载</a><br><a href="https://www.bootcdn.cn/">BootCDN</a>：稳定、快速、免费的前端开源项目CDN加速服务，可查找大部分插件CDN<br><a href="https://tinypng.com/">TinyPNG</a>：免费在线图片压缩，方便无广告，压缩率高，可多次压缩<br><a href="https://mvnrepository.com/">Maven中央仓库</a>：查找所有Jar包  </p>
+<h1 id="软件工具集合">软件工具集合</h1>
+<p><a href="http://www.hostbuf.com/">FinalShell</a>：SSH连接工具，集成了文件上传和下载<br><a href="https://www.screentogif.com/">GIF录制软件</a>：免费好用的GIF录制软件，无广告，功能相较齐全<br><a href="https://blog.csdn.net/weixin_45844049/article/details/113660234">VScode国内下载方法</a>：在没有梯子的情况下正常下载VsCode<br><a href="https://www.snipaste.com/">Snipaste截图工具</a>：便捷的截图工具，同时能吸取颜色<br><a href="https://sparanoid.com/lab/7z/">7-zip解压缩软件</a>：最小无广告的解压缩软件<br><a href="https://listen1.github.io/listen1/">Listen 1</a>：所有资源播放器  </p>
+<h1 id="学习网站">学习网站</h1>
+<p><a href="https://www.runoob.com/">菜鸟教程</a><br><a href="https://github.com/alibaba/spring-cloud-alibaba/blob/master/README-zh.md">SpringCloud Alibaba中文文档</a></p>
+<h1 id="资源网址">资源网址</h1>
+<p><a href="https://www.zfuhao.com/emoji">emoji表情大全</a><br><a href="http://www.downcc.com/">绿色资源网</a>  </p>
+<h1 id="java学习线路">Java学习线路</h1>
+<p><a href="https://www.processon.com/view/link/5eccea8fe0b34d5f263038f0#map">Java架构师学习线路图</a><br><a href="https://www.processon.com/view/link/5ece30f91e08530a9b241122#outline">Java架构师学习线路图</a></p>
+<h1 id="技术博文">技术博文</h1>
+<p><a href="https://www.cnblogs.com/grasp/p/12427474.html">搭建私有maven</a><br><a href="https://www.cnblogs.com/xisheng/p/14690282.html">Navicat15获取注册激活码教程</a><br><a href="https://mp.weixin.qq.com/s/rByH2x2UbD5I9FQHEyPDZw">系统设计经验【高并发、高性能、高可用】</a><br><a href="https://mp.weixin.qq.com/s/hlZKJ2nimV_Fuemc2bK0qA">面试官问我：用了HTTPS就安全了吗？用了HTTPS会被抓包吗？我竟然回答不上来...</a><br><a href="https://www.cnblogs.com/zuidongfeng/p/9926471.html">springboot项目启动成功后执行一段代码的两种方式</a><br><a href="https://www.cnblogs.com/xuwujing/p/10933082.html">SpringBoot优雅的全局异常处理</a><br><a href="https://blog.csdn.net/szh1127249432/article/details/106787491?spm=1001.2101.3001.6650.1&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7Eessearch%7Evector-1.fixedcolumn&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7Eessearch%7Evector-1.fixedcolumn">element表格数据导出为Excel</a><br><a href="https://blog.csdn.net/weixin_45775963/article/details/104539930/">Nginx日志切割</a><br><a href="https://speed17.com/">放心云</a>  </p>
+</div>
+    </div>
+    <div class="footer">
+      <a href="https://beian.miit.gov.cn" target="_blank">黔ICP备2021005697号</a> © COPYRIGHT 2022 FANMR.CN
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <!-- 图片预览 -->
+  <link rel="stylesheet" href="/static/viewer.min.css">
+  <script src="/static/viewer.min.js"></script>
+  <script>
+    // 链接新窗口打开
+    $('#content').on('click', 'a', function (e) {
+      e.target.target = '_blank'
+    })
+    // 图片放大
+    new Viewer(document.getElementById('content'))
+  </script>
+</body>
+
+</html>

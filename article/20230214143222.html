@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/static/logo.png">
+  <title>Vue3中使用TinyMCE富文本 | FANMR.CN</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100.1vh;
+      font-family: Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      /* background-color: #f6f6f7; */
+      background-color: #fff;
+      color: #4c4b52;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* 定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+      background-color: #0003;
+      border-radius: 10px;
+    }
+
+    /* 滑块hover效果 */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B2B2B2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* 布局 */
+    .container {
+      width: 1380px;
+      display: flex;
+      margin: 0 auto;
+    }
+
+    .left {
+      width: 260px;
+      height: 100vh;
+      padding-right: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    .center {
+      width: 840px;
+      background-color: #fff;
+    }
+
+    .right {
+      width: 260px;
+      height: 100vh;
+      padding-left: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    /* 网站名称 */
+    .site {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+    }
+
+    .site a {
+      color: #4c4b52;
+      font-size: 18px;
+      font-weight: bold;
+
+    }
+
+    .site span {
+      display: inline-block;
+      font-size: 13px;
+      color: #999;
+      margin-left: 20px;
+    }
+
+    /* 导航 */
+    .nav {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      text-align: right;
+    }
+
+    .nav a {
+      font-size: 18px;
+      display: inline-block;
+      margin-left: 15px;
+      position: relative;
+    }
+
+    .nav a::after {
+      content: '';
+      display: block;
+      width: 35px;
+      height: 35px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 13px;
+      left: -6px;
+      transition: all .25s;
+    }
+
+    .nav a:hover::after {
+      border: 1px solid #dfdfe1;
+    }
+
+    /* 分类 */
+    .category {
+      margin-top: 15px;
+      font-size: 13.5px;
+      padding: 5px;
+      max-height: 70vh;
+      overflow: scroll;
+    }
+
+    /* 定义滚动条宽度（竖向）、高度（横向）及背景（容器） */
+    .category::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条轨道 */
+    .category::-webkit-scrollbar-track {
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    .category::-webkit-scrollbar-thumb {
+      background-color: #fff;
+      transition: all .2s;
+      border-radius: 10px;
+    }
+
+    .category:hover::-webkit-scrollbar {
+      background-color: #f5f6f7;
+    }
+
+    .category:hover::-webkit-scrollbar-thumb {
+      background-color: #0003;
+    }
+
+    .category-item {
+      margin: 3px 0;
+      padding: 2px 0;
+    }
+
+
+    .category-item-text {
+      color: #555;
+      cursor: pointer;
+      transition: all .1s;
+    }
+
+    .category-item-text span:nth-child(2) {
+      float: right;
+      color: #999;
+    }
+
+    .category-item-text:hover,
+    .category-item-text:hover span:nth-child(2) {
+      color: #ec5c30;
+    }
+
+    .category-child {
+      display: none;
+    }
+
+    .category-child a {
+      font-size: 13.5px;
+      display: block;
+      margin-left: 16px;
+      color: #555;
+      padding: 5px 0;
+      transition: all .1s;
+    }
+
+    .category-child a:first-child {
+      margin-top: 7px;
+    }
+
+    .category-child a:last-child {
+      margin-bottom: 7px;
+    }
+
+    .category-child a:hover {
+      color: #ec5c30;
+    }
+
+    .category-child-active {
+      color: #ec5c30 !important;
+    }
+
+    /* 中间内容 */
+    .content {
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      margin: 20px 0 15px 0;
+      text-align: center;
+    }
+
+    .content-info {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .content-info span {
+      margin: 0 5px;
+      color: #222;
+    }
+
+    /* 大纲 */
+    #outline {
+      margin-top: 15px;
+      padding: 3px 5px 3px 10px;
+      max-height: 70vh;
+      position: relative;
+
+    }
+
+    #ouline:hover::after {
+      background-color: #c5c5c6;
+    }
+
+    /* 定义滚动条 */
+    #outline::-webkit-scrollbar {
+      width: 0;
+    }
+
+    #outline a {
+      display: block;
+      font-size: 13.5px;
+      color: #4c4b52;
+      padding: 3px 5px;
+      margin: 2px 0;
+      border-radius: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+
+    #outline a:hover {
+      color: #ec5c30;
+    }
+
+    .outline-active {
+      color: #23a057 !important;
+      position: relative;
+      background-color: #def1e6;
+    }
+
+    .outline-2 {
+      padding-left: 30px !important;
+    }
+
+    #backTop {
+      cursor: pointer;
+      width: 100%;
+      height: 30px;
+      text-align: center;
+      line-height: 32px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    #backTop:hover {
+      color: #23a057;
+    }
+
+    /* 底部 */
+    .footer {
+      width: 1380px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+      border-top: 1px solid #dfdfe1;
+      margin-left: -270px;
+      padding: 20px 0;
+      background-color: #fff;
+    }
+
+    .footer a {
+      color: #4c4b52;
+    }
+
+
+
+    /* 文章样式 */
+    .article-content {
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* 1级标题 */
+    .article-content h1 {
+      font-size: 1.4em;
+      padding-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .article-content h1:after {
+      content: 'h1';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 2级标题 */
+    .article-content h2 {
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+
+    .article-content h2:after {
+      content: 'h2';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 引用 */
+    .article-content blockquote {
+      border-left: 5px solid #1a8971;
+      background-color: #eff2f3;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .article-content blockquote p {
+      margin: 0;
+    }
+
+    /* 图片 */
+    .article-content img {
+      max-width: 100%;
+      display: block;
+      margin: 10px auto;
+      cursor: pointer;
+      border: 1px solid #eee;
+    }
+
+    /* 代码 */
+    .article-content code {
+      line-height: 1.6;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+      background-color: #eff2f3;
+    }
+
+    .article-content pre {
+      background: #eff2f3;
+      overflow: auto;
+      padding: 1em;
+      line-height: 1.5 !important;
+    }
+
+    .article-content pre::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .article-content p code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    .article-content li code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    code span {
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+    }
+
+    /* 表格 */
+    .article-content table {
+      width: 100%;
+      border-right: 1px solid #EBEEF5;
+      border-top: 1px solid #EBEEF5;
+      border-collapse: collapse;
+    }
+
+    .article-content th,
+    .article-content td {
+      text-align: center;
+      border-left: 1px solid #EBEEF5;
+      border-bottom: 1px solid #EBEEF5;
+      padding: 7px 10px !important;
+    }
+
+    .article-content th {
+      font-weight: bold !important;
+      background-color: #f8f8f8;
+    }
+
+    .article-content a {
+      color: #34a9d8;
+      text-decoration: none;
+    }
+
+    .article-content a:hover {
+      color: #ff7600;
+    }
+
+    /* 代办事项 */
+    .article-content input {
+      position: relative;
+      top: 1px;
+    }
+
+    input[type='checkbox'] {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    input[type='checkbox']::after {
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      background-color: white;
+      color: #000;
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      visibility: visible;
+      padding-left: 0;
+      text-align: center;
+      content: ' ';
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    input[type='checkbox']:checked::before {
+      content: '✓';
+      font-size: 13px;
+      font-weight: bold;
+      color: #ff7600;
+      position: absolute;
+      display: inline-block;
+      z-index: 10;
+      top: -2px;
+      left: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="site"><a href="/">🥝FANMR.CN</a><span>热爱，追求</span></div>
+      <div class="category"><div class="category-item"><div class="category-item-text"><span>杂文随笔</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230213110145.html" class="">Hexo博客：静态博客</a><a href="/article/20230214142334.html" class="">Hexo博客：Next主题</a><a href="/article/20230214142852.html" class="">Hexo博客：进阶使用</a><a href="/article/20230214142904.html" class="">Hexo博客：高级配置</a><a href="/article/20230214171402.html" class="">基于Node的静态博客</a></div></div><div class="category-item"><div class="category-item-text"><span>前端基础</span><span>10</span></div><div class="category-child" style="display:none"><a href="/article/20230214142926.html" class="">HTML知识</a><a href="/article/20230214142938.html" class="">CSS知识</a><a href="/article/20230214142943.html" class="">JS常用知识</a><a href="/article/20230214142952.html" class="">JS格式化时间戳</a><a href="/article/20230214143001.html" class="">JS获取浏览器窗口宽高</a><a href="/article/20230214143007.html" class="">JQ常用操作</a><a href="/article/20230214143014.html" class="">JQ复制到剪切板插件</a><a href="/article/20230214143021.html" class="">Three.js基础知识</a><a href="/article/20230214143028.html" class="">TypeScript基础知识</a><a href="/article/20230309185839.html" class="">Electron</a></div></div><div class="category-item"><div class="category-item-text"><span>Vue相关</span><span>17</span></div><div class="category-child" style="display:block"><a href="/article/20230214143114.html" class="">Vite使用及扩展</a><a href="/article/20230214143120.html" class="">Vue3知识及其新特性</a><a href="/article/20230214143125.html" class="">Vue3父子组件</a><a href="/article/20230214143130.html" class="">Vue常用知识积累</a><a href="/article/20230214143135.html" class="">Vue初始化页面动画</a><a href="/article/20230214143140.html" class="">Axios表单提交</a><a href="/article/20230214143147.html" class="">Element表格</a><a href="/article/20230214143153.html" class="">Element级联下拉</a><a href="/article/20230214143159.html" class="">Element文件上传</a><a href="/article/20230214143205.html" class="">Element对话框</a><a href="/article/20230214143213.html" class="">Vue二维码解决方案</a><a href="/article/20230214143222.html" class="category-child-active">Vue3中使用TinyMCE富文本</a><a href="/article/20230214143227.html" class="">NProgress加载条</a><a href="/article/20230214143234.html" class="">Vue3框架动态菜单实现</a><a href="/article/20230214143240.html" class="">Vue3使用Echarts</a><a href="/article/20230214143246.html" class="">Vue3处理Excel导入导出</a><a href="/article/20230326162835.html" class="">Uniapp</a></div></div><div class="category-item"><div class="category-item-text"><span>Java基础</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143300.html" class="">Java入门知识</a><a href="/article/20230215151103.html" class="">Java常用API</a><a href="/article/20230223141136.html" class="">Java集合</a><a href="/article/20230214143305.html" class="">Java常用知识积累</a><a href="/article/20230214143309.html" class="">Lambda表达式</a><a href="/article/20230214143430.html" class="">try-with-resource</a><a href="/article/20230214143437.html" class="">Java注解</a><a href="/article/20230214143442.html" class="">Java反射</a><a href="/article/20230214143448.html" class="">Java多线程</a><a href="/article/20230214143453.html" class="">JUC并发工具包</a><a href="/article/20230214143457.html" class="">静态代理模式</a><a href="/article/20230214143501.html" class="">动态代理模式</a><a href="/article/20230214143506.html" class="">JVM结构</a><a href="/article/20230326164410.html" class="">JVM垃圾回收器</a><a href="/article/20230214143513.html" class="">树结构数据生成工具</a><a href="/article/20230214143518.html" class="">经纬度计算工具</a><a href="/article/20230214143914.html" class="">Tomcat安装</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringBoot</span><span>20</span></div><div class="category-child" style="display:none"><a href="/article/20230328161840.html" class="">Spring介绍</a><a href="/article/20230214143924.html" class="">application配置</a><a href="/article/20230214143930.html" class="">Lombok中的Builder</a><a href="/article/20230214143934.html" class="">AOP打印请求响应耗时</a><a href="/article/20230214143942.html" class="">RestTemplate</a><a href="/article/20230214143947.html" class="">SpringBoot开发中常见工具类</a><a href="/article/20230214143952.html" class="">分布式锁</a><a href="/article/20230214143957.html" class="">邮件功能</a><a href="/article/20230214144002.html" class="">定时任务</a><a href="/article/20230214144009.html" class="">异步</a><a href="/article/20230214144013.html" class="">JPA</a><a href="/article/20230214144018.html" class="">基于hutool读excel</a><a href="/article/20230214144026.html" class="">省市区三级数据来源</a><a href="/article/20230214144031.html" class="">JSR303</a><a href="/article/20230214144036.html" class="">在线预览解决方案</a><a href="/article/20230214144041.html" class="">WebSocket</a><a href="/article/20230214144046.html" class="">全局异常处理</a><a href="/article/20230319144046.html" class="">支付相关</a><a href="/article/20230326164910.html" class="">SpringDoc</a><a href="/article/20230326174228.html" class="">knife4j</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringMVC</span><span>6</span></div><div class="category-child" style="display:none"><a href="/article/20230214144055.html" class="">Thymeaf</a><a href="/article/20230214144101.html" class="">跨域处理</a><a href="/article/20230214144108.html" class="">拦截器</a><a href="/article/20230214144113.html" class="">伪前后端分离</a><a href="/article/20230214144120.html" class="">基于拦截器做权限校验</a><a href="/article/20230214144125.html" class="">REST风格</a></div></div><div class="category-item"><div class="category-item-text"><span>MyBatis</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230214144134.html" class="">MyBatis基本使用与配置</a><a href="/article/20230214144139.html" class="">Mapper使用相关</a><a href="/article/20230214144144.html" class="">MaBatis多数据源配置</a><a href="/article/20230214144149.html" class="">MyBatisPlus</a><a href="/article/20230214144153.html" class="">基于MyBatisPlus的正向工程</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Netflix</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144200.html" class="">微服务</a><a href="/article/20230214144205.html" class="">服务的消费与提供</a><a href="/article/20230214144209.html" class="">Eureka</a><a href="/article/20230214144213.html" class="">Actuator</a><a href="/article/20230214144218.html" class="">Ribbon</a><a href="/article/20230214144223.html" class="">Feign</a><a href="/article/20230214144229.html" class="">Zuul</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Alibaba</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144237.html" class="">简介与搭建</a><a href="/article/20230214144242.html" class="">Nacos注册中心</a><a href="/article/20230214144247.html" class="">Ribbon</a><a href="/article/20230214144252.html" class="">OpenFeign</a><a href="/article/20230214144258.html" class="">Nacos配置中心</a><a href="/article/20230214144306.html" class="">Geteway</a><a href="/article/20230214144310.html" class="">Sentinel</a></div></div><div class="category-item"><div class="category-item-text"><span>Netty</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144318.html" class="">Netty入门知识</a></div></div><div class="category-item"><div class="category-item-text"><span>RocketMQ</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144323.html" class="">RocketMQ介绍与安装</a></div></div><div class="category-item"><div class="category-item-text"><span>MySQL</span><span>16</span></div><div class="category-child" style="display:none"><a href="/article/20230214144332.html" class="">MySQL基础知识</a><a href="/article/20230224103504.html" class="">MySQL多表查询</a><a href="/article/20230214144340.html" class="">MySQL常用函数及解决方案</a><a href="/article/20230214144346.html" class="">MySQL视图</a><a href="/article/20230214144351.html" class="">MySQL索引</a><a href="/article/20230214144356.html" class="">MySQL存储引擎</a><a href="/article/20230214144402.html" class="">ContOS安装MySQL</a><a href="/article/20230226101051.html" class="">SQL优化</a><a href="/article/20230226145552.html" class="">MySQL存储过程</a><a href="/article/20230226153640.html" class="">MySQL触发器</a><a href="/article/20230226154033.html" class="">MySQL锁</a><a href="/article/20230302103809.html" class="">MySQL管理相关</a><a href="/article/20230302111501.html" class="">MySQL-运维-日志</a><a href="/article/20230302112331.html" class="">MySQL-运维-主从复制</a><a href="/article/20230302122646.html" class="">MySQL-运维-分库分表及MyCat</a><a href="/article/20230302222752.html" class="">MySQL-运维-读写分离</a></div></div><div class="category-item"><div class="category-item-text"><span>Redis</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144409.html" class="">Redis介绍和安装</a><a href="/article/20230214144414.html" class="">Redis配置文件</a><a href="/article/20230214144421.html" class="">Redis持久化</a><a href="/article/20230214144425.html" class="">Redis集群</a><a href="/article/20230214144429.html" class="">Redis语法基础</a><a href="/article/20230214144434.html" class="">Redis进阶使用</a><a href="/article/20230214144439.html" class="">Redis相关问题及解决方案</a></div></div><div class="category-item"><div class="category-item-text"><span>MongoDB</span><span>8</span></div><div class="category-child" style="display:none"><a href="/article/20230214144446.html" class="">Linux安装MongoDB</a><a href="/article/20230214144452.html" class="">MongoDB基础语法</a><a href="/article/20230214144457.html" class="">MongoTemplate</a><a href="/article/20230214144501.html" class="">MongoTemplate中Update操作</a><a href="/article/20230214144509.html" class="">MongoTemplate中聚合查询</a><a href="/article/20230214144515.html" class="">MongoTemplate中日期归档示例</a><a href="/article/20230214144521.html" class="">MongoTemplate使用相关知识归纳</a><a href="/article/20230214144525.html" class="">地理位置存储与距离查询</a></div></div><div class="category-item"><div class="category-item-text"><span>Linux相关</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144537.html" class="">Linux常用命令</a><a href="/article/20230214144546.html" class="">Jar启动脚本</a><a href="/article/20230214144550.html" class="">VirtualBox安装CentOS</a><a href="/article/20230214144556.html" class="">CentOS安装Node</a><a href="/article/20230214144601.html" class="">CentOS中的防火墙</a><a href="/article/20230214144607.html" class="">ArchLinux系统安装</a><a href="/article/20230214144612.html" class="">ArchLinux系统使用</a></div></div><div class="category-item"><div class="category-item-text"><span>工具合集</span><span>13</span></div><div class="category-child" style="display:none"><a href="/article/20230214144620.html" class="">IDEA</a><a href="/article/20230214144625.html" class="">Maven介绍</a><a href="/article/20230303154310.html" class="">Maven安装</a><a href="/article/20230214144630.html" class="">Gradle</a><a href="/article/20230214144635.html" class="">Git</a><a href="/article/20230214144532.html" class="">H2数据库</a><a href="/article/20230214144646.html" class="">Nginx安装</a><a href="/article/20230214144650.html" class="">Nginx配置</a><a href="/article/20230214144656.html" class="">VSCode编辑器</a><a href="/article/20230214144701.html" class="">JMeter压测</a><a href="/article/20230214144707.html" class="">smart-doc文档</a><a href="/article/20230214144712.html" class="">Docker</a><a href="/article/20230214144717.html" class="">抓包工具Charles</a></div></div><div class="category-item"><div class="category-item-text"><span>面试题</span><span>6</span></div><div class="category-child" style="display:none"><a href="/article/20230312102225.html" class="">Java基础</a><a href="/article/20230326162650.html" class="">Java集合</a><a href="/article/20230326162733.html" class="">Java多线程</a><a href="/article/20230326162756.html" class="">JVM</a><a href="/article/20230327214859.html" class="">Spring</a><a href="/article/20230328135936.html" class="">计算机网络</a></div></div></div>
+    </div>
+    <div class="center">
+      <div class="content">
+        <div class="content-title">Vue3中使用TinyMCE富文本</div>
+        <div class="content-info">
+          <span>📚Vue相关</span>
+          <span>⏱2023/02/14</span>
+          
+        </div>
+        <div class="article-content" id="content"><h1 id="相关链接">相关链接</h1>
+<p><a href="http://tinymce.ax-z.cn/">tiny中文文档</a></p>
+<p><a href="https://www.cnblogs.com/huihuihero/p/13877589.html">官方推荐的Vue3集成教程</a></p>
+<h1 id="安装">安装</h1>
+<pre><code>npm install tinymce
+npm install @tinymce/tinymce-vue
+</code></pre>
+<p>然后下载汉化包<a href="https://www.tiny.cloud/get-tiny/language-packages/">https://www.tiny.cloud/get-tiny/language-packages/</a></p>
+<p>但是发现没有中文的，文章末尾有我找到的中文汉化</p>
+<p>将<code>node_modules/tinymce/skins</code>文件夹复制到<code>public</code>里</p>
+<!-- more -->
+
+<img alt="图" src="../../../images/20230131152810.png" />  
+
+<h1 id="自定义组件">自定义组件</h1>
+<p>在<code>src/components</code>下新建<code>TEditor.vue</code>，并写入以下代码</p>
+<pre><code>&lt;template&gt;
+  &lt;div class=&quot;tinymce-box&quot;&gt;
+    &lt;Editor v-model=&quot;contentValue&quot; :init=&quot;init&quot; :disabled=&quot;disabled&quot; @onClick=&quot;onClick&quot;/&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+//引入tinymce编辑器
+import Editor from &#39;@tinymce/tinymce-vue&#39;
+
+//引入node_modules里的tinymce相关文件文件
+import tinymce from &#39;tinymce/tinymce&#39; //tinymce默认hidden，不引入则不显示编辑器
+import &#39;tinymce/themes/silver&#39;  //编辑器主题，不引入则报错
+import &#39;tinymce/icons/default&#39;  //引入编辑器图标icon，不引入则不显示对应图标
+
+// 引入编辑器插件（基本免费插件都在这儿了）
+import &#39;tinymce/plugins/advlist&#39;  //高级列表
+import &#39;tinymce/plugins/anchor&#39;  //锚点
+import &#39;tinymce/plugins/autolink&#39;  //自动链接
+import &#39;tinymce/plugins/autoresize&#39;  //编辑器高度自适应,注：plugins里引入此插件时，Init里设置的height将失效
+import &#39;tinymce/plugins/autosave&#39;  //自动存稿
+import &#39;tinymce/plugins/charmap&#39;  //特殊字符
+import &#39;tinymce/plugins/code&#39;  //编辑源码
+import &#39;tinymce/plugins/codesample&#39;  //代码示例
+import &#39;tinymce/plugins/directionality&#39;  //文字方向
+import &#39;tinymce/plugins/emoticons&#39;  //表情
+import &#39;tinymce/plugins/fullpage&#39;  //文档属性
+import &#39;tinymce/plugins/fullscreen&#39;  //全屏
+import &#39;tinymce/plugins/help&#39;  //帮助
+import &#39;tinymce/plugins/hr&#39;  //水平分割线
+import &#39;tinymce/plugins/image&#39;  //插入编辑图片
+import &#39;tinymce/plugins/importcss&#39;  //引入css
+import &#39;tinymce/plugins/insertdatetime&#39;  //插入日期时间
+import &#39;tinymce/plugins/link&#39;  //超链接
+import &#39;tinymce/plugins/lists&#39; //列表插件
+import &#39;tinymce/plugins/media&#39; //插入编辑媒体
+import &#39;tinymce/plugins/nonbreaking&#39; //插入不间断空格
+import &#39;tinymce/plugins/pagebreak&#39; //插入分页符
+import &#39;tinymce/plugins/paste&#39; //粘贴插件
+import &#39;tinymce/plugins/preview&#39;//预览
+import &#39;tinymce/plugins/print&#39;//打印
+import &#39;tinymce/plugins/quickbars&#39;  //快速工具栏
+import &#39;tinymce/plugins/save&#39;  //保存
+import &#39;tinymce/plugins/searchreplace&#39;  //查找替换
+// import &#39;tinymce/plugins/spellchecker&#39;  //拼写检查，暂未加入汉化，不建议使用
+import &#39;tinymce/plugins/tabfocus&#39;  //切入切出，按tab键切出编辑器，切入页面其他输入框中
+import &#39;tinymce/plugins/table&#39;  //表格
+import &#39;tinymce/plugins/template&#39;  //内容模板
+import &#39;tinymce/plugins/textcolor&#39;  //文字颜色
+import &#39;tinymce/plugins/textpattern&#39;  //快速排版
+import &#39;tinymce/plugins/toc&#39;  //目录生成器
+import &#39;tinymce/plugins/visualblocks&#39;  //显示元素范围
+import &#39;tinymce/plugins/visualchars&#39;  //显示不可见字符
+import &#39;tinymce/plugins/wordcount&#39;  //字数统计
+
+
+export default {
+  name: &#39;TEditor&#39;,
+  components: {
+    Editor
+  },
+  props: {
+    value: {
+      type: String,
+      default: &#39;&#39;
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    plugins: {
+      type: [String, Array],
+      default: &#39;print preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount textpattern autosave &#39;
+    },
+    toolbar: {
+      type: [String, Array],
+      default: &#39;fullscreen undo redo | pastetext forecolor backcolor bold italic underline strikethrough link anchor | \
+                alignleft aligncenter alignright alignjustify | outdent indent | \
+                styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | \
+                table image media charmap hr pagebreak insertdatetime print preview | code selectall searchreplace visualblocks | \
+                indent2em lineheight formatpainter axupimgs restoredraft cut copy paste&#39;
+    },
+  },
+  data() {
+    return {
+      init: {
+        language_url: &#39;/langs/zh_CN.js&#39;,  //引入语言包文件
+        language: &#39;zh_CN&#39;,  //语言类型
+
+        skin_url: &#39;/skins/ui/oxide&#39;,  //皮肤：浅色
+        //skin_url: &#39;/tiny/skins/ui/oxide-dark&#39;,//皮肤：暗色
+
+        plugins: this.plugins,  //插件配置
+        toolbar: this.toolbar,  //工具栏配置，设为false则隐藏
+        // menubar: &#39;file edit&#39;,  //菜单栏配置，设为false则隐藏，不配置则默认显示全部菜单，也可自定义配置--查看 http://tinymce.ax-z.cn/configure/editor-appearance.php --搜索“自定义菜单”
+
+        fontsize_formats: &#39;12px 14px 16px 18px 20px 22px 24px 28px 32px 36px 48px 56px 72px&#39;,  //字体大小
+        font_formats: &#39;微软雅黑=Microsoft YaHei,Helvetica Neue,PingFang SC,sans-serif;苹果苹方=PingFang SC,Microsoft YaHei,sans-serif;宋体=simsun,serif;仿宋体=FangSong,serif;黑体=SimHei,sans-serif;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;&#39;,  //字体样式
+        lineheight_formats: &quot;0.5 0.8 1 1.2 1.5 1.75 2 2.5 3 4 5&quot;,  //行高配置，也可配置成&quot;12px 14px 16px 20px&quot;这种形式
+
+        height: 400,  //注：引入autoresize插件时，此属性失效
+        placeholder: &#39;在这里输入文字&#39;,
+        branding: false,  //tiny技术支持信息是否显示
+        resize: false,  //编辑器宽高是否可变，false-否,true-高可变，&#39;both&#39;-宽高均可，注意引号
+        // statusbar: false,  //最下方的元素路径和字数统计那一栏是否显示
+        elementpath: false,  //元素路径是否显示
+
+        content_style: &quot;img {max-width:100%;}&quot;,  //直接自定义可编辑区域的css样式
+        // content_css: &#39;/tinycontent.css&#39;,  //以css文件方式自定义可编辑区域的css样式，css文件需自己创建并引入
+
+        // images_upload_url: &#39;/apib/api-upload/uploadimg&#39;,  //后端处理程序的url，建议直接自定义上传函数image_upload_handler，这个就可以不用了
+        // images_upload_base_path: &#39;/demo&#39;,  //相对基本路径--关于图片上传建议查看--http://tinymce.ax-z.cn/general/upload-images.php
+        paste_data_images: true,  //图片是否可粘贴
+        images_upload_handler: (blobInfo, success, failure) =&gt; {
+          if (blobInfo.blob().size / 1024 / 1024 &gt; 2) {
+            failure(&quot;上传失败，图片大小请控制在 2M 以内&quot;)
+          } else {
+            let params = new FormData()
+            params.append(&#39;file&#39;, blobInfo.blob())
+            let config = {
+              headers: {
+                &quot;Content-Type&quot;: &quot;multipart/form-data&quot;
+              }
+            }
+            this.$axios.post(`/api-upload/uploadimg`, params, config).then(res =&gt; {
+              if (res.data.code === 200) {
+                success(res.data.msg)  //上传成功，在成功函数里填入图片路径
+              } else {
+                failure(&quot;上传失败&quot;)
+              }
+            }).catch(() =&gt; {
+              failure(&quot;上传出错，服务器开小差了呢&quot;)
+            })
+          }
+        }
+      },
+      contentValue: this.value
+    }
+  },
+  watch: {
+    value(newValue) {
+      this.contentValue = newValue
+    },
+    contentValue(newValue) {
+      this.$emit(&#39;html&#39;, newValue)
+    },
+  },
+  created() {
+
+  },
+  mounted() {
+    tinymce.init({})
+  },
+  methods: {
+    // 添加相关的事件，可用的事件参照文档=&gt; https://github.com/tinymce/tinymce-vue =&gt; All available events
+    onClick(e) {
+      this.$emit(&#39;onClick&#39;, e, tinymce)
+    },
+    //清空内容
+    clear() {
+      this.contentValue = &#39;&#39;
+    },
+  },
+}
+&lt;/script&gt;
+
+&lt;style lang=&quot;sass&quot;&gt;
+
+&lt;/style&gt;
+</code></pre>
+<h1 id="全局注册">全局注册</h1>
+<p>在<code>main.js</code>中注册全局组件</p>
+<pre><code>import TEditor from &#39;./components/TEditor.vue&#39;
+
+app.component(&#39;TEditor&#39;, TEditor)
+</code></pre>
+<h1 id="使用方式">使用方式</h1>
+<p>在相关页面进行使用</p>
+<pre><code>&lt;!--value为传入的值；html为返回的html字符，直接使用函数接口即可--&gt;
+&lt;TEditor ref=&quot;editor&quot; :value=&quot;modifyData.html&quot; @html=&quot;getModifyHTML&quot;/&gt;
+</code></pre>
+<h1 id="中文汉化">中文汉化</h1>
+<p>文件名称为<code>zh_CN.js</code></p>
+<pre><code>tinymce.addI18n(&#39;zh_CN&#39;,{
+&quot;Redo&quot;: &quot;恢复&quot;,
+&quot;Undo&quot;: &quot;撤销&quot;,
+&quot;Cut&quot;: &quot;剪切&quot;,
+&quot;Copy&quot;: &quot;复制&quot;,
+&quot;Paste&quot;: &quot;粘贴&quot;,
+&quot;Select all&quot;: &quot;全选&quot;,
+&quot;New document&quot;: &quot;新建文档&quot;,
+&quot;Ok&quot;: &quot;确定&quot;,
+&quot;Cancel&quot;: &quot;取消&quot;,
+&quot;Visual aids&quot;: &quot;网格线&quot;,
+&quot;Bold&quot;: &quot;粗体&quot;,
+&quot;Italic&quot;: &quot;斜体&quot;,
+&quot;Underline&quot;: &quot;下划线&quot;,
+&quot;Strikethrough&quot;: &quot;删除线&quot;,
+&quot;Superscript&quot;: &quot;上标&quot;,
+&quot;Subscript&quot;: &quot;下标&quot;,
+&quot;Clear formatting&quot;: &quot;清除格式&quot;,
+&quot;Align left&quot;: &quot;左对齐&quot;,
+&quot;Align center&quot;: &quot;居中&quot;,
+&quot;Align right&quot;: &quot;右对齐&quot;,
+&quot;Justify&quot;: &quot;两端对齐&quot;,
+&quot;Bullet list&quot;: &quot;符号列表&quot;,
+&quot;Numbered list&quot;: &quot;数字列表&quot;,
+&quot;Decrease indent&quot;: &quot;减少缩进&quot;,
+&quot;Increase indent&quot;: &quot;增加缩进&quot;,
+&quot;Close&quot;: &quot;关闭&quot;,
+&quot;Formats&quot;: &quot;格式&quot;,
+&quot;Your browser doesn&#39;t support direct access to the clipboard. Please use the Ctrl+X\/C\/V keyboard shortcuts instead.&quot;: &quot;当前浏览器不支持访问剪贴板，请使用快捷键Ctrl+X/C/V复制粘贴&quot;,
+&quot;Headers&quot;: &quot;标题&quot;,
+&quot;Header 1&quot;: &quot;标题1&quot;,
+&quot;Header 2&quot;: &quot;标题2&quot;,
+&quot;Header 3&quot;: &quot;标题3&quot;,
+&quot;Header 4&quot;: &quot;标题4&quot;,
+&quot;Header 5&quot;: &quot;标题5&quot;,
+&quot;Header 6&quot;: &quot;标题6&quot;,
+&quot;Headings&quot;: &quot;标题&quot;,
+&quot;Heading 1&quot;: &quot;标题1&quot;,
+&quot;Heading 2&quot;: &quot;标题2&quot;,
+&quot;Heading 3&quot;: &quot;标题3&quot;,
+&quot;Heading 4&quot;: &quot;标题4&quot;,
+&quot;Heading 5&quot;: &quot;标题5&quot;,
+&quot;Heading 6&quot;: &quot;标题6&quot;,
+&quot;Preformatted&quot;: &quot;预格式化&quot;,
+&quot;Div&quot;: &quot;Div区块&quot;,
+&quot;Pre&quot;: &quot;预格式文本&quot;,
+&quot;Code&quot;: &quot;代码&quot;,
+&quot;Paragraph&quot;: &quot;段落&quot;,
+&quot;Blockquote&quot;: &quot;引用&quot;,
+&quot;Inline&quot;: &quot;文本&quot;,
+&quot;Blocks&quot;: &quot;区块&quot;,
+&quot;Paste is now in plain text mode. Contents will now be pasted as plain text until you toggle this option off.&quot;: &quot;当前为纯文本粘贴模式，再次点击可以回到普通粘贴模式。&quot;,
+&quot;Fonts&quot;: &quot;字体&quot;,
+&quot;Font Sizes&quot;: &quot;字号&quot;,
+&quot;Class&quot;: &quot;Class&quot;,
+&quot;Browse for an image&quot;: &quot;浏览图像&quot;,
+&quot;OR&quot;: &quot;或&quot;,
+&quot;Drop an image here&quot;: &quot;拖放一张图片文件至此&quot;,
+&quot;Upload&quot;: &quot;上传&quot;,
+&quot;Block&quot;: &quot;块&quot;,
+&quot;Align&quot;: &quot;对齐&quot;,
+&quot;Default&quot;: &quot;默认&quot;,
+&quot;Circle&quot;: &quot;空心圆&quot;,
+&quot;Disc&quot;: &quot;实心圆&quot;,
+&quot;Square&quot;: &quot;方块&quot;,
+&quot;Lower Alpha&quot;: &quot;小写英文字母&quot;,
+&quot;Lower Greek&quot;: &quot;小写希腊字母&quot;,
+&quot;Lower Roman&quot;: &quot;小写罗马字母&quot;,
+&quot;Upper Alpha&quot;: &quot;大写英文字母&quot;,
+&quot;Upper Roman&quot;: &quot;大写罗马字母&quot;,
+&quot;Anchor...&quot;: &quot;锚点...&quot;,
+&quot;Name&quot;: &quot;名称&quot;,
+&quot;Id&quot;: &quot;id&quot;,
+&quot;Id should start with a letter, followed only by letters, numbers, dashes, dots, colons or underscores.&quot;: &quot;id应该以字母开头，后跟字母、数字、横线、点、冒号或下划线。&quot;,
+&quot;You have unsaved changes are you sure you want to navigate away?&quot;: &quot;你对文档的修改尚未保存，确定离开吗？&quot;,
+&quot;Restore last draft&quot;: &quot;恢复上次的草稿&quot;,
+&quot;Special characters...&quot;: &quot;特殊字符...&quot;,
+&quot;Source code&quot;: &quot;HTML源码&quot;,
+&quot;Insert\/Edit code sample&quot;: &quot;插入/编辑代码示例&quot;,
+&quot;Language&quot;: &quot;语言&quot;,
+&quot;Code sample...&quot;: &quot;代码示例...&quot;,
+&quot;Color Picker&quot;: &quot;选取颜色&quot;,
+&quot;R&quot;: &quot;R&quot;,
+&quot;G&quot;: &quot;G&quot;,
+&quot;B&quot;: &quot;B&quot;,
+&quot;Left to right&quot;: &quot;从左到右&quot;,
+&quot;Right to left&quot;: &quot;从右到左&quot;,
+&quot;Emoticons...&quot;: &quot;表情符号...&quot;,
+&quot;Metadata and Document Properties&quot;: &quot;元数据和文档属性&quot;,
+&quot;Title&quot;: &quot;标题&quot;,
+&quot;Keywords&quot;: &quot;关键词&quot;,
+&quot;Description&quot;: &quot;描述&quot;,
+&quot;Robots&quot;: &quot;机器人&quot;,
+&quot;Author&quot;: &quot;作者&quot;,
+&quot;Encoding&quot;: &quot;编码&quot;,
+&quot;Fullscreen&quot;: &quot;全屏&quot;,
+&quot;Action&quot;: &quot;操作&quot;,
+&quot;Shortcut&quot;: &quot;快捷键&quot;,
+&quot;Help&quot;: &quot;帮助&quot;,
+&quot;Address&quot;: &quot;地址&quot;,
+&quot;Focus to menubar&quot;: &quot;移动焦点到菜单栏&quot;,
+&quot;Focus to toolbar&quot;: &quot;移动焦点到工具栏&quot;,
+&quot;Focus to element path&quot;: &quot;移动焦点到元素路径&quot;,
+&quot;Focus to contextual toolbar&quot;: &quot;移动焦点到上下文菜单&quot;,
+&quot;Insert link (if link plugin activated)&quot;: &quot;插入链接 (如果链接插件已激活)&quot;,
+&quot;Save (if save plugin activated)&quot;: &quot;保存(如果保存插件已激活)&quot;,
+&quot;Find (if searchreplace plugin activated)&quot;: &quot;查找(如果查找替换插件已激活)&quot;,
+&quot;Plugins installed ({0}):&quot;: &quot;已安装插件 ({0})：&quot;,
+&quot;Premium plugins:&quot;: &quot;优秀插件：&quot;,
+&quot;Learn more...&quot;: &quot;了解更多...&quot;,
+&quot;You are using {0}&quot;: &quot;你正在使用 {0}&quot;,
+&quot;Plugins&quot;: &quot;插件&quot;,
+&quot;Handy Shortcuts&quot;: &quot;快捷键&quot;,
+&quot;Horizontal line&quot;: &quot;水平分割线&quot;,
+&quot;Insert\/edit image&quot;: &quot;插入/编辑图片&quot;,
+&quot;Image description&quot;: &quot;图片描述&quot;,
+&quot;Source&quot;: &quot;地址&quot;,
+&quot;Dimensions&quot;: &quot;大小&quot;,
+&quot;Constrain proportions&quot;: &quot;保持宽高比&quot;,
+&quot;General&quot;: &quot;常规&quot;,
+&quot;Advanced&quot;: &quot;高级&quot;,
+&quot;Style&quot;: &quot;样式&quot;,
+&quot;Vertical space&quot;: &quot;垂直边距&quot;,
+&quot;Horizontal space&quot;: &quot;水平边距&quot;,
+&quot;Border&quot;: &quot;边框&quot;,
+&quot;Insert image&quot;: &quot;插入图片&quot;,
+&quot;Image...&quot;: &quot;图片...&quot;,
+&quot;Image list&quot;: &quot;图片列表&quot;,
+&quot;Rotate counterclockwise&quot;: &quot;逆时针旋转&quot;,
+&quot;Rotate clockwise&quot;: &quot;顺时针旋转&quot;,
+&quot;Flip vertically&quot;: &quot;垂直翻转&quot;,
+&quot;Flip horizontally&quot;: &quot;水平翻转&quot;,
+&quot;Edit image&quot;: &quot;编辑图片&quot;,
+&quot;Image options&quot;: &quot;图片选项&quot;,
+&quot;Zoom in&quot;: &quot;放大&quot;,
+&quot;Zoom out&quot;: &quot;缩小&quot;,
+&quot;Crop&quot;: &quot;裁剪&quot;,
+&quot;Resize&quot;: &quot;调整大小&quot;,
+&quot;Orientation&quot;: &quot;方向&quot;,
+&quot;Brightness&quot;: &quot;亮度&quot;,
+&quot;Sharpen&quot;: &quot;锐化&quot;,
+&quot;Contrast&quot;: &quot;对比度&quot;,
+&quot;Color levels&quot;: &quot;色阶&quot;,
+&quot;Gamma&quot;: &quot;伽马值&quot;,
+&quot;Invert&quot;: &quot;反转&quot;,
+&quot;Apply&quot;: &quot;应用&quot;,
+&quot;Back&quot;: &quot;后退&quot;,
+&quot;Insert date\/time&quot;: &quot;插入日期/时间&quot;,
+&quot;Date\/time&quot;: &quot;日期/时间&quot;,
+&quot;Insert\/Edit Link&quot;: &quot;插入/编辑链接&quot;,
+&quot;Insert\/edit link&quot;: &quot;插入/编辑链接&quot;,
+&quot;Text to display&quot;: &quot;显示文字&quot;,
+&quot;Url&quot;: &quot;地址&quot;,
+&quot;Open link in...&quot;: &quot;链接打开方式...&quot;,
+&quot;Current window&quot;: &quot;当前窗口打开&quot;,
+&quot;None&quot;: &quot;在当前窗口/框架打开&quot;,
+&quot;New window&quot;: &quot;在新窗口打开&quot;,
+&quot;Remove link&quot;: &quot;删除链接&quot;,
+&quot;Anchors&quot;: &quot;锚点&quot;,
+&quot;Link...&quot;: &quot;链接...&quot;,
+&quot;Paste or type a link&quot;: &quot;粘贴或输入链接&quot;,
+&quot;The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?&quot;: &quot;你所填写的URL地址为邮件地址，需要加上mailto:前缀吗？&quot;,
+&quot;The URL you entered seems to be an external link. Do you want to add the required http:\/\/ prefix?&quot;: &quot;你所填写的URL地址属于外部链接，需要加上http://:前缀吗？&quot;,
+&quot;Link list&quot;: &quot;链接列表&quot;,
+&quot;Insert video&quot;: &quot;插入视频&quot;,
+&quot;Insert\/edit video&quot;: &quot;插入/编辑视频&quot;,
+&quot;Insert\/edit media&quot;: &quot;插入/编辑媒体&quot;,
+&quot;Alternative source&quot;: &quot;替代资源&quot;,
+&quot;Alternative image URL&quot;: &quot;资源备用地址&quot;,
+&quot;Media poster (Image URL)&quot;: &quot;封面(图片地址)&quot;,
+&quot;Paste your embed code below:&quot;: &quot;将内嵌代码粘贴在下面:&quot;,
+&quot;Embed&quot;: &quot;内嵌&quot;,
+&quot;Media...&quot;: &quot;多媒体...&quot;,
+&quot;Nonbreaking space&quot;: &quot;不间断空格&quot;,
+&quot;Page break&quot;: &quot;分页符&quot;,
+&quot;Paste as text&quot;: &quot;粘贴为文本&quot;,
+&quot;Preview&quot;: &quot;预览&quot;,
+&quot;Print...&quot;: &quot;打印...&quot;,
+&quot;Save&quot;: &quot;保存&quot;,
+&quot;Find&quot;: &quot;查找&quot;,
+&quot;Replace with&quot;: &quot;替换为&quot;,
+&quot;Replace&quot;: &quot;替换&quot;,
+&quot;Replace all&quot;: &quot;替换全部&quot;,
+&quot;Previous&quot;: &quot;上一个&quot;,
+&quot;Next&quot;: &quot;下一个&quot;,
+&quot;Find and replace...&quot;: &quot;查找并替换...&quot;,
+&quot;Could not find the specified string.&quot;: &quot;未找到搜索内容。&quot;,
+&quot;Match case&quot;: &quot;区分大小写&quot;,
+&quot;Find whole words only&quot;: &quot;全单词匹配&quot;,
+&quot;Spell check&quot;: &quot;拼写检查&quot;,
+&quot;Ignore&quot;: &quot;忽略&quot;,
+&quot;Ignore all&quot;: &quot;忽略全部&quot;,
+&quot;Finish&quot;: &quot;完成&quot;,
+&quot;Add to Dictionary&quot;: &quot;添加到字典&quot;,
+&quot;Insert table&quot;: &quot;插入表格&quot;,
+&quot;Table properties&quot;: &quot;表格属性&quot;,
+&quot;Delete table&quot;: &quot;删除表格&quot;,
+&quot;Cell&quot;: &quot;单元格&quot;,
+&quot;Row&quot;: &quot;行&quot;,
+&quot;Column&quot;: &quot;列&quot;,
+&quot;Cell properties&quot;: &quot;单元格属性&quot;,
+&quot;Merge cells&quot;: &quot;合并单元格&quot;,
+&quot;Split cell&quot;: &quot;拆分单元格&quot;,
+&quot;Insert row before&quot;: &quot;在上方插入&quot;,
+&quot;Insert row after&quot;: &quot;在下方插入&quot;,
+&quot;Delete row&quot;: &quot;删除行&quot;,
+&quot;Row properties&quot;: &quot;行属性&quot;,
+&quot;Cut row&quot;: &quot;剪切行&quot;,
+&quot;Copy row&quot;: &quot;复制行&quot;,
+&quot;Paste row before&quot;: &quot;粘贴到上方&quot;,
+&quot;Paste row after&quot;: &quot;粘贴到下方&quot;,
+&quot;Insert column before&quot;: &quot;在左侧插入&quot;,
+&quot;Insert column after&quot;: &quot;在右侧插入&quot;,
+&quot;Delete column&quot;: &quot;删除列&quot;,
+&quot;Cols&quot;: &quot;列&quot;,
+&quot;Rows&quot;: &quot;行&quot;,
+&quot;Width&quot;: &quot;宽&quot;,
+&quot;Height&quot;: &quot;高&quot;,
+&quot;Cell spacing&quot;: &quot;单元格外间距&quot;,
+&quot;Cell padding&quot;: &quot;单元格内边距&quot;,
+&quot;Show caption&quot;: &quot;显示标题&quot;,
+&quot;Left&quot;: &quot;左对齐&quot;,
+&quot;Center&quot;: &quot;居中&quot;,
+&quot;Right&quot;: &quot;右对齐&quot;,
+&quot;Cell type&quot;: &quot;单元格类型&quot;,
+&quot;Scope&quot;: &quot;范围&quot;,
+&quot;Alignment&quot;: &quot;对齐方式&quot;,
+&quot;H Align&quot;: &quot;水平对齐&quot;,
+&quot;V Align&quot;: &quot;垂直对齐&quot;,
+&quot;Top&quot;: &quot;顶部对齐&quot;,
+&quot;Middle&quot;: &quot;垂直居中&quot;,
+&quot;Bottom&quot;: &quot;底部对齐&quot;,
+&quot;Header cell&quot;: &quot;表头单元格&quot;,
+&quot;Row group&quot;: &quot;行组&quot;,
+&quot;Column group&quot;: &quot;列组&quot;,
+&quot;Row type&quot;: &quot;行类型&quot;,
+&quot;Header&quot;: &quot;表头&quot;,
+&quot;Body&quot;: &quot;表体&quot;,
+&quot;Footer&quot;: &quot;表尾&quot;,
+&quot;Border color&quot;: &quot;边框颜色&quot;,
+&quot;Insert template...&quot;: &quot;插入模板...&quot;,
+&quot;Templates&quot;: &quot;模板&quot;,
+&quot;Template&quot;: &quot;模板&quot;,
+&quot;Text color&quot;: &quot;文字颜色&quot;,
+&quot;Background color&quot;: &quot;背景色&quot;,
+&quot;Custom...&quot;: &quot;自定义...&quot;,
+&quot;Custom color&quot;: &quot;自定义颜色&quot;,
+&quot;No color&quot;: &quot;无&quot;,
+&quot;Remove color&quot;: &quot;删除颜色&quot;,
+&quot;Table of Contents&quot;: &quot;目录&quot;,
+&quot;Show blocks&quot;: &quot;显示区块边框&quot;,
+&quot;Show invisible characters&quot;: &quot;显示不可见字符&quot;,
+&quot;Word count&quot;: &quot;字数统计&quot;,
+&quot;Words: {0}&quot;: &quot;字数：{0}&quot;,
+&quot;{0} words&quot;: &quot;{0} 个字&quot;,
+&quot;File&quot;: &quot;文件&quot;,
+&quot;Edit&quot;: &quot;编辑&quot;,
+&quot;Insert&quot;: &quot;插入&quot;,
+&quot;View&quot;: &quot;查看&quot;,
+&quot;Format&quot;: &quot;格式&quot;,
+&quot;Table&quot;: &quot;表格&quot;,
+&quot;Tools&quot;: &quot;工具&quot;,
+&quot;Powered by {0}&quot;: &quot;Powered by {0}&quot;,
+&quot;Rich Text Area. Press ALT-F9 for menu. Press ALT-F10 for toolbar. Press ALT-0 for help&quot;: &quot;在编辑区按ALT+F9打开菜单，按ALT+F10打开工具栏，按ALT+0查看帮助&quot;,
+&quot;Image title&quot;: &quot;图片标题&quot;,
+&quot;Border width&quot;: &quot;边框宽度&quot;,
+&quot;Border style&quot;: &quot;边框样式&quot;,
+&quot;Error&quot;: &quot;错误&quot;,
+&quot;Warn&quot;: &quot;警告&quot;,
+&quot;Valid&quot;: &quot;有效&quot;,
+&quot;To open the popup, press Shift+Enter&quot;: &quot;此快捷为软回车（插入&lt;br&gt;）&quot;,
+&quot;Rich Text Area. Press ALT-0 for help.&quot;: &quot;编辑区. 按Alt+0键打开帮助&quot;,
+&quot;System Font&quot;: &quot;默认字体&quot;,
+&quot;Failed to upload image: {0}&quot;: &quot;图片上传失败: {0}&quot;,
+&quot;Failed to load plugin: {0} from url {1}&quot;: &quot;插件加载失败: {0} - {1}&quot;,
+&quot;Failed to load plugin url: {0}&quot;: &quot;插件加载失败: {0}&quot;,
+&quot;Failed to initialize plugin: {0}&quot;: &quot;插件初始化失败: {0}&quot;,
+&quot;example&quot;: &quot;示例&quot;,
+&quot;Search&quot;: &quot;查找&quot;,
+&quot;All&quot;: &quot;全部&quot;,
+&quot;Currency&quot;: &quot;货币&quot;,
+&quot;Text&quot;: &quot;文本&quot;,
+&quot;Quotations&quot;: &quot;引用&quot;,
+&quot;Mathematical&quot;: &quot;数学运算符&quot;,
+&quot;Extended Latin&quot;: &quot;拉丁语扩充&quot;,
+&quot;Symbols&quot;: &quot;符号&quot;,
+&quot;Arrows&quot;: &quot;箭头&quot;,
+&quot;User Defined&quot;: &quot;自定义&quot;,
+&quot;dollar sign&quot;: &quot;美元&quot;,
+&quot;currency sign&quot;: &quot;货币&quot;,
+&quot;euro-currency sign&quot;: &quot;欧元&quot;,
+&quot;colon sign&quot;: &quot;冒号&quot;,
+&quot;cruzeiro sign&quot;: &quot;克鲁赛罗币&quot;,
+&quot;french franc sign&quot;: &quot;法郎&quot;,
+&quot;lira sign&quot;: &quot;里拉&quot;,
+&quot;mill sign&quot;: &quot;密尔&quot;,
+&quot;naira sign&quot;: &quot;奈拉&quot;,
+&quot;peseta sign&quot;: &quot;比塞塔&quot;,
+&quot;rupee sign&quot;: &quot;卢比&quot;,
+&quot;won sign&quot;: &quot;韩元&quot;,
+&quot;new sheqel sign&quot;: &quot;新谢克尔&quot;,
+&quot;dong sign&quot;: &quot;越南盾&quot;,
+&quot;kip sign&quot;: &quot;老挝基普&quot;,
+&quot;tugrik sign&quot;: &quot;图格里克&quot;,
+&quot;drachma sign&quot;: &quot;德拉克马&quot;,
+&quot;german penny symbol&quot;: &quot;德国便士&quot;,
+&quot;peso sign&quot;: &quot;比索&quot;,
+&quot;guarani sign&quot;: &quot;瓜拉尼&quot;,
+&quot;austral sign&quot;: &quot;澳元&quot;,
+&quot;hryvnia sign&quot;: &quot;格里夫尼亚&quot;,
+&quot;cedi sign&quot;: &quot;塞地&quot;,
+&quot;livre tournois sign&quot;: &quot;里弗弗尔&quot;,
+&quot;spesmilo sign&quot;: &quot;一千spesoj的货币符号，该货币未使用&quot;,
+&quot;tenge sign&quot;: &quot;坚戈&quot;,
+&quot;indian rupee sign&quot;: &quot;印度卢比&quot;,
+&quot;turkish lira sign&quot;: &quot;土耳其里拉&quot;,
+&quot;nordic mark sign&quot;: &quot;北欧马克&quot;,
+&quot;manat sign&quot;: &quot;马纳特&quot;,
+&quot;ruble sign&quot;: &quot;卢布&quot;,
+&quot;yen character&quot;: &quot;日元&quot;,
+&quot;yuan character&quot;: &quot;人民币元&quot;,
+&quot;yuan character, in hong kong and taiwan&quot;: &quot;元的繁体字&quot;,
+&quot;yen\/yuan character variant one&quot;: &quot;元（大写）&quot;,
+&quot;Loading emoticons...&quot;: &quot;正在加载表情文字...&quot;,
+&quot;Could not load emoticons&quot;: &quot;不能加载表情文字&quot;,
+&quot;People&quot;: &quot;人类&quot;,
+&quot;Animals and Nature&quot;: &quot;动物和自然&quot;,
+&quot;Food and Drink&quot;: &quot;食物和饮品&quot;,
+&quot;Activity&quot;: &quot;活动&quot;,
+&quot;Travel and Places&quot;: &quot;旅游和地点&quot;,
+&quot;Objects&quot;: &quot;物件&quot;,
+&quot;Flags&quot;: &quot;旗帜&quot;,
+&quot;Characters&quot;: &quot;字数&quot;,
+&quot;Characters (no spaces)&quot;: &quot;字数（不含空格）&quot;,
+&quot;Error: Form submit field collision.&quot;: &quot;错误: 表单提交字段冲突.&quot;,
+&quot;Error: No form element found.&quot;: &quot;错误: 未找到可用的form.&quot;,
+&quot;Update&quot;: &quot;更新&quot;,
+&quot;Color swatch&quot;: &quot;颜色样本&quot;,
+&quot;Turquoise&quot;: &quot;青绿&quot;,
+&quot;Green&quot;: &quot;绿色&quot;,
+&quot;Blue&quot;: &quot;蓝色&quot;,
+&quot;Purple&quot;: &quot;紫色&quot;,
+&quot;Navy Blue&quot;: &quot;海军蓝&quot;,
+&quot;Dark Turquoise&quot;: &quot;深蓝绿色&quot;,
+&quot;Dark Green&quot;: &quot;暗绿&quot;,
+&quot;Medium Blue&quot;: &quot;中蓝&quot;,
+&quot;Medium Purple&quot;: &quot;中紫&quot;,
+&quot;Midnight Blue&quot;: &quot;深蓝&quot;,
+&quot;Yellow&quot;: &quot;黄色&quot;,
+&quot;Orange&quot;: &quot;橙色&quot;,
+&quot;Red&quot;: &quot;红色&quot;,
+&quot;Light Gray&quot;: &quot;浅灰&quot;,
+&quot;Gray&quot;: &quot;灰色&quot;,
+&quot;Dark Yellow&quot;: &quot;暗黄&quot;,
+&quot;Dark Orange&quot;: &quot;暗橙&quot;,
+&quot;Dark Red&quot;: &quot;暗红&quot;,
+&quot;Medium Gray&quot;: &quot;中灰&quot;,
+&quot;Dark Gray&quot;: &quot;深灰&quot;,
+&quot;Black&quot;: &quot;黑色&quot;,
+&quot;White&quot;: &quot;白色&quot;,
+&quot;Switch to or from fullscreen mode&quot;: &quot;切换全屏模式&quot;,
+&quot;Open help dialog&quot;: &quot;打开帮助对话框&quot;,
+&quot;history&quot;: &quot;历史&quot;,
+&quot;styles&quot;: &quot;样式&quot;,
+&quot;formatting&quot;: &quot;格式化&quot;,
+&quot;alignment&quot;: &quot;对齐&quot;,
+&quot;indentation&quot;: &quot;缩进&quot;,
+&quot;permanent pen&quot;: &quot;记号笔&quot;,
+&quot;comments&quot;: &quot;注释&quot;,
+&quot;Anchor&quot;: &quot;锚点&quot;,
+&quot;Special character&quot;: &quot;特殊字符&quot;,
+&quot;Code sample&quot;: &quot;代码示例&quot;,
+&quot;Color&quot;: &quot;颜色&quot;,
+&quot;Emoticons&quot;: &quot;表情&quot;,
+&quot;Document properties&quot;: &quot;文档属性&quot;,
+&quot;Image&quot;: &quot;图片&quot;,
+&quot;Insert link&quot;: &quot;插入链接&quot;,
+&quot;Target&quot;: &quot;目标&quot;,
+&quot;Link&quot;: &quot;链接&quot;,
+&quot;Poster&quot;: &quot;封面&quot;,
+&quot;Media&quot;: &quot;音视频&quot;,
+&quot;Print&quot;: &quot;打印&quot;,
+&quot;Prev&quot;: &quot;上一个&quot;,
+&quot;Find and replace&quot;: &quot;查找并替换&quot;,
+&quot;Whole words&quot;: &quot;全字匹配&quot;,
+&quot;Spellcheck&quot;: &quot;拼写检查&quot;,
+&quot;Caption&quot;: &quot;标题&quot;,
+&quot;Insert template&quot;: &quot;插入模板&quot;,
+//以下为补充汉化内容 by 莫若卿
+&quot;Code view&quot;: &quot;代码区域&quot;,
+&quot;Select...&quot;: &quot;选择...&quot;,
+&quot;Format Painter&quot;: &quot;格式刷&quot;,
+&quot;No templates defined.&quot;: &quot;无内置模板&quot;,
+&quot;Special character...&quot;: &quot;特殊字符...&quot;,
+&quot;Open link&quot;: &quot;打开链接&quot;,
+&quot;None&quot;: &quot;无&quot;,
+&quot;Count&quot;: &quot;统计&quot;,
+&quot;Document&quot;: &quot;整个文档&quot;,
+&quot;Selection&quot;: &quot;选取部分&quot;,
+&quot;Words&quot;: &quot;字词数&quot;,
+&quot;{0} characters&quot;: &quot;{0} 个字符&quot;,
+&quot;Alternative source URL&quot;: &quot;替代资源地址&quot;,
+&quot;Alternative description&quot;: &quot;替代说明文字&quot;,
+&quot;Accessibility&quot;: &quot;可访问性&quot;,
+&quot;Image is decorative&quot;: &quot;仅用于装饰&quot;,
+//5.6新增
+&quot;Line height&quot;: &quot;行高&quot;,
+&quot;Cut column&quot;: &quot;剪切列&quot;,
+&quot;Copy column&quot;: &quot;复制列&quot;,
+&quot;Paste column before&quot;: &quot;粘贴到前方&quot;,
+&quot;Paste column after&quot;: &quot;粘贴到后方&quot;,
+&quot;Copy column&quot;: &quot;复制列&quot;,
+//帮助窗口内的文字
+&quot;Version&quot;: &quot;版本&quot;,
+&quot;Keyboard Navigation&quot;: &quot;键盘导航&quot;,
+&quot;Open popup menu for split buttons&quot;: &quot;该组合键的作用是软回车（插入br）&quot;,
+});
+</code></pre>
+<h1 id="功能按钮点击无反应问题">功能按钮点击无反应问题</h1>
+<p>由于z-index导致的</p>
+<pre><code>.tox
+  z-index: 9999 !important
+</code></pre>
+</div>
+      </div>
+      <div class="footer">
+        <a href="https://beian.miit.gov.cn" target="_blank">黔ICP备2021005697号</a> © COPYRIGHT 2022 FANMR.CN
+      </div>
+    </div>
+    <div class="right">
+      <div class="nav">
+        <a href="/" title="首页">🏡</a>
+        <a href="/navigation.html" title="导航">🚴‍♂️</a>
+        <a href="/about.html" title="作者">👨‍🌾</a>
+        <a href="https://github.com/fanmore" target="_blank" title="Github">🐞</a>
+        <a href="https://gitee.com/riskfan" target="_blank" title="Gitee">🎃</a>
+      </div>
+
+      <div id="outline"><a href="#相关链接" id="outline-相关链接" class="">相关链接</a><a href="#安装" id="outline-安装" class="">安装</a><a href="#自定义组件" id="outline-自定义组件" class="">自定义组件</a><a href="#全局注册" id="outline-全局注册" class="">全局注册</a><a href="#使用方式" id="outline-使用方式" class="">使用方式</a><a href="#中文汉化" id="outline-中文汉化" class="">中文汉化</a><a href="#功能按钮点击无反应问题" id="outline-功能按钮点击无反应问题" class="">功能按钮点击无反应问题</a></div>
+      <div id="backTop" onclick="backTop()"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <!-- 图片预览 -->
+  <link rel="stylesheet" href="/static/viewer.min.css">
+  <script src="/static/viewer.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // 分类点击
+      $(".category-item-text").click(function () {
+        let item = $(this).parent().find('.category-child')
+        let allItem = $('.category').find('.category-child')
+        for (const iterator of allItem) {
+          if (item.is(iterator)) {
+            if ($(item).css('display') == 'none') {
+              $(item).slideDown();
+            } else {
+              $(item).slideUp();
+            }
+          } else {
+            $(iterator).slideUp()
+          }
+        }
+      });
+
+      // 获取文章目录
+      let outline = $('#content').find('h1, h2')
+      let outlineId = []
+      for (let item of outline) {
+        outlineId.push($(item).attr('id'))
+      }
+      // 滚动监听
+      $(document).scroll(function () {
+        // 大纲激活项
+        outlineActive()
+
+        // 计算页面滚动比列
+        // 获取窗口高度
+        let bodyHeight = $(document).height()
+        // 获取窗口高度
+        let winHeight = 0
+        if (window.innerHeight) {
+          winHeight = window.innerHeight
+        } else if ((document.body) && (document.body.clientHeight)) {
+          winHeight = document.body.clientHeight
+        }
+        // 获取窗口宽度
+        let winWidth = 0
+        if (window.innerWidth) {
+          winWidth = window.innerWidth
+        } else if ((document.body) && (document.body.clientWidth)) {
+          winWidth = document.body.clientWidth
+        }
+        let scrollRatio = Math.min(parseInt((top / (bodyHeight - winHeight)) * 100) + 1, 100)
+        $('#backTop').html('<svg width="13px" height="13px" style="top:1px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 244l144-144l144 144"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M256 120v292"></path></svg> ' + scrollRatio + '%')
+        if (top > 50 && winWidth > 1100) {
+          $('#backTop').css({ 'display': 'block' })
+        } else {
+          $('#backTop').css({ 'display': 'none' })
+        }
+      })
+
+      // 大纲激活项
+      outlineActive()
+
+      // 大纲激活项
+      function outlineActive() {
+        let top = $(document).scrollTop();
+        if (top < 140) {
+          $('#outline-' + outlineId[0]).addClass('outline-active')
+        } else {
+          for (let i = 0; i < outlineId.length; i++) {
+            // 是最后一个或后一个之前
+            if (top > $('#' + outlineId[i]).offset().top - 1 && (i === outlineId.length - 1 || top < $('#' + outlineId[i + 1]).offset().top - 1)) {
+              $('#outline-' + outlineId[i]).addClass('outline-active')
+            } else {
+              $('#outline-' + outlineId[i]).removeClass('outline-active')
+            }
+          }
+        }
+      }
+    });
+
+    // 返回顶部
+    function backTop() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
+
+    // 代办事项样式
+    $("input[type='checkbox']").parents("li").css({ "list-style-type": "none", "margin-left": "-23px" })
+
+    // 链接新窗口打开
+    $('#content').on('click', 'a', function (e) {
+      e.target.target = '_blank'
+    })
+
+    // 图片放大
+    new Viewer(document.getElementById('content'))
+  </script>
+</body>
+
+</html>

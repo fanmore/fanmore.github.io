@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/static/logo.png">
+  <title>计算机网络 | FANMR.CN</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100.1vh;
+      font-family: Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      /* background-color: #f6f6f7; */
+      background-color: #fff;
+      color: #4c4b52;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* 定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    ::-webkit-scrollbar-thumb {
+      background-color: #0003;
+      border-radius: 10px;
+    }
+
+    /* 滑块hover效果 */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B2B2B2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* 布局 */
+    .container {
+      width: 1380px;
+      display: flex;
+      margin: 0 auto;
+    }
+
+    .left {
+      width: 260px;
+      height: 100vh;
+      padding-right: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    .center {
+      width: 840px;
+      background-color: #fff;
+    }
+
+    .right {
+      width: 260px;
+      height: 100vh;
+      padding-left: 15px;
+      position: sticky;
+      top: 0;
+    }
+
+    /* 网站名称 */
+    .site {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+    }
+
+    .site a {
+      color: #4c4b52;
+      font-size: 18px;
+      font-weight: bold;
+
+    }
+
+    .site span {
+      display: inline-block;
+      font-size: 13px;
+      color: #999;
+      margin-left: 20px;
+    }
+
+    /* 导航 */
+    .nav {
+      width: 100%;
+      height: 64px;
+      line-height: 64px;
+      border-bottom: 1px solid #dfdfe1;
+      text-align: right;
+    }
+
+    .nav a {
+      font-size: 18px;
+      display: inline-block;
+      margin-left: 15px;
+      position: relative;
+    }
+
+    .nav a::after {
+      content: '';
+      display: block;
+      width: 35px;
+      height: 35px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      position: absolute;
+      top: 13px;
+      left: -6px;
+      transition: all .25s;
+    }
+
+    .nav a:hover::after {
+      border: 1px solid #dfdfe1;
+    }
+
+    /* 分类 */
+    .category {
+      margin-top: 15px;
+      font-size: 13.5px;
+      padding: 5px;
+      max-height: 70vh;
+      overflow: scroll;
+    }
+
+    /* 定义滚动条宽度（竖向）、高度（横向）及背景（容器） */
+    .category::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条轨道 */
+    .category::-webkit-scrollbar-track {
+      background-color: #fff;
+      border-radius: 10px;
+    }
+
+    /* 定义滚动条滑块 */
+    .category::-webkit-scrollbar-thumb {
+      background-color: #fff;
+      transition: all .2s;
+      border-radius: 10px;
+    }
+
+    .category:hover::-webkit-scrollbar {
+      background-color: #f5f6f7;
+    }
+
+    .category:hover::-webkit-scrollbar-thumb {
+      background-color: #0003;
+    }
+
+    .category-item {
+      margin: 3px 0;
+      padding: 2px 0;
+    }
+
+
+    .category-item-text {
+      color: #555;
+      cursor: pointer;
+      transition: all .1s;
+    }
+
+    .category-item-text span:nth-child(2) {
+      float: right;
+      color: #999;
+    }
+
+    .category-item-text:hover,
+    .category-item-text:hover span:nth-child(2) {
+      color: #ec5c30;
+    }
+
+    .category-child {
+      display: none;
+    }
+
+    .category-child a {
+      font-size: 13.5px;
+      display: block;
+      margin-left: 16px;
+      color: #555;
+      padding: 5px 0;
+      transition: all .1s;
+    }
+
+    .category-child a:first-child {
+      margin-top: 7px;
+    }
+
+    .category-child a:last-child {
+      margin-bottom: 7px;
+    }
+
+    .category-child a:hover {
+      color: #ec5c30;
+    }
+
+    .category-child-active {
+      color: #ec5c30 !important;
+    }
+
+    /* 中间内容 */
+    .content {
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #555;
+      margin: 20px 0 15px 0;
+      text-align: center;
+    }
+
+    .content-info {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .content-info span {
+      margin: 0 5px;
+      color: #222;
+    }
+
+    /* 大纲 */
+    #outline {
+      margin-top: 15px;
+      padding: 3px 5px 3px 10px;
+      max-height: 70vh;
+      position: relative;
+
+    }
+
+    #ouline:hover::after {
+      background-color: #c5c5c6;
+    }
+
+    /* 定义滚动条 */
+    #outline::-webkit-scrollbar {
+      width: 0;
+    }
+
+    #outline a {
+      display: block;
+      font-size: 13.5px;
+      color: #4c4b52;
+      padding: 3px 5px;
+      margin: 2px 0;
+      border-radius: 4px;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
+
+    #outline a:hover {
+      color: #ec5c30;
+    }
+
+    .outline-active {
+      color: #23a057 !important;
+      position: relative;
+      background-color: #def1e6;
+    }
+
+    .outline-2 {
+      padding-left: 30px !important;
+    }
+
+    #backTop {
+      cursor: pointer;
+      width: 100%;
+      height: 30px;
+      text-align: center;
+      line-height: 32px;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    #backTop:hover {
+      color: #23a057;
+    }
+
+    /* 底部 */
+    .footer {
+      width: 1380px;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+      border-top: 1px solid #dfdfe1;
+      margin-left: -270px;
+      padding: 20px 0;
+      background-color: #fff;
+    }
+
+    .footer a {
+      color: #4c4b52;
+    }
+
+
+
+    /* 文章样式 */
+    .article-content {
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    /* 1级标题 */
+    .article-content h1 {
+      font-size: 1.4em;
+      padding-top: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .article-content h1:after {
+      content: 'h1';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 2级标题 */
+    .article-content h2 {
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+
+    .article-content h2:after {
+      content: 'h2';
+      color: rgba(0, 0, 0, .2);
+      font-size: 14px;
+      display: inline-block;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+
+    /* 引用 */
+    .article-content blockquote {
+      border-left: 5px solid #1a8971;
+      background-color: #eff2f3;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .article-content blockquote p {
+      margin: 0;
+    }
+
+    /* 图片 */
+    .article-content img {
+      max-width: 100%;
+      display: block;
+      margin: 10px auto;
+      cursor: pointer;
+      border: 1px solid #eee;
+    }
+
+    /* 代码 */
+    .article-content code {
+      line-height: 1.6;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+      background-color: #eff2f3;
+    }
+
+    .article-content pre {
+      background: #eff2f3;
+      overflow: auto;
+      padding: 1em;
+      line-height: 1.5 !important;
+    }
+
+    .article-content pre::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .article-content p code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    .article-content li code {
+      background: #eff2f3;
+      color: #ff7600;
+      margin: 0 3px;
+      display: inline-block;
+      padding: 0 5px;
+      font-size: 14px;
+    }
+
+    code span {
+      font-family: Consolas, "Courier New", "Microsoft Yahei", monospace !important;
+    }
+
+    /* 表格 */
+    .article-content table {
+      width: 100%;
+      border-right: 1px solid #EBEEF5;
+      border-top: 1px solid #EBEEF5;
+      border-collapse: collapse;
+    }
+
+    .article-content th,
+    .article-content td {
+      text-align: center;
+      border-left: 1px solid #EBEEF5;
+      border-bottom: 1px solid #EBEEF5;
+      padding: 7px 10px !important;
+    }
+
+    .article-content th {
+      font-weight: bold !important;
+      background-color: #f8f8f8;
+    }
+
+    .article-content a {
+      color: #34a9d8;
+      text-decoration: none;
+    }
+
+    .article-content a:hover {
+      color: #ff7600;
+    }
+
+    /* 代办事项 */
+    .article-content input {
+      position: relative;
+      top: 1px;
+    }
+
+    input[type='checkbox'] {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      font-size: 14px;
+    }
+
+    input[type='checkbox']::after {
+      border-radius: 3px;
+      position: absolute;
+      top: 0;
+      background-color: white;
+      color: #000;
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      visibility: visible;
+      padding-left: 0;
+      text-align: center;
+      content: ' ';
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+    }
+
+    input[type='checkbox']:checked::before {
+      content: '✓';
+      font-size: 13px;
+      font-weight: bold;
+      color: #ff7600;
+      position: absolute;
+      display: inline-block;
+      z-index: 10;
+      top: -2px;
+      left: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="site"><a href="/">🥝FANMR.CN</a><span>热爱，追求</span></div>
+      <div class="category"><div class="category-item"><div class="category-item-text"><span>杂文随笔</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230213110145.html" class="">Hexo博客：静态博客</a><a href="/article/20230214142334.html" class="">Hexo博客：Next主题</a><a href="/article/20230214142852.html" class="">Hexo博客：进阶使用</a><a href="/article/20230214142904.html" class="">Hexo博客：高级配置</a><a href="/article/20230214171402.html" class="">基于Node的静态博客</a></div></div><div class="category-item"><div class="category-item-text"><span>前端基础</span><span>10</span></div><div class="category-child" style="display:none"><a href="/article/20230214142926.html" class="">HTML知识</a><a href="/article/20230214142938.html" class="">CSS知识</a><a href="/article/20230214142943.html" class="">JS常用知识</a><a href="/article/20230214142952.html" class="">JS格式化时间戳</a><a href="/article/20230214143001.html" class="">JS获取浏览器窗口宽高</a><a href="/article/20230214143007.html" class="">JQ常用操作</a><a href="/article/20230214143014.html" class="">JQ复制到剪切板插件</a><a href="/article/20230214143021.html" class="">Three.js基础知识</a><a href="/article/20230214143028.html" class="">TypeScript基础知识</a><a href="/article/20230309185839.html" class="">Electron</a></div></div><div class="category-item"><div class="category-item-text"><span>Vue相关</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143114.html" class="">Vite使用及扩展</a><a href="/article/20230214143120.html" class="">Vue3知识及其新特性</a><a href="/article/20230214143125.html" class="">Vue3父子组件</a><a href="/article/20230214143130.html" class="">Vue常用知识积累</a><a href="/article/20230214143135.html" class="">Vue初始化页面动画</a><a href="/article/20230214143140.html" class="">Axios表单提交</a><a href="/article/20230214143147.html" class="">Element表格</a><a href="/article/20230214143153.html" class="">Element级联下拉</a><a href="/article/20230214143159.html" class="">Element文件上传</a><a href="/article/20230214143205.html" class="">Element对话框</a><a href="/article/20230214143213.html" class="">Vue二维码解决方案</a><a href="/article/20230214143222.html" class="">Vue3中使用TinyMCE富文本</a><a href="/article/20230214143227.html" class="">NProgress加载条</a><a href="/article/20230214143234.html" class="">Vue3框架动态菜单实现</a><a href="/article/20230214143240.html" class="">Vue3使用Echarts</a><a href="/article/20230214143246.html" class="">Vue3处理Excel导入导出</a><a href="/article/20230326162835.html" class="">Uniapp</a></div></div><div class="category-item"><div class="category-item-text"><span>Java基础</span><span>17</span></div><div class="category-child" style="display:none"><a href="/article/20230214143300.html" class="">Java入门知识</a><a href="/article/20230215151103.html" class="">Java常用API</a><a href="/article/20230223141136.html" class="">Java集合</a><a href="/article/20230214143305.html" class="">Java常用知识积累</a><a href="/article/20230214143309.html" class="">Lambda表达式</a><a href="/article/20230214143430.html" class="">try-with-resource</a><a href="/article/20230214143437.html" class="">Java注解</a><a href="/article/20230214143442.html" class="">Java反射</a><a href="/article/20230214143448.html" class="">Java多线程</a><a href="/article/20230214143453.html" class="">JUC并发工具包</a><a href="/article/20230214143457.html" class="">静态代理模式</a><a href="/article/20230214143501.html" class="">动态代理模式</a><a href="/article/20230214143506.html" class="">JVM结构</a><a href="/article/20230326164410.html" class="">JVM垃圾回收器</a><a href="/article/20230214143513.html" class="">树结构数据生成工具</a><a href="/article/20230214143518.html" class="">经纬度计算工具</a><a href="/article/20230214143914.html" class="">Tomcat安装</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringBoot</span><span>20</span></div><div class="category-child" style="display:none"><a href="/article/20230328161840.html" class="">Spring介绍</a><a href="/article/20230214143924.html" class="">application配置</a><a href="/article/20230214143930.html" class="">Lombok中的Builder</a><a href="/article/20230214143934.html" class="">AOP打印请求响应耗时</a><a href="/article/20230214143942.html" class="">RestTemplate</a><a href="/article/20230214143947.html" class="">SpringBoot开发中常见工具类</a><a href="/article/20230214143952.html" class="">分布式锁</a><a href="/article/20230214143957.html" class="">邮件功能</a><a href="/article/20230214144002.html" class="">定时任务</a><a href="/article/20230214144009.html" class="">异步</a><a href="/article/20230214144013.html" class="">JPA</a><a href="/article/20230214144018.html" class="">基于hutool读excel</a><a href="/article/20230214144026.html" class="">省市区三级数据来源</a><a href="/article/20230214144031.html" class="">JSR303</a><a href="/article/20230214144036.html" class="">在线预览解决方案</a><a href="/article/20230214144041.html" class="">WebSocket</a><a href="/article/20230214144046.html" class="">全局异常处理</a><a href="/article/20230319144046.html" class="">支付相关</a><a href="/article/20230326164910.html" class="">SpringDoc</a><a href="/article/20230326174228.html" class="">knife4j</a></div></div><div class="category-item"><div class="category-item-text"><span>SpringMVC</span><span>6</span></div><div class="category-child" style="display:none"><a href="/article/20230214144055.html" class="">Thymeaf</a><a href="/article/20230214144101.html" class="">跨域处理</a><a href="/article/20230214144108.html" class="">拦截器</a><a href="/article/20230214144113.html" class="">伪前后端分离</a><a href="/article/20230214144120.html" class="">基于拦截器做权限校验</a><a href="/article/20230214144125.html" class="">REST风格</a></div></div><div class="category-item"><div class="category-item-text"><span>MyBatis</span><span>5</span></div><div class="category-child" style="display:none"><a href="/article/20230214144134.html" class="">MyBatis基本使用与配置</a><a href="/article/20230214144139.html" class="">Mapper使用相关</a><a href="/article/20230214144144.html" class="">MaBatis多数据源配置</a><a href="/article/20230214144149.html" class="">MyBatisPlus</a><a href="/article/20230214144153.html" class="">基于MyBatisPlus的正向工程</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Netflix</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144200.html" class="">微服务</a><a href="/article/20230214144205.html" class="">服务的消费与提供</a><a href="/article/20230214144209.html" class="">Eureka</a><a href="/article/20230214144213.html" class="">Actuator</a><a href="/article/20230214144218.html" class="">Ribbon</a><a href="/article/20230214144223.html" class="">Feign</a><a href="/article/20230214144229.html" class="">Zuul</a></div></div><div class="category-item"><div class="category-item-text"><span>Spring Cloud Alibaba</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144237.html" class="">简介与搭建</a><a href="/article/20230214144242.html" class="">Nacos注册中心</a><a href="/article/20230214144247.html" class="">Ribbon</a><a href="/article/20230214144252.html" class="">OpenFeign</a><a href="/article/20230214144258.html" class="">Nacos配置中心</a><a href="/article/20230214144306.html" class="">Geteway</a><a href="/article/20230214144310.html" class="">Sentinel</a></div></div><div class="category-item"><div class="category-item-text"><span>Netty</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144318.html" class="">Netty入门知识</a></div></div><div class="category-item"><div class="category-item-text"><span>RocketMQ</span><span>1</span></div><div class="category-child" style="display:none"><a href="/article/20230214144323.html" class="">RocketMQ介绍与安装</a></div></div><div class="category-item"><div class="category-item-text"><span>MySQL</span><span>16</span></div><div class="category-child" style="display:none"><a href="/article/20230214144332.html" class="">MySQL基础知识</a><a href="/article/20230224103504.html" class="">MySQL多表查询</a><a href="/article/20230214144340.html" class="">MySQL常用函数及解决方案</a><a href="/article/20230214144346.html" class="">MySQL视图</a><a href="/article/20230214144351.html" class="">MySQL索引</a><a href="/article/20230214144356.html" class="">MySQL存储引擎</a><a href="/article/20230214144402.html" class="">ContOS安装MySQL</a><a href="/article/20230226101051.html" class="">SQL优化</a><a href="/article/20230226145552.html" class="">MySQL存储过程</a><a href="/article/20230226153640.html" class="">MySQL触发器</a><a href="/article/20230226154033.html" class="">MySQL锁</a><a href="/article/20230302103809.html" class="">MySQL管理相关</a><a href="/article/20230302111501.html" class="">MySQL-运维-日志</a><a href="/article/20230302112331.html" class="">MySQL-运维-主从复制</a><a href="/article/20230302122646.html" class="">MySQL-运维-分库分表及MyCat</a><a href="/article/20230302222752.html" class="">MySQL-运维-读写分离</a></div></div><div class="category-item"><div class="category-item-text"><span>Redis</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144409.html" class="">Redis介绍和安装</a><a href="/article/20230214144414.html" class="">Redis配置文件</a><a href="/article/20230214144421.html" class="">Redis持久化</a><a href="/article/20230214144425.html" class="">Redis集群</a><a href="/article/20230214144429.html" class="">Redis语法基础</a><a href="/article/20230214144434.html" class="">Redis进阶使用</a><a href="/article/20230214144439.html" class="">Redis相关问题及解决方案</a></div></div><div class="category-item"><div class="category-item-text"><span>MongoDB</span><span>8</span></div><div class="category-child" style="display:none"><a href="/article/20230214144446.html" class="">Linux安装MongoDB</a><a href="/article/20230214144452.html" class="">MongoDB基础语法</a><a href="/article/20230214144457.html" class="">MongoTemplate</a><a href="/article/20230214144501.html" class="">MongoTemplate中Update操作</a><a href="/article/20230214144509.html" class="">MongoTemplate中聚合查询</a><a href="/article/20230214144515.html" class="">MongoTemplate中日期归档示例</a><a href="/article/20230214144521.html" class="">MongoTemplate使用相关知识归纳</a><a href="/article/20230214144525.html" class="">地理位置存储与距离查询</a></div></div><div class="category-item"><div class="category-item-text"><span>Linux相关</span><span>7</span></div><div class="category-child" style="display:none"><a href="/article/20230214144537.html" class="">Linux常用命令</a><a href="/article/20230214144546.html" class="">Jar启动脚本</a><a href="/article/20230214144550.html" class="">VirtualBox安装CentOS</a><a href="/article/20230214144556.html" class="">CentOS安装Node</a><a href="/article/20230214144601.html" class="">CentOS中的防火墙</a><a href="/article/20230214144607.html" class="">ArchLinux系统安装</a><a href="/article/20230214144612.html" class="">ArchLinux系统使用</a></div></div><div class="category-item"><div class="category-item-text"><span>工具合集</span><span>13</span></div><div class="category-child" style="display:none"><a href="/article/20230214144620.html" class="">IDEA</a><a href="/article/20230214144625.html" class="">Maven介绍</a><a href="/article/20230303154310.html" class="">Maven安装</a><a href="/article/20230214144630.html" class="">Gradle</a><a href="/article/20230214144635.html" class="">Git</a><a href="/article/20230214144532.html" class="">H2数据库</a><a href="/article/20230214144646.html" class="">Nginx安装</a><a href="/article/20230214144650.html" class="">Nginx配置</a><a href="/article/20230214144656.html" class="">VSCode编辑器</a><a href="/article/20230214144701.html" class="">JMeter压测</a><a href="/article/20230214144707.html" class="">smart-doc文档</a><a href="/article/20230214144712.html" class="">Docker</a><a href="/article/20230214144717.html" class="">抓包工具Charles</a></div></div><div class="category-item"><div class="category-item-text"><span>面试题</span><span>6</span></div><div class="category-child" style="display:block"><a href="/article/20230312102225.html" class="">Java基础</a><a href="/article/20230326162650.html" class="">Java集合</a><a href="/article/20230326162733.html" class="">Java多线程</a><a href="/article/20230326162756.html" class="">JVM</a><a href="/article/20230327214859.html" class="">Spring</a><a href="/article/20230328135936.html" class="category-child-active">计算机网络</a></div></div></div>
+    </div>
+    <div class="center">
+      <div class="content">
+        <div class="content-title">计算机网络</div>
+        <div class="content-info">
+          <span>📚面试题</span>
+          <span>⏱2023/03/28</span>
+          
+        </div>
+        <div class="article-content" id="content"><h1 id="http和https的区别？">HTTP和HTTPS的区别？</h1>
+<ul>
+<li>端口号：HTTP默认使用端口号80进行通信，而HTTPS默认使用端口号443进行通信</li>
+<li>安全性：HTTP不是安全的协议，因为数据以明文形式传输，容易被劫持、窃取或篡改。而HTTPS使用SSL/TLS加密协议对数据进行加密，确保数据在传输过程中不被窃取、篡改或伪造</li>
+<li>证书认证：HTTPS需要使用数字证书来验证服务器的身份，防止中间人攻击。而HTTP没有这个认证机制，无法验证服务器的真实身份，容易遭受攻击</li>
+</ul>
+<h1 id="常用的http方法？">常用的HTTP方法？</h1>
+<p>HTTP 协议定义了多种请求方法，其中最常用的方法有以下几种：</p>
+<ol>
+<li>GET：用于获取资源，请求参数附加在URL后面，可以被缓存和收藏</li>
+<li>POST：用于提交数据并创建新资源，请求参数包含在请求体中，不可被缓存或收藏</li>
+<li>PUT：用于更新资源，请求参数包含在请求体中，要求对指定URI的资源进行完全替换</li>
+<li>DELETE：用于删除资源，请求参数附加在URL后面</li>
+<li>HEAD：类似于GET方法，但只返回响应头部信息，不返回实体内容</li>
+<li>OPTIONS：获取服务器支持的HTTP方法列表</li>
+<li>PATCH：用于更新资源，与PUT方法类似，但只更新部分属性</li>
+</ol>
+<h1 id="get和post的区别？">GET和POST的区别？</h1>
+<ul>
+<li>请求参数：GET方法将请求参数附加在URL后面进行传输，而POST方法将请求参数包含在请求体中进行传输</li>
+<li>安全性：GET方法将请求参数暴露在URL中，容易被恶意获取、篡改或缓存。而POST方法将请求参数包含在请求体中，相对更加安全</li>
+<li>支持数据类型：GET方法只支持ASCII字符集，而POST方法支持任意字符集，且可以上传二进制数据</li>
+<li>数据长度限制：GET方法提交的数据量有限制，一般为2048个字符；而POST方法没有数据量大小限制</li>
+<li>浏览器行为：GET方法会被浏览器主动缓存，常用于获取静态资源，点击浏览器的后退按钮时，有可能从缓存中读取页面，不会向服务器重新发送请求。而POST方法不会被缓存，每次点击后退按钮都会向服务器重新发送请求</li>
+</ul>
+<h1 id="三次握手？">三次握手？</h1>
+<p>三次握手用于建立TCP连接，为之后的可靠性传送做准备：</p>
+<ol>
+<li>第一次握手：客户端发送同步序列编号（SYN）包到服务器，请求建立连接。SYN包中包含一个随机的初始序列号ISN（Initial Sequence Number）</li>
+<li>第二次握手：服务器收到SYN包后，回复一个 SYN-ACK 包以确认请求，并向客户端发起自己的SYN包，也包含一个随机的ISN</li>
+<li>第三次握手：客户端收到ACK包后，再向服务器发送一个ACK包以确认连接。此时连接已经建立成功，可以开始数据传输</li>
+</ol>
+<h1 id="四次挥手？">四次挥手？</h1>
+<p>终止一个连接要经过四次挥手：</p>
+<ol>
+<li>第一次挥手：客户端向服务器发送一个FIN包，表示已经完成了数据传输并请求关闭连接</li>
+<li>第二次挥手：服务器收到FIN包后，回复一个ACK包以确认收到了请求，但仍可以继续发送数据</li>
+<li>第三次挥手：如果服务器也要关闭连接，则会向客户端发送一个FIN包，表示它已经没有数据要发送了</li>
+<li>第四次挥手：客户端收到FIN包后，回复一个ACK包以确认收到请求，并进入TIME_WAIT状态。等待2MSL（最长报文段寿命）时间后，才会关闭连接。这样做是为了确保所有网络中的相关数据包都能够被完全接收，避免数据包丢失或延迟而导致的问题</li>
+</ol>
+<h1 id="http状态码？">HTTP状态码？</h1>
+<ul>
+<li>1xx：信息类（Informational），表示请求已被接受，需要继续处理</li>
+<li>2xx：成功类（Successful），表示请求已经被成功接收、理解和处理</li>
+<li>3xx：重定向类（Redirection），表示需要客户端采取进一步的操作才能完成请求</li>
+<li>4xx：客户端错误类（Client Error），表示请求包含语法错误或无法完成请求</li>
+<li>5xx：服务器错误类（Server Error），表示服务器在处理请求时发生了错误</li>
+</ul>
+<h1 id="websocket和http区别？">WebSocket和HTTP区别？</h1>
+<ul>
+<li>连接方式：HTTP每次请求都需要建立一个新的连接，单向通行；WebSocket则是一种全双工通信协议，只需要建立一次连接即可进行双向通信</li>
+<li>数据格式：HTTP传输数据使用的是文本格式，WebSocket传输数据则是二进制数据流的形式</li>
+<li>协议头：HTTP协议头较为繁琐，数据包大小比较大，而WebSocket的协议头相对简单，数据包大小比较小</li>
+<li>跨域：WebSocket不存在跨域问题</li>
+</ul>
+</div>
+      </div>
+      <div class="footer">
+        <a href="https://beian.miit.gov.cn" target="_blank">黔ICP备2021005697号</a> © COPYRIGHT 2022 FANMR.CN
+      </div>
+    </div>
+    <div class="right">
+      <div class="nav">
+        <a href="/" title="首页">🏡</a>
+        <a href="/navigation.html" title="导航">🚴‍♂️</a>
+        <a href="/about.html" title="作者">👨‍🌾</a>
+        <a href="https://github.com/fanmore" target="_blank" title="Github">🐞</a>
+        <a href="https://gitee.com/riskfan" target="_blank" title="Gitee">🎃</a>
+      </div>
+
+      <div id="outline"><a href="#http和https的区别？" id="outline-http和https的区别？" class="">HTTP和HTTPS的区别？</a><a href="#常用的http方法？" id="outline-常用的http方法？" class="">常用的HTTP方法？</a><a href="#get和post的区别？" id="outline-get和post的区别？" class="">GET和POST的区别？</a><a href="#三次握手？" id="outline-三次握手？" class="">三次握手？</a><a href="#四次挥手？" id="outline-四次挥手？" class="">四次挥手？</a><a href="#http状态码？" id="outline-http状态码？" class="">HTTP状态码？</a><a href="#websocket和http区别？" id="outline-websocket和http区别？" class="">WebSocket和HTTP区别？</a></div>
+      <div id="backTop" onclick="backTop()"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <!-- 图片预览 -->
+  <link rel="stylesheet" href="/static/viewer.min.css">
+  <script src="/static/viewer.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // 分类点击
+      $(".category-item-text").click(function () {
+        let item = $(this).parent().find('.category-child')
+        let allItem = $('.category').find('.category-child')
+        for (const iterator of allItem) {
+          if (item.is(iterator)) {
+            if ($(item).css('display') == 'none') {
+              $(item).slideDown();
+            } else {
+              $(item).slideUp();
+            }
+          } else {
+            $(iterator).slideUp()
+          }
+        }
+      });
+
+      // 获取文章目录
+      let outline = $('#content').find('h1, h2')
+      let outlineId = []
+      for (let item of outline) {
+        outlineId.push($(item).attr('id'))
+      }
+      // 滚动监听
+      $(document).scroll(function () {
+        // 大纲激活项
+        outlineActive()
+
+        // 计算页面滚动比列
+        // 获取窗口高度
+        let bodyHeight = $(document).height()
+        // 获取窗口高度
+        let winHeight = 0
+        if (window.innerHeight) {
+          winHeight = window.innerHeight
+        } else if ((document.body) && (document.body.clientHeight)) {
+          winHeight = document.body.clientHeight
+        }
+        // 获取窗口宽度
+        let winWidth = 0
+        if (window.innerWidth) {
+          winWidth = window.innerWidth
+        } else if ((document.body) && (document.body.clientWidth)) {
+          winWidth = document.body.clientWidth
+        }
+        let scrollRatio = Math.min(parseInt((top / (bodyHeight - winHeight)) * 100) + 1, 100)
+        $('#backTop').html('<svg width="13px" height="13px" style="top:1px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 244l144-144l144 144"></path><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M256 120v292"></path></svg> ' + scrollRatio + '%')
+        if (top > 50 && winWidth > 1100) {
+          $('#backTop').css({ 'display': 'block' })
+        } else {
+          $('#backTop').css({ 'display': 'none' })
+        }
+      })
+
+      // 大纲激活项
+      outlineActive()
+
+      // 大纲激活项
+      function outlineActive() {
+        let top = $(document).scrollTop();
+        if (top < 140) {
+          $('#outline-' + outlineId[0]).addClass('outline-active')
+        } else {
+          for (let i = 0; i < outlineId.length; i++) {
+            // 是最后一个或后一个之前
+            if (top > $('#' + outlineId[i]).offset().top - 1 && (i === outlineId.length - 1 || top < $('#' + outlineId[i + 1]).offset().top - 1)) {
+              $('#outline-' + outlineId[i]).addClass('outline-active')
+            } else {
+              $('#outline-' + outlineId[i]).removeClass('outline-active')
+            }
+          }
+        }
+      }
+    });
+
+    // 返回顶部
+    function backTop() {
+      document.body.scrollTop = 0
+      document.documentElement.scrollTop = 0
+    }
+
+    // 代办事项样式
+    $("input[type='checkbox']").parents("li").css({ "list-style-type": "none", "margin-left": "-23px" })
+
+    // 链接新窗口打开
+    $('#content').on('click', 'a', function (e) {
+      e.target.target = '_blank'
+    })
+
+    // 图片放大
+    new Viewer(document.getElementById('content'))
+  </script>
+</body>
+
+</html>
