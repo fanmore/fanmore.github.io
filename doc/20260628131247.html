@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628131247.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,49 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><h1 id="头部icon写法">头部icon写法</h1>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;shortcut icon&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;图片url&quot;</span>&gt;</span></code></pre>
+<h1 id="http转https">http转https</h1>
+<p>网页中的链接需要都转为https请求，并且数据是动态的情况处理方式</p>
+<pre><code class="hljs"><span class="hljs-comment">&lt;!--指定该网页中http转https访问--&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">&quot;Content-Security-Policy&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;upgrade-insecure-requests&quot;</span>&gt;</span></code></pre>
+<h1 id="a标签打开方式">a标签打开方式</h1>
+<pre><code class="hljs"><span class="language-xml">// 语法
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">&quot;_blank&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span></code></pre>
+<p>可选值：</p>
+<ul>
+<li><code>_blank</code>：新窗口打开</li>
+<li><code>_self</code>：在相同的框架中打开，默认</li>
+<li><code>_parent</code>：父框架中打开</li>
+<li><code>_top</code>：在整个窗口中打开</li>
+<li><code>framename</code>：在指定的框架中打开</li>
+</ul>
+<h1 id="textarea禁止拖拽">textarea禁止拖拽</h1>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">style</span>=<span class="hljs-string">&quot;resize:none;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span></span></code></pre>
+<h1 id="文字禁止选中">文字禁止选中</h1>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onselectstart</span>=<span class="hljs-string">&quot;return false&quot;</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>css方式</p>
+<pre><code class="hljs"><span class="hljs-comment">/* 禁止选中 */</span>
+user-select: none;</code></pre>
+<h1 id="关闭输入框红色波浪线">关闭输入框红色波浪线</h1>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">spellcheck</span>=<span class="hljs-string">&quot;false&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span></code></pre>
+<p>对<code>contenteditable</code>属性同样有效</p>
+<h1 id="svg的引入方式">svg的引入方式</h1>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/lib/svg/wechat-fill.svg&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">object</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;object&quot;</span> <span class="hljs-attr">data</span>=<span class="hljs-string">&quot;/lib/svg/wechat-fill.svg&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;image/svg+xml&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">object</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">embed</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;embed&quot;</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;/lib/svg/wechat-fill.svg&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;image/svg+xml&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span></code></pre>
+<h1 id="svg颜色跟随父容器调节">svg颜色跟随父容器调节</h1>
+<p>关键代码：<code>fill=&quot;currentColor&quot;</code></p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">t</span>=<span class="hljs-string">&quot;1661761707943&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;icon&quot;</span> <span class="hljs-attr">viewBox</span>=<span class="hljs-string">&quot;0 0 1024 1024&quot;</span> <span class="hljs-attr">version</span>=<span class="hljs-string">&quot;1.1&quot;</span> <span class="hljs-attr">xmlns</span>=<span class="hljs-string">&quot;http://www.w3.org/2000/svg&quot;</span>
+  <span class="hljs-attr">p-id</span>=<span class="hljs-string">&quot;12758&quot;</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;16&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;16&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">path</span> <span class="hljs-attr">d</span>=<span class="hljs-string">&quot;M101.188 406.2l248.169 184.115 266.799-181.721-178.15 270.229L624.188 929.2l304.7-828.5z&quot;</span>
+    <span class="hljs-attr">p-id</span>=<span class="hljs-string">&quot;12759&quot;</span> <span class="hljs-attr">fill</span>=<span class="hljs-string">&quot;currentColor&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">path</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span></span></code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#头部icon写法">头部icon写法</a></div><div id="outline-1" style="padding-left:0px"><a href="#http转https">http转https</a></div><div id="outline-2" style="padding-left:0px"><a href="#a标签打开方式">a标签打开方式</a></div><div id="outline-3" style="padding-left:0px"><a href="#textarea禁止拖拽">textarea禁止拖拽</a></div><div id="outline-4" style="padding-left:0px"><a href="#文字禁止选中">文字禁止选中</a></div><div id="outline-5" style="padding-left:0px"><a href="#关闭输入框红色波浪线">关闭输入框红色波浪线</a></div><div id="outline-6" style="padding-left:0px"><a href="#svg的引入方式">svg的引入方式</a></div><div id="outline-7" style="padding-left:0px"><a href="#svg颜色跟随父容器调节">svg颜色跟随父容器调节</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +573,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

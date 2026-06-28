@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FANMR.CN</title>
+    <link rel="shortcut icon" href="/static/logo.png" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 101vh;
+        color: #3c3c43;
+        line-height: 1.7;
+        font-size: 15px;
+      }
+      html {
+        scroll-padding-top: 60px; /* 顶部导航高度 */
+      }
+      /* 头部 */
+      .header {
+        height: 60px;
+        border-bottom: 1px solid #c2c2c4;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+      }
+      .header-left a {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: #3c3c43;
+      }
+      .header-left img {
+        width: 30px;
+        position: relative;
+        top: -2px;
+      }
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .header-right a {
+        text-decoration: none;
+        color: #3c3c43;
+      }
+
+      /* 分类 */
+      .cate {
+        position: fixed;
+        top: 60px;
+        bottom: 0;
+        width: 320px;
+        border-right: 1px solid #c2c2c4;
+        padding: 16px;
+        font-size: 13px;
+        color: #333;
+      }
+      .cate-parent {
+        padding: 2px 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .cate-parent span:nth-child(2) {
+        margin-left: auto;
+      }
+      .cate-parent:hover {
+        color: #299764;
+      }
+      .cate-item-box {
+        padding-left: 24px;
+        display: none;
+      }
+      .cate-item-box a {
+        display: block;
+        text-decoration: none;
+        color: #3c3c43;
+        padding: 2px 0;
+      }
+      .cate-item-box a:hover {
+        color: #299764;
+      }
+      /* 内容 */
+      .content {
+        width: 840px;
+        margin: 0 auto;
+        padding: 20px 0 40px 0;
+      }
+
+      /* 大纲 */
+      .outline {
+        position: fixed;
+        top: 100px;
+        right: 0;
+        width: 300px;
+        padding: 0 16px;
+        border-left: 1px solid #c2c2c4;
+      }
+      .outline a {
+        text-decoration: none;
+        color: #3c3c43;
+        font-size: 13px;
+        padding: 2px 0;
+        display: block;
+      }
+      .outline a:hover {
+        color: #299764;
+      }
+      .outline-active a {
+        color: #299764 !important;
+      }
+
+      /* 高亮代码 */
+      pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1em;
+      }
+      code.hljs {
+        padding: 3px 5px;
+      }
+      .hljs {
+        color: #383a42;
+        background: #fafafa;
+      }
+      .hljs-comment,
+      .hljs-quote {
+        color: #a0a1a7;
+        font-style: italic;
+      }
+      .hljs-doctag,
+      .hljs-formula,
+      .hljs-keyword {
+        color: #a626a4;
+      }
+      .hljs-deletion,
+      .hljs-name,
+      .hljs-section,
+      .hljs-selector-tag,
+      .hljs-subst {
+        color: #e45649;
+      }
+      .hljs-literal {
+        color: #0184bb;
+      }
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string,
+      .hljs-regexp,
+      .hljs-string {
+        color: #50a14f;
+      }
+      .hljs-attr,
+      .hljs-number,
+      .hljs-selector-attr,
+      .hljs-selector-class,
+      .hljs-selector-pseudo,
+      .hljs-template-variable,
+      .hljs-type,
+      .hljs-variable {
+        color: #986801;
+      }
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-symbol,
+      .hljs-title {
+        color: #4078f2;
+      }
+      .hljs-built_in,
+      .hljs-class .hljs-title,
+      .hljs-title.class_ {
+        color: #c18401;
+      }
+      .hljs-emphasis {
+        font-style: italic;
+      }
+      .hljs-strong {
+        font-weight: 700;
+      }
+      .hljs-link {
+        text-decoration: underline;
+      }
+
+      /* 代码复制 */
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        cursor: pointer;
+        color: #999;
+        font-size: 12px;
+        transition: all 0.2s;
+        opacity: 0;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 2px 6px;
+        background-color: #fff;
+      }
+
+      .copy-btn:hover {
+        color: #fc6423;
+      }
+
+
+      /* 图片放大遮罩 */
+      .img-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .img-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        transition: transform 0.1s;
+      }
+
+      /* 文章样式 */
+
+      /* 1级标题 */
+      #content h1 {
+        font-size: 22px;
+        padding-top: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      /* 2级标题 */
+      #content h2 {
+        font-size: 18px;
+      }
+      /* 引用 */
+      #content blockquote {
+        border: 1px solid rgb(165, 194, 255);
+        background: linear-gradient(
+          137deg,
+          rgb(245, 238, 255) 0%,
+          rgb(230, 244, 255) 52%,
+          rgb(236, 240, 255) 97%
+        );
+        padding: 15px;
+        margin: 10px 0;
+        color: rgb(97, 92, 237);
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      #content blockquote p {
+        margin: 0;
+      }
+      /* 图片 */
+      #content img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        cursor: pointer;
+        border: 1px solid #eee;
+      }
+      /* 代码 */
+      #content pre {
+        background-color: #f5f6f7;
+        overflow: auto;
+        padding: 1em;
+        position: relative;
+        border-radius: 6px;
+        padding: 0 0 0 0;
+      }
+      #content pre code {
+        font-size: 13px;
+        font-family:
+          "SF Mono", "Consolas", "Roboto Mono", "Monaco", "Courier New",
+          "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+      }
+      #content code {
+        border-radius: 3px;
+        background-color: #f5f6f7;
+      }
+      #content p code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      #content li code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      /* 表格 */
+      #content table {
+        width: 100%;
+        border-right: 1px solid #ebeef5;
+        border-top: 1px solid #ebeef5;
+        border-collapse: collapse;
+      }
+      #content th,
+      #content td {
+        text-align: left;
+        border-left: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+        padding: 7px 10px !important;
+      }
+      #content th {
+        font-weight: bold !important;
+        background-color: #f8f8f8;
+      }
+      #content a {
+        color: #65a1d6;
+        text-decoration: none;
+        margin: 0 2px;
+        border-bottom: 1px solid #65a1d6;
+      }
+      #content a:hover {
+        color: #ff7600;
+      }
+      /* 有序列表 */
+      #content ol {
+        padding-left: 50px;
+      }
+      /* 代办事项 */
+      #content input {
+        position: relative;
+        top: 1px;
+      }
+      #content input[type="checkbox"] {
+        position: relative;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+        left: -20px;
+        margin-right: -16px;
+      }
+      #content input[type="checkbox"]::after {
+        border-radius: 3px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        color: #000;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        visibility: visible;
+        padding-left: 0;
+        text-align: center;
+        content: " ";
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+      #content input[type="checkbox"]:checked::before {
+        content: "✓";
+        font-size: 12px;
+        font-weight: bold;
+        color: #7459ee;
+        position: absolute;
+        display: inline-block;
+        z-index: 10;
+        top: -1px;
+        left: 3px;
+      }
+    </style>
+    <style>.cate-item-box a[href="/doc/20260628131403.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
+  </head>
+  <body>
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-left">
+        <a href="/">
+          <img src="/static/logo.png" alt="logo" />
+          <span>FANMR.CN</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <a href="/nav.html">网址收集</a>
+        <a href="/author.html">关于作者</a>
+        <a href="https://github.com/fanmore" target="_blank">Github</a>
+        <a href="https://gitee.com/riskfan" target="_blank">Gitee</a>
+      </div>
+    </div>
+    <!-- 分类 -->
+    <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
+    <!-- 内容 -->
+    <div class="content" id="content"><h1 id="display行内块对齐">display行内块对齐</h1>
+<p>两个<code>display: inline-block</code>元素对齐顶部，给没对齐的加：</p>
+<pre><code class="hljs"><span class="hljs-attribute">vertical-align</span>: top</code></pre>
+<p>此时会出现间隙问题，是由div之间的换行和空格造成的，去掉换行和空格即可</p>
+<h1 id="position粘性定位">position粘性定位</h1>
+<p><code>position: sticky;</code>粘性定位的行为就像<code>position:relative;</code>，而当页面滚动超出目标区域时，它的表现就像<code>position:fixed;</code>，它会固定在目标位置</p>
+<p>需要指定<code>top</code>、<code>right</code>、<code>bottom</code>或<code>left</code>之一，同时需要指定该定位容器的父容器的高度才会有效</p>
+<p><strong>注意</strong>：粘性定位最好配合弹性布局使用，弹性布局下的元素高度为最大，直接支持粘性定位，如果不适用弹性布局则需要JS获取页面高度</p>
+<h1 id="position固定定位">position固定定位</h1>
+<p><code>position: fixed;</code>遇到父级transform会失效，表现特征为：fixed元素不会脱离文档流，但是top等属性依然可用</p>
+<h1 id="选中样式定义">选中样式定义</h1>
+<pre><code class="hljs"><span class="hljs-comment">/* 选中文本样式 */</span>
+<span class="hljs-selector-pseudo">::selection</span> {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#f1e6ff</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#333</span> <span class="hljs-meta">!important</span>;
+}</code></pre>
+<h1 id="伪类清除浮动">伪类清除浮动</h1>
+<pre><code class="hljs"><span class="hljs-selector-tag">div</span><span class="hljs-selector-pseudo">:after</span> {
+    <span class="hljs-attribute">content</span>: <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-attribute">display</span>: block;
+    <span class="hljs-attribute">clear</span>: both;
+}</code></pre>
+<h1 id="svg与文字对齐">svg与文字对齐</h1>
+<pre><code class="hljs"><span class="hljs-attribute">position</span>: relative;
+<span class="hljs-attribute">top</span>: <span class="hljs-number">2px</span>;</code></pre>
+<h1 id="居中策略">居中策略</h1>
+<p>页面布局中的居中问题，无论是文字居中，还是元素居中，都比较常见</p>
+<h2 id="水平居中">水平居中</h2>
+<ul>
+<li>对于非块级元素直接使用<code>text-align: center;</code></li>
+<li>对于块级元素可以使用<code>margin: 0 auto;</code></li>
+<li>对于弹性盒子<code>display: flex;</code>中的元素可以使用<code>justify-content: center;</code></li>
+</ul>
+<h2 id="垂直居中">垂直居中</h2>
+<p>对于非块级元素使用<code>line-height</code>，<code>vertical-align</code>对行内元素有效，需要对父容器加<code>line-height</code></p>
+<p>对于块级元素可以使用：</p>
+<pre><code class="hljs">// 先改布局方式fixed或relative
+<span class="hljs-attribute">position</span>: fixed;
+// 设置<span class="hljs-attribute">top</span>
+<span class="hljs-attribute">top</span>: <span class="hljs-number">50%</span>;
+// 修复靠下问题，元素高度的一半
+<span class="hljs-attribute">margin-top</span>: -<span class="hljs-number">50px</span>;</code></pre>
+<p>对于弹性盒子<code>display: flex;</code>中的元素可以使用<code>align-items: center;</code>垂直居中</p>
+<h1 id="固定背景图片">固定背景图片</h1>
+<pre><code class="hljs">// 加载图片
+<span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;../assets/bg.png&quot;</span>)
+// 图片水平垂直居中
+background-position: center center
+// 背景图不平铺
+background-repeat: no-repeat
+// 基于容器大小伸缩
+background-size: cover
+// 当内容高度大于图片高度，图像基于容器固定
+background-attachment: fixed</code></pre>
+<h1 id="文字不换行">文字不换行</h1>
+<pre><code class="hljs"># 不换行
+<span class="hljs-attribute">white-space</span>: nowrap
+# 超出部分隐藏
+overflow: hidden
+# 多余文字不显示，
+text-overflow: clip</code></pre>
+<h1 id="鼠标定义">鼠标定义</h1>
+<pre><code class="hljs"><span class="hljs-comment">/* 自定义鼠标样式 */</span>
+<span class="hljs-selector-tag">body</span> {
+  <span class="hljs-attribute">cursor</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;https://s3.bmp.ovh/imgs/2021/12/dfaeeafcee61de54.png&#x27;</span>), auto;
+}
+<span class="hljs-selector-tag">a</span><span class="hljs-selector-pseudo">:hover</span> {
+  <span class="hljs-attribute">cursor</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;https://s3.bmp.ovh/imgs/2021/12/dfaeeafcee61de54.png&#x27;</span>), auto;
+}</code></pre>
+<h1 id="弹性布局某个元素靠左或右">弹性布局某个元素靠左或右</h1>
+<p>给父容器添加弹性布局：</p>
+<pre><code class="hljs"><span class="hljs-attribute">display</span>: flex</code></pre>
+<p>然后给需要靠左或靠右的元素设置：</p>
+<pre><code class="hljs"><span class="hljs-comment">// 靠左</span>
+margin-right: <span class="hljs-keyword">auto</span>
+<span class="hljs-comment">// 靠右</span>
+margin-left: <span class="hljs-keyword">auto</span></code></pre>
+<h1 id="弹性布局不随容器高度">弹性布局不随容器高度</h1>
+<pre><code class="hljs">// 方式一：修改父容器的对齐方式
+<span class="hljs-selector-class">.parent</span> {
+  <span class="hljs-attribute">display</span>: flex;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">300px</span>; <span class="hljs-comment">/* 父容器有固定高度 */</span>
+  <span class="hljs-attribute">align-items</span>: flex-start; <span class="hljs-comment">/* 关键属性：子元素顶部对齐，高度由内容决定 */</span>
+}
+
+// 方式二：单独控制子容器的对齐方式
+<span class="hljs-selector-class">.parent</span> {
+  <span class="hljs-attribute">display</span>: flex;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">300px</span>;
+  <span class="hljs-comment">/* 其他子元素会默认拉伸 */</span>
+}
+
+<span class="hljs-selector-class">.child-special</span> {
+  <span class="hljs-attribute">align-self</span>: flex-start; <span class="hljs-comment">/* 关键属性：仅此子元素高度由内容决定 */</span>
+}</code></pre>
+<h1 id="弹性布局不占满全宽">弹性布局不占满全宽</h1>
+<pre><code class="hljs"><span class="hljs-selector-class">.flex-container</span> {
+  <span class="hljs-attribute">display</span>: inline-flex; <span class="hljs-comment">/* 关键属性 */</span>
+  <span class="hljs-attribute">gap</span>: <span class="hljs-number">10px</span>; <span class="hljs-comment">/* 子元素间距 */</span>
+}</code></pre>
+<h1 id="弹性布局间距">弹性布局间距</h1>
+<pre><code class="hljs"><span class="hljs-selector-class">.container</span> {
+    <span class="hljs-attribute">display</span>: flex;
+    <span class="hljs-attribute">gap</span>: <span class="hljs-number">20px</span>; <span class="hljs-comment">/* 行列间隙均为20px */</span>
+}</code></pre>
+<h1 id="图片防止变形">图片防止变形</h1>
+<pre><code class="hljs"><span class="hljs-selector-tag">img</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">200px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;
+  <span class="hljs-attribute">object-fit</span>: cover;
+}</code></pre>
+<h1 id="美化Chrome滚动条">美化Chrome滚动条</h1>
+<pre><code class="hljs"><span class="hljs-comment">/* 定义滚动条宽度（竖向）、高度（横向）及背景（容器） */</span>
+::-webkit-scrollbar {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">7px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">7px</span>;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#fff</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">10px</span>;
+}
+
+<span class="hljs-comment">/* 定义滚动条轨道 */</span>
+::-webkit-scrollbar-track {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#fff</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">10px</span>;
+}
+
+<span class="hljs-comment">/* 定义滚动条滑块 */</span>
+::-webkit-scrollbar-thumb {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#0003</span>;
+  <span class="hljs-attribute">transition</span>: all <span class="hljs-number">0.2s</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">10px</span>;
+}
+
+<span class="hljs-comment">/* 去除底部白点 */</span>
+::-webkit-scrollbar-corner {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">0</span>;
+}
+
+<span class="hljs-comment">/* 滑块hover效果 */</span>
+::-webkit-scrollbar-thumb:hover {
+  <span class="hljs-attribute">background</span>: <span class="hljs-number">#b2b2b2</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+}
+
+<span class="hljs-comment">/* 定义文本框的滚动条背景 */</span>
+<span class="hljs-selector-tag">textarea</span>::-webkit-scrollbar-track {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#fff</span>;
+}
+
+<span class="hljs-comment">/* hover实例 */</span>
+<span class="hljs-selector-tag">textarea</span><span class="hljs-selector-pseudo">:hover</span>::-webkit-scrollbar-thumb {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#0003</span>;
+}
+
+<span class="hljs-selector-tag">textarea</span>::-webkit-scrollbar-thumb:hover {
+  <span class="hljs-attribute">background</span>: <span class="hljs-number">#b2b2b2</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+}
+<span class="hljs-comment">/* 自定义代码滚动 */</span>
+<span class="hljs-selector-tag">code</span>::-webkit-scrollbar-track {
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#fff</span>;
+}
+<span class="hljs-selector-tag">code</span>::-webkit-scrollbar-thumb:hover {
+  <span class="hljs-attribute">background</span>: <span class="hljs-number">#b2b2b2</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+}
+<span class="hljs-selector-tag">code</span>::-webkit-scrollbar-thumb:hover {
+  <span class="hljs-attribute">background</span>: <span class="hljs-number">#b2b2b2</span>;
+  <span class="hljs-attribute">cursor</span>: pointer;
+}</code></pre>
+<p>想实现hover再出现滚动条可以先将其设置为与背景相同的颜色，然后使用hover改变</p>
+<h1 id="CSS实现锚点滚动过渡">CSS实现锚点滚动过渡</h1>
+<pre><code class="hljs"><span class="hljs-selector-tag">html</span> {
+  scroll-behavior:smooth;
+}</code></pre>
+<h1 id="光标颜色">光标颜色</h1>
+<pre><code class="hljs"><span class="hljs-comment">/* 光标颜色 */</span>
+<span class="hljs-attribute">caret-color</span>: <span class="hljs-number">#000</span>;</code></pre>
+<h1 id="主题切换功能">主题切换功能</h1>
+<pre><code class="hljs">:root {
+    --background-<span class="hljs-attr">color</span>: #fff;
+}
+
+.<span class="hljs-property">dark</span> {
+    --background-<span class="hljs-attr">color</span>: #23272e;
+}
+
+
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.theme-color&#x27;</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;click&quot;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+    <span class="hljs-keyword">let</span> selector = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.theme-color&#x27;</span>)
+    <span class="hljs-keyword">if</span> (selector.<span class="hljs-title function_">getAttribute</span>(<span class="hljs-string">&#x27;model&#x27;</span>) == <span class="hljs-string">&#x27;light&#x27;</span>) {
+        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;body&#x27;</span>).<span class="hljs-property">classList</span>.<span class="hljs-title function_">add</span>(<span class="hljs-string">&quot;dark&quot;</span>)
+        selector.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;model&#x27;</span>, <span class="hljs-string">&#x27;dark&#x27;</span>)
+        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.theme-color&#x27;</span>).<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;&lt;svg&gt;xxx&lt;/svg&gt;&#x27;</span>
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;body&#x27;</span>).<span class="hljs-property">classList</span>.<span class="hljs-title function_">remove</span>(<span class="hljs-string">&quot;dark&quot;</span>)
+        selector.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;model&#x27;</span>, <span class="hljs-string">&#x27;light&#x27;</span>)
+        <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.theme-color&#x27;</span>).<span class="hljs-property">innerHTML</span> = <span class="hljs-string">&#x27;&lt;svg&gt;xxx&lt;/svg&gt;&#x27;</span>
+    }
+});</code></pre>
+<h1 id="hover阴影">hover阴影</h1>
+<pre><code class="hljs"><span class="hljs-selector-class">.logo</span> {
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">6em</span>;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">1.5em</span>;
+  <span class="hljs-attribute">will-change</span>: filter;
+  <span class="hljs-attribute">transition</span>: filter <span class="hljs-number">300ms</span>;
+}
+<span class="hljs-selector-class">.logo</span><span class="hljs-selector-pseudo">:hover</span> {
+  <span class="hljs-attribute">filter</span>: <span class="hljs-built_in">drop-shadow</span>(<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">2em</span> <span class="hljs-number">#646cffaa</span>);
+}
+<span class="hljs-selector-class">.logo</span><span class="hljs-selector-class">.vue</span><span class="hljs-selector-pseudo">:hover</span> {
+  <span class="hljs-attribute">filter</span>: <span class="hljs-built_in">drop-shadow</span>(<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">2em</span> <span class="hljs-number">#42b883aa</span>);
+}</code></pre>
+<h1 id="简单瀑布流布局">简单瀑布流布局</h1>
+<pre><code class="hljs"><span class="hljs-selector-class">.waterfall</span> {
+    <span class="hljs-attribute">column-count</span>: <span class="hljs-number">5</span>;
+    <span class="hljs-attribute">column-gap</span>: <span class="hljs-number">10px</span>;
+}
+ 
+<span class="hljs-selector-class">.waterfall</span> <span class="hljs-selector-tag">img</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
+    <span class="hljs-attribute">height</span>: auto;
+    <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">10px</span>;
+}</code></pre>
+<h1 id="媒体查询">媒体查询</h1>
+<pre><code class="hljs"><span class="hljs-comment">// 屏幕可视窗口尺寸小于 600 像素时</span>
+<span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">max-width</span>: <span class="hljs-number">600px</span>) {
+  
+}
+<span class="hljs-comment">// 屏幕可视窗口尺寸大于 480 像素时</span>
+<span class="hljs-keyword">@media</span> screen <span class="hljs-keyword">and</span> (<span class="hljs-attribute">min-width</span>: <span class="hljs-number">480px</span>) {
+
+}</code></pre>
+<h1 id="字体">字体</h1>
+<pre><code class="hljs"><span class="hljs-comment">/* 英文字体 */</span>
+<span class="hljs-keyword">@font-face</span> {
+  <span class="hljs-attribute">font-family</span>: <span class="hljs-string">&#x27;en&#x27;</span>;
+  <span class="hljs-attribute">src</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;/en.ttf&#x27;</span>) <span class="hljs-built_in">format</span>(<span class="hljs-string">&#x27;truetype&#x27;</span>);
+  <span class="hljs-attribute">font-weight</span>: normal;
+  <span class="hljs-attribute">font-style</span>: normal;
+}
+
+<span class="hljs-comment">/* 中文字体 */</span>
+<span class="hljs-keyword">@font-face</span> {
+  <span class="hljs-attribute">font-family</span>: <span class="hljs-string">&#x27;zh&#x27;</span>;
+  <span class="hljs-attribute">src</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&#x27;/zh.woff2&#x27;</span>) <span class="hljs-built_in">format</span>(<span class="hljs-string">&#x27;truetype&#x27;</span>);
+  <span class="hljs-attribute">font-weight</span>: normal;
+  <span class="hljs-attribute">font-style</span>: normal;
+}
+
+* {
+  <span class="hljs-attribute">font-family</span>: <span class="hljs-string">&#x27;en&#x27;</span>, <span class="hljs-string">&#x27;zh&#x27;</span>, <span class="hljs-string">&#x27;sans-serif&#x27;</span>;
+}</code></pre>
+</div>
+    <!-- 大纲 -->
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#display行内块对齐">display行内块对齐</a></div><div id="outline-1" style="padding-left:0px"><a href="#position粘性定位">position粘性定位</a></div><div id="outline-2" style="padding-left:0px"><a href="#position固定定位">position固定定位</a></div><div id="outline-3" style="padding-left:0px"><a href="#选中样式定义">选中样式定义</a></div><div id="outline-4" style="padding-left:0px"><a href="#伪类清除浮动">伪类清除浮动</a></div><div id="outline-5" style="padding-left:0px"><a href="#svg与文字对齐">svg与文字对齐</a></div><div id="outline-6" style="padding-left:0px"><a href="#居中策略">居中策略</a></div><div id="outline-7" style="padding-left:20px"><a href="#水平居中">水平居中</a></div><div id="outline-8" style="padding-left:20px"><a href="#垂直居中">垂直居中</a></div><div id="outline-9" style="padding-left:0px"><a href="#固定背景图片">固定背景图片</a></div><div id="outline-10" style="padding-left:0px"><a href="#文字不换行">文字不换行</a></div><div id="outline-11" style="padding-left:0px"><a href="#鼠标定义">鼠标定义</a></div><div id="outline-12" style="padding-left:0px"><a href="#弹性布局某个元素靠左或右">弹性布局某个元素靠左或右</a></div><div id="outline-13" style="padding-left:0px"><a href="#弹性布局不随容器高度">弹性布局不随容器高度</a></div><div id="outline-14" style="padding-left:0px"><a href="#弹性布局不占满全宽">弹性布局不占满全宽</a></div><div id="outline-15" style="padding-left:0px"><a href="#弹性布局间距">弹性布局间距</a></div><div id="outline-16" style="padding-left:0px"><a href="#图片防止变形">图片防止变形</a></div><div id="outline-17" style="padding-left:0px"><a href="#美化Chrome滚动条">美化Chrome滚动条</a></div><div id="outline-18" style="padding-left:0px"><a href="#CSS实现锚点滚动过渡">CSS实现锚点滚动过渡</a></div><div id="outline-19" style="padding-left:0px"><a href="#光标颜色">光标颜色</a></div><div id="outline-20" style="padding-left:0px"><a href="#主题切换功能">主题切换功能</a></div><div id="outline-21" style="padding-left:0px"><a href="#hover阴影">hover阴影</a></div><div id="outline-22" style="padding-left:0px"><a href="#简单瀑布流布局">简单瀑布流布局</a></div><div id="outline-23" style="padding-left:0px"><a href="#媒体查询">媒体查询</a></div><div id="outline-24" style="padding-left:0px"><a href="#字体">字体</a></div></div>
+
+    <script>
+      // 链接新窗口打开
+      document.querySelectorAll("#content a").forEach((item) => {
+        item.setAttribute("target", "_blank");
+      });
+
+      // 图片点击放大（滚轮缩放，点击关闭）
+      (function () {
+        var overlay = null;
+        var scale = 1;
+        document.querySelectorAll("#content img").forEach(function (img) {
+          img.addEventListener("click", function () {
+            overlay = document.createElement("div");
+            overlay.className = "img-overlay";
+            var clone = img.cloneNode(true);
+            clone.removeAttribute("width");
+            clone.style.transform = "scale(1)";
+            scale = 1;
+            overlay.appendChild(clone);
+            // 点击任意位置关闭
+            overlay.addEventListener("click", function () {
+              document.body.removeChild(overlay);
+              overlay = null;
+            });
+            // 滚轮缩放
+            overlay.addEventListener("wheel", function (e) {
+              e.preventDefault();
+              scale += e.deltaY < 0 ? 0.1 : -0.1;
+              scale = Math.max(0.2, Math.min(5, scale));
+              clone.style.transform = "scale(" + scale + ")";
+            });
+            document.body.appendChild(overlay);
+          });
+        });
+      })();
+
+      // 代码复制
+      document.querySelectorAll("#content pre").forEach((item) => {
+        item.innerHTML +=
+          '<div class="copy-btn" onclick="copyCode(this)">复制</div>';
+        item.onmouseover = function () {
+          item.querySelector(".copy-btn").style.opacity = 1;
+        };
+        item.onmouseout = function () {
+          item.querySelector(".copy-btn").style.opacity = 0;
+        };
+      });
+
+      function copyCode(item) {
+        // 获取要复制的代码文本
+        let code = item.parentNode.querySelector("code").innerText;
+
+        // 尝试使用 Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(code)
+            .then(() => {
+              item.innerText = "复制成功";
+              setTimeout(() => {
+                item.innerText = "复制";
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("复制失败，请手动复制:", err);
+              fallbackCopyTextToClipboard(code, item);
+            });
+        } else {
+          // 使用兼容性处理方法
+          fallbackCopyTextToClipboard(code, item);
+        }
+      }
+
+      // 兼容性处理函数
+      function fallbackCopyTextToClipboard(text, item) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // 隐藏textarea元素
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+
+        document.body.appendChild(textArea);
+        textArea.select();
+
+        try {
+          let successful = document.execCommand("copy");
+          let msg = successful ? "成功" : "失败";
+          item.innerText = `复制${msg}`;
+          setTimeout(() => {
+            item.innerText = "复制";
+          }, 2000);
+        } catch (err) {
+          console.error("Fallback: 复制失败，请手动复制:", err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      // 上一次点击
+      document.querySelectorAll(".cate-parent").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          // 先关闭所有
+          document.querySelectorAll(".cate-item-box").forEach((itemOther) => {
+            // 不是当前元素关闭
+            if (itemOther != item.nextElementSibling) {
+              itemOther.style.display = "none";
+            } else {
+              if (itemOther.style.display == "block") {
+                itemOther.style.display = "none";
+              } else {
+                itemOther.style.display = "block";
+              }
+            }
+          });
+        });
+      });
+
+      // 页面加载时展开当前文档所属分类
+      (function () {
+        var cateId = "03";
+        if (cateId) {
+          document
+            .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')
+            .forEach(function (box) {
+              box.style.display = "block";
+            });
+        }
+      })();
+
+      // 当前文档在侧边栏高亮
+      var currentPath = window.location.pathname;
+      document.querySelectorAll(".cate-item-box a").forEach(function (a) {
+        if (a.getAttribute("href") === currentPath) {
+          a.style.color = "#299764";
+        }
+      });
+
+      // 大纲滚动监听
+      var outlineIdList = [];
+      document.querySelectorAll(".outline a").forEach(function (a) {
+        outlineIdList.push(a.getAttribute("href").replace("#", ""));
+      });
+
+      window.addEventListener("scroll", function () {
+        var scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop;
+        var OFFSET = 60; // 顶部导航高度
+        for (var i = 0; i < outlineIdList.length; i++) {
+          var el = document.getElementById(outlineIdList[i]);
+          if (!el) continue;
+          var top = el.getBoundingClientRect().top + scrollTop;
+          // 最后一个标题，或下一个标题元素不存在 → 激活到文档末尾
+          var nextEl =
+            i < outlineIdList.length - 1
+              ? document.getElementById(outlineIdList[i + 1])
+              : null;
+          var isActive =
+            scrollTop > top - OFFSET &&
+            (!nextEl ||
+              scrollTop <
+                nextEl.getBoundingClientRect().top + scrollTop - OFFSET);
+          var outlineEl = document.getElementById("outline-" + i);
+          if (outlineEl) {
+            outlineEl.classList.toggle("outline-active", isActive);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

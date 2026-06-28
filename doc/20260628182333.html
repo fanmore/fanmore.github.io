@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628182333.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,54 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><h1 id="获取窗口高度宽度">获取窗口高度宽度</h1>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * 获取窗口高度
+ */</span>
+<span class="hljs-title function_">getWinHeight</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">let</span> winWidth
+  <span class="hljs-keyword">let</span> winHeight
+  <span class="hljs-comment">// 获取窗口宽度</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>) {
+    winWidth = <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>) &amp;&amp; (<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">clientWidth</span>)) {
+    winWidth = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">clientWidth</span>
+  }
+  <span class="hljs-comment">// 获取窗口高度</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>) {
+    winHeight = <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> ((<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>) &amp;&amp; (<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">clientHeight</span>)) {
+    winHeight = <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">clientHeight</span>
+  }
+  <span class="hljs-comment">// 通过深入 Document 内部对 body 进行检测，获取窗口大小</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span> &amp;&amp; <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientHeight</span> &amp;&amp; <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientWidth</span>) {
+    winHeight = <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientHeight</span>;
+    winWidth = <span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">clientWidth</span>;
+  }
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(winWidth)
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(winHeight)
+}</code></pre>
+<h1 id="高度改变事件">高度改变事件</h1>
+<pre><code class="hljs"><span class="hljs-variable language_">window</span>.<span class="hljs-property">onresize</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>){
+}</code></pre>
+<h1 id="JS获取DOM宽高">JS获取DOM宽高</h1>
+<pre><code class="hljs">网页可见区域宽： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">clientWidth</span>
+网页可见区域高： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">clientHeight</span>
+网页可见区域宽： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">offsetWidth</span> (包括边线的宽)
+网页可见区域高： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">offsetHeight</span> (包括边线的高)
+网页正文全文宽： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollWidth</span>
+网页正文全文高： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollHeight</span>
+网页被卷去的高： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollTop</span>
+网页被卷去的左： <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollLeft</span>
+网页正文部分上： <span class="hljs-variable language_">window</span>.<span class="hljs-property">screenTop</span>
+网页正文部分左： <span class="hljs-variable language_">window</span>.<span class="hljs-property">screenLeft</span>
+屏幕分辨率的高： <span class="hljs-variable language_">window</span>.<span class="hljs-property">screen</span>.<span class="hljs-property">height</span>
+屏幕分辨率的宽： <span class="hljs-variable language_">window</span>.<span class="hljs-property">screen</span>.<span class="hljs-property">width</span>
+屏幕可用工作区高度： <span class="hljs-variable language_">window</span>.<span class="hljs-property">screen</span>.<span class="hljs-property">availHeight</span>
+屏幕可用工作区宽度： <span class="hljs-variable language_">window</span>.<span class="hljs-property">screen</span>.<span class="hljs-property">availWidth</span></code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#获取窗口高度宽度">获取窗口高度宽度</a></div><div id="outline-1" style="padding-left:0px"><a href="#高度改变事件">高度改变事件</a></div><div id="outline-2" style="padding-left:0px"><a href="#JS获取DOM宽高">JS获取DOM宽高</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +578,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

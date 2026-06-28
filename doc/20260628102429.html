@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628102429.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,55 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><h1 id="默认的展示">默认的展示</h1>
+<p><img src="/image/1782613819420.png" width="180"></p>
+<h1 id="美化后的展示">美化后的展示</h1>
+<p><img src="/image/1782613886353.png" width="180"></p>
+<h1 id="实现方式">实现方式</h1>
+<p>利用伪类创建一个好看的样式，再利用定位将其遮盖</p>
+<pre><code class="hljs"><span class="hljs-comment">/* 代办事项 */</span>
+<span class="hljs-selector-id">#content</span> <span class="hljs-selector-tag">input</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">top</span>: <span class="hljs-number">1px</span>;
+}
+<span class="hljs-selector-id">#content</span> <span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">left</span>: -<span class="hljs-number">20px</span>;
+  <span class="hljs-attribute">margin-right</span>: -<span class="hljs-number">16px</span>;
+}
+<span class="hljs-selector-id">#content</span> <span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span><span class="hljs-selector-pseudo">::after</span> {
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">3px</span>;
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">top</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">background-color</span>: white;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#000</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">15px</span>;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">visibility</span>: visible;
+  <span class="hljs-attribute">padding-left</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">text-align</span>: center;
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot; &quot;</span>;
+  <span class="hljs-attribute">box-sizing</span>: border-box;
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid <span class="hljs-number">#ccc</span>;
+}
+<span class="hljs-selector-id">#content</span> <span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span><span class="hljs-selector-pseudo">:checked</span><span class="hljs-selector-pseudo">::before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;✓&quot;</span>;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">12px</span>;
+  <span class="hljs-attribute">font-weight</span>: bold;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#7459ee</span>;
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">z-index</span>: <span class="hljs-number">10</span>;
+  <span class="hljs-attribute">top</span>: -<span class="hljs-number">1px</span>;
+  <span class="hljs-attribute">left</span>: <span class="hljs-number">3px</span>;
+}</code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#默认的展示">默认的展示</a></div><div id="outline-1" style="padding-left:0px"><a href="#美化后的展示">美化后的展示</a></div><div id="outline-2" style="padding-left:0px"><a href="#实现方式">实现方式</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +579,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

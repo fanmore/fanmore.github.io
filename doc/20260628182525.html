@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628182525.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,59 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><h1 id="代码">代码</h1>
+<pre><code class="hljs"><span class="hljs-keyword">function</span> <span class="hljs-title function_">numberToChinese</span>(<span class="hljs-params">num</span>) {
+    <span class="hljs-keyword">const</span> digits = [<span class="hljs-string">&#x27;零&#x27;</span>, <span class="hljs-string">&#x27;壹&#x27;</span>, <span class="hljs-string">&#x27;贰&#x27;</span>, <span class="hljs-string">&#x27;叁&#x27;</span>, <span class="hljs-string">&#x27;肆&#x27;</span>, <span class="hljs-string">&#x27;伍&#x27;</span>, <span class="hljs-string">&#x27;陆&#x27;</span>, <span class="hljs-string">&#x27;柒&#x27;</span>, <span class="hljs-string">&#x27;捌&#x27;</span>, <span class="hljs-string">&#x27;玖&#x27;</span>];
+    <span class="hljs-keyword">const</span> units = [<span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;拾&#x27;</span>, <span class="hljs-string">&#x27;佰&#x27;</span>, <span class="hljs-string">&#x27;仟&#x27;</span>];
+    <span class="hljs-keyword">const</span> bigUnits = [<span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-string">&#x27;万&#x27;</span>, <span class="hljs-string">&#x27;亿&#x27;</span>];
+
+    <span class="hljs-keyword">if</span> (num === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> digits[<span class="hljs-number">0</span>]; <span class="hljs-comment">// 处理零的情况</span>
+
+    <span class="hljs-keyword">let</span> result = <span class="hljs-string">&#x27;&#x27;</span>;
+    <span class="hljs-keyword">let</span> bigUnitPos = <span class="hljs-number">0</span>; <span class="hljs-comment">// 大单位的位置（万、亿）</span>
+    <span class="hljs-keyword">let</span> needZero = <span class="hljs-literal">false</span>; <span class="hljs-comment">// 是否需要补零</span>
+
+    <span class="hljs-keyword">while</span> (num &gt; <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">let</span> chunk = num % <span class="hljs-number">10000</span>; <span class="hljs-comment">// 每次处理4位（个、十、百、千）</span>
+        <span class="hljs-keyword">let</span> chunkStr = <span class="hljs-string">&#x27;&#x27;</span>;
+        <span class="hljs-keyword">let</span> unitPos = <span class="hljs-number">0</span>;
+
+        <span class="hljs-comment">// 处理当前4位</span>
+        <span class="hljs-keyword">while</span> (chunk &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">const</span> n = chunk % <span class="hljs-number">10</span>;
+            <span class="hljs-keyword">if</span> (n === <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">if</span> (needZero) {
+                    chunkStr = digits[<span class="hljs-number">0</span>] + chunkStr;
+                    needZero = <span class="hljs-literal">false</span>;
+                }
+            } <span class="hljs-keyword">else</span> {
+                chunkStr = digits[n] + units[unitPos] + chunkStr;
+                needZero = <span class="hljs-literal">true</span>;
+            }
+            unitPos++;
+            chunk = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(chunk / <span class="hljs-number">10</span>);
+        }
+
+        <span class="hljs-comment">// 拼接大单位</span>
+        <span class="hljs-keyword">if</span> (chunkStr !== <span class="hljs-string">&#x27;&#x27;</span>) {
+            result = chunkStr + bigUnits[bigUnitPos] + result;
+        }
+
+        bigUnitPos++;
+        num = <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">floor</span>(num / <span class="hljs-number">10000</span>); <span class="hljs-comment">// 处理下一组4位</span>
+    }
+
+    <span class="hljs-keyword">return</span> result;
+}
+
+<span class="hljs-comment">// 示例用法</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">numberToChinese</span>(<span class="hljs-number">934</span>)); <span class="hljs-comment">// 输出：玖佰叁拾肆</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">numberToChinese</span>(<span class="hljs-number">1001</span>)); <span class="hljs-comment">// 输出：壹仟零壹</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">numberToChinese</span>(<span class="hljs-number">10000000</span>)); <span class="hljs-comment">// 输出：壹仟万</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-title function_">numberToChinese</span>(<span class="hljs-number">123456789</span>)); <span class="hljs-comment">// 输出：壹亿贰仟叁佰肆拾伍万陆仟柒佰捌拾玖</span></code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#代码">代码</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +583,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

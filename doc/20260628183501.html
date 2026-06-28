@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628183501.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,159 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><h1 id="下载安装">下载安装</h1>
+<p><a href="https://nodejs.org/zh-cn">https://nodejs.org/zh-cn</a></p>
+<h1 id="Yarn">Yarn</h1>
+<pre><code class="hljs">npm i -g yarn
+yarn <span class="hljs-comment">--version</span>
+
+yarn init - 初始化新项目并创建 <span class="hljs-built_in">package</span>.json 文件
+yarn add [<span class="hljs-built_in">package</span>] - 将一个或多个包添加到项目中
+yarn <span class="hljs-built_in">remove</span> [<span class="hljs-built_in">package</span>] - 从项目中移除一个或多个包
+yarn install - 安装项目中所有依赖项
+yarn upgrade [<span class="hljs-built_in">package</span>] - 更新一个或多个包至最新版本
+yarn run [script] - 运行在 <span class="hljs-built_in">package</span>.json 中定义的脚本
+yarn build - 执行构建命令以生成生产环境所需的文件
+yarn start - 启动应用程序或服务器
+yarn test - 运行测试套件</code></pre>
+<h1 id="文件读写">文件读写</h1>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>)
+<span class="hljs-comment">/**
+ * 读取数据
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-params">path</span>) {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">return</span> fs.<span class="hljs-title function_">readFileSync</span>(path, { <span class="hljs-attr">encoding</span>: <span class="hljs-string">&#x27;utf-8&#x27;</span> })
+  } <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>
+  }
+}
+
+<span class="hljs-comment">/**
+ * 写入数据
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">writeFile</span>(<span class="hljs-params">path, content</span>) {
+  fs.<span class="hljs-title function_">writeFileSync</span>(path, content)
+}</code></pre>
+<h1 id="开启HTTP服务">开启HTTP服务</h1>
+<pre><code class="hljs"><span class="hljs-keyword">var</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;http&#x27;</span>)
+<span class="hljs-comment">/**
+ * 运行服务
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">runServer</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// 启动前梳理一遍排序</span>
+  <span class="hljs-title function_">neatenSort</span>()
+  <span class="hljs-comment">// 项执行一遍目录生成，防止没有文件进行访问</span>
+  <span class="hljs-title function_">startGenerate</span>()
+  <span class="hljs-comment">// 需要访问的文件的存放目录（项目所在位置的文件夹路径）</span>
+  <span class="hljs-keyword">var</span> documentRoot = <span class="hljs-string">&#x27;./target&#x27;</span>
+  <span class="hljs-comment">// 启动服务</span>
+  http.<span class="hljs-title function_">createServer</span>(<span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) {
+    <span class="hljs-keyword">var</span> url = req.<span class="hljs-property">url</span>
+    <span class="hljs-keyword">if</span> (url == <span class="hljs-string">&#x27;/&#x27;</span> || url == <span class="hljs-string">&#x27;/article&#x27;</span> || url == <span class="hljs-string">&#x27;/article/**&#x27;</span>) {
+      url = <span class="hljs-string">&#x27;/index.html&#x27;</span>
+    }
+    <span class="hljs-keyword">var</span> file = documentRoot + url
+    fs.<span class="hljs-title function_">readFile</span>(file, <span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) {
+      <span class="hljs-keyword">if</span> (err) {
+        res.<span class="hljs-title function_">writeHeader</span>(<span class="hljs-number">404</span>, {
+          <span class="hljs-string">&#x27;content-type&#x27;</span>: <span class="hljs-string">&#x27;text/html;charset=&quot;utf-8&quot;&#x27;</span>
+        })
+        res.<span class="hljs-title function_">write</span>(<span class="hljs-title function_">readFile</span>(<span class="hljs-string">&#x27;404.html&#x27;</span>))
+      } <span class="hljs-keyword">else</span> {
+        <span class="hljs-comment">// 请求头设置</span>
+        <span class="hljs-comment">// html的请求头 Content-Type : text/html ; charset=utf-8</span>
+        <span class="hljs-comment">// CSS的请求头 content-type:  text/css; charset=utf-8</span>
+        <span class="hljs-comment">// JavaScript的请求头 content-type:  text/javascrpt; charset=utf-8</span>
+        <span class="hljs-keyword">let</span> contentType = <span class="hljs-string">&#x27;text/html;charset=&quot;utf-8&quot;&#x27;</span>
+        <span class="hljs-keyword">if</span> (url.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;.css&#x27;</span>) &gt; -<span class="hljs-number">1</span>) {
+          contentType = <span class="hljs-string">&#x27;text/css;charset=utf-8&#x27;</span>
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (url.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;.js&#x27;</span>) &gt; -<span class="hljs-number">1</span>) {
+          contentType = <span class="hljs-string">&#x27;application/javascript;charset=utf-8&#x27;</span>
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (url.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;.svg&#x27;</span>) &gt; -<span class="hljs-number">1</span>) {
+          contentType = <span class="hljs-string">&#x27;image/svg+xml;charset=utf-8&#x27;</span>
+        }
+        res.<span class="hljs-title function_">writeHeader</span>(<span class="hljs-number">200</span>, {
+          <span class="hljs-string">&#x27;content-type&#x27;</span>: contentType
+        })
+        res.<span class="hljs-title function_">write</span>(data)
+      }
+      res.<span class="hljs-title function_">end</span>()
+    })
+  }).<span class="hljs-title function_">listen</span>(<span class="hljs-number">7981</span>)
+
+  <span class="hljs-comment">// 监听文件变化，由于监听了所有子文件，所以一次改动会刷新多次，解决办法为限时刷新，即同一时间内只允许刷新一次</span>
+  <span class="hljs-comment">// 这里注意：VSCode的自动保存会定时触发，也就是开启后这里会每隔一段时间就刷新一次，建议不要使用自动保存，而是手动保存，触发文件动态刷新</span>
+  <span class="hljs-keyword">let</span> tempTimer = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">let</span> number = <span class="hljs-number">1</span>
+  fs.<span class="hljs-title function_">watch</span>(<span class="hljs-string">&#x27;./docs&#x27;</span>, { <span class="hljs-attr">recursive</span>: <span class="hljs-literal">true</span> }, <span class="hljs-function">(<span class="hljs-params">eventType, filename</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> timer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>()
+    <span class="hljs-keyword">if</span> (timer - tempTimer &gt; <span class="hljs-number">2000</span> &amp;&amp; eventType == <span class="hljs-string">&#x27;rename&#x27;</span>) {
+      <span class="hljs-comment">// 监听文件名称改动，进行排序整理和重新生成</span>
+      <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-comment">// 延时执行，避免编辑器打开新建文件立刻执行更名操作的异常问题</span>
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;A file or directory is renamed: &#x27;</span> + filename + <span class="hljs-string">&#x27;, resort&#x27;</span>);
+        <span class="hljs-title function_">neatenSort</span>()
+        <span class="hljs-title function_">startGenerate</span>()
+      }, <span class="hljs-number">500</span>);
+      tempTimer = timer
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (timer - tempTimer &gt; <span class="hljs-number">2000</span> &amp;&amp; eventType == <span class="hljs-string">&#x27;change&#x27;</span>) {
+      <span class="hljs-comment">// 监听文件改动，重新生成</span>
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;A file is changed: &#x27;</span> + filename + <span class="hljs-string">&#x27; &gt; &#x27;</span> + (number++));
+      <span class="hljs-title function_">startGenerate</span>()
+      tempTimer = timer
+    }
+  })
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Service started successfully, url is http://localhost:7981/&#x27;</span>)
+  <span class="hljs-comment">// 控制台输入</span>
+  <span class="hljs-title function_">readCommand</span>()
+}</code></pre>
+<h1 id="文件夹复制">文件夹复制</h1>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * 文件夹复制（递归支持下级目录）
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">cpSync</span>(<span class="hljs-params">source, destination</span>) {
+  <span class="hljs-keyword">let</span> major = process.<span class="hljs-property">version</span>.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/v([0-9]*).([0-9]*)/</span>)[<span class="hljs-number">1</span>]
+  <span class="hljs-keyword">let</span> minor = process.<span class="hljs-property">version</span>.<span class="hljs-title function_">match</span>(<span class="hljs-regexp">/v([0-9]*).([0-9]*)/</span>)[<span class="hljs-number">2</span>]
+  <span class="hljs-comment">// 判断node版本不是16.7.0以上的版本</span>
+  <span class="hljs-comment">// 则进入兼容处理</span>
+  <span class="hljs-comment">// 这样处理是因为16.7.0的版本支持了直接复制文件夹的操作</span>
+  <span class="hljs-keyword">if</span> (<span class="hljs-title class_">Number</span>(major) &lt; <span class="hljs-number">16</span> || <span class="hljs-title class_">Number</span>(major) == <span class="hljs-number">16</span> &amp;&amp; <span class="hljs-title class_">Number</span>(minor) &lt; <span class="hljs-number">7</span>) {
+    <span class="hljs-comment">// 如果存在文件夹 先递归删除该文件夹</span>
+    <span class="hljs-keyword">if</span> (fs.<span class="hljs-title function_">existsSync</span>(destination)) fs.<span class="hljs-title function_">rmSync</span>(destination, { <span class="hljs-attr">recursive</span>: <span class="hljs-literal">true</span> })
+    <span class="hljs-comment">// 新建文件夹 递归新建</span>
+    fs.<span class="hljs-title function_">mkdirSync</span>(destination, { <span class="hljs-attr">recursive</span>: <span class="hljs-literal">true</span> })
+    <span class="hljs-comment">// 读取源文件夹</span>
+    <span class="hljs-keyword">let</span> rd = fs.<span class="hljs-title function_">readdirSync</span>(source)
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> fd <span class="hljs-keyword">of</span> rd) {
+      <span class="hljs-comment">// 循环拼接源文件夹/文件全名称</span>
+      <span class="hljs-keyword">let</span> sourceFullName = source + <span class="hljs-string">&quot;/&quot;</span> + fd
+      <span class="hljs-comment">// 循环拼接目标文件夹/文件全名称</span>
+      <span class="hljs-keyword">let</span> destFullName = destination + <span class="hljs-string">&quot;/&quot;</span> + fd
+      <span class="hljs-comment">// 读取文件信息</span>
+      <span class="hljs-keyword">let</span> lstatRes = fs.<span class="hljs-title function_">lstatSync</span>(sourceFullName)
+      <span class="hljs-comment">// 是否是文件</span>
+      <span class="hljs-keyword">if</span> (lstatRes.<span class="hljs-title function_">isFile</span>()) fs.<span class="hljs-title function_">copyFileSync</span>(sourceFullName, destFullName)
+      <span class="hljs-comment">// 是否是文件夹</span>
+      <span class="hljs-keyword">if</span> (lstatRes.<span class="hljs-title function_">isDirectory</span>()) <span class="hljs-title function_">cpSync</span>(sourceFullName, destFullName)
+    }
+  } <span class="hljs-keyword">else</span> {
+    fs.<span class="hljs-title function_">cpSync</span>(source, destination, { <span class="hljs-attr">force</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">recursive</span>: <span class="hljs-literal">true</span> })
+  }
+}</code></pre>
+<h1 id="Sleep休眠">Sleep休眠</h1>
+<pre><code class="hljs"><span class="hljs-keyword">function</span> <span class="hljs-title function_">sleep</span>(<span class="hljs-params">ms</span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span>=&gt;</span><span class="hljs-built_in">setTimeout</span>(resolve, ms))
+}
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">sleep</span>(<span class="hljs-number">1500</span>)
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">2</span>)
+}
+<span class="hljs-title function_">main</span>()</code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#下载安装">下载安装</a></div><div id="outline-1" style="padding-left:0px"><a href="#Yarn">Yarn</a></div><div id="outline-2" style="padding-left:0px"><a href="#文件读写">文件读写</a></div><div id="outline-3" style="padding-left:0px"><a href="#开启HTTP服务">开启HTTP服务</a></div><div id="outline-4" style="padding-left:0px"><a href="#文件夹复制">文件夹复制</a></div><div id="outline-5" style="padding-left:0px"><a href="#Sleep休眠">Sleep休眠</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +683,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

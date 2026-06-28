@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628182619.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,173 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><blockquote>
+<p>TypeScript是微软开发的一个开源的编程语言，通过在JavaScript的基础上添加静态类型定义构建而成，通过编译器转译为JavaScript代码，可运行在任何浏览器和任何操作系统</p>
+</blockquote>
+<h1 id="TypeScript介绍">TypeScript介绍</h1>
+<p>是以JavaScript为基础构建的语言，是JavaScript的超集。其扩展了JavaScript并添加类型，可以在任何支持JavaScript的平台执行</p>
+<h1 id="环境安装">环境安装</h1>
+<ul>
+<li>node（直接下载安装）</li>
+<li>TypeScript编译器（使用npm安装）</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-comment">// 全局安装</span>
+<span class="hljs-selector-tag">npm</span> <span class="hljs-selector-tag">i</span> <span class="hljs-selector-tag">-g</span> <span class="hljs-selector-tag">typescript</span>
+<span class="hljs-comment">// 查看版本</span>
+<span class="hljs-selector-tag">npm</span> <span class="hljs-selector-tag">view</span> <span class="hljs-selector-tag">typescript</span> <span class="hljs-selector-tag">version</span>
+<span class="hljs-comment">// 卸载</span>
+<span class="hljs-selector-tag">npm</span> <span class="hljs-selector-tag">uninstall</span> <span class="hljs-selector-tag">typescript</span></code></pre>
+<h1 id="编译">编译</h1>
+<pre><code class="hljs">tsc xxx.ts</code></pre>
+<h1 id="类型">类型</h1>
+<p>指定类型后不能再更改为其他类型</p>
+<pre><code class="hljs"><span class="hljs-comment">// 指定类型</span>
+<span class="hljs-keyword">let</span> <span class="hljs-attr">num</span>:number;
+<span class="hljs-comment">// 指定类型并赋值</span>
+<span class="hljs-keyword">let</span> <span class="hljs-attr">num</span>:number = <span class="hljs-number">1</span>;
+<span class="hljs-comment">// 自动指定类型（根据第一次赋值类型判断）</span>
+<span class="hljs-keyword">let</span> str = <span class="hljs-string">&#x27;test&#x27;</span>;
+
+<span class="hljs-comment">// 指定入参类型，指定返回类型</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a: number, b: number</span>): number {
+  <span class="hljs-keyword">return</span> a + b;
+}
+
+<span class="hljs-keyword">let</span> result = <span class="hljs-title function_">add</span>(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>)</code></pre>
+<p>类型增加了代码的规范和可控性</p>
+<p><img src="/image/1782642456938.png" width=""></p>
+<h2 id="number">number</h2>
+<p>指定为数字类型，如：</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> <span class="hljs-attr">age</span>: <span class="hljs-built_in">number</span> = <span class="hljs-number">18</span>;</code></pre>
+<h2 id="string">string</h2>
+<p>指定为字符串类型，如：</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> userName: <span class="hljs-built_in">string</span> = <span class="hljs-string">&#x27;Tom&#x27;</span></code></pre>
+<h2 id="boolean">boolean</h2>
+<p>指定为布尔类型：如：</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> <span class="hljs-attr">flag</span>: <span class="hljs-built_in">boolean</span> = <span class="hljs-literal">true</span>;</code></pre>
+<h2 id="字面量">字面量</h2>
+<p>将变量直接指定为某个值，意味着这个变量只能为这个值，类似常量的意思，但是可扩展，如：</p>
+<pre><code class="hljs"><span class="hljs-comment">// 定义数量为10，之后不可更改，同常量</span>
+<span class="hljs-keyword">let</span> amount: <span class="hljs-number">10</span>;
+<span class="hljs-comment">// 可用于定义某些指定选项，只能赋值指定选项</span>
+<span class="hljs-keyword">let</span> sex: <span class="hljs-string">&#x27;man&#x27;</span> | <span class="hljs-string">&#x27;woman&#x27;</span> | <span class="hljs-string">&#x27;unknown&#x27;</span>;</code></pre>
+<h2 id="any">any</h2>
+<p>任意类型，相当于关闭了该变量的类型检查，不建议使用，回到了js</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> <span class="hljs-attr">other</span>: <span class="hljs-built_in">any</span>;
+
+<span class="hljs-keyword">let</span> <span class="hljs-attr">amount</span>: <span class="hljs-built_in">number</span> = <span class="hljs-number">20</span>;
+<span class="hljs-comment">// 此处不会报错</span>
+amount = other</code></pre>
+<p>注意：any的类型变量可以赋值给其他类型变量，即会影响其他变量的类型</p>
+<h2 id="unknown">unknown</h2>
+<p>未知类型，效果同any，都可以赋值，但是区别是不能赋值给其他类型变量，无法改变其他类型变量</p>
+<p>是一个类型安全的any，不能直接赋值非其他类型变量</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> <span class="hljs-attr">other</span>: <span class="hljs-built_in">unknown</span>;
+
+<span class="hljs-keyword">let</span> <span class="hljs-attr">amount</span>: <span class="hljs-built_in">number</span> = <span class="hljs-number">20</span>;
+<span class="hljs-comment">// 此处会报错</span>
+amount = other
+
+<span class="hljs-comment">// 类型报错处理办法</span>
+
+<span class="hljs-comment">// 方法一：类型检查</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> other === <span class="hljs-string">&#x27;number&#x27;</span>) {
+  amount = other
+}
+<span class="hljs-comment">// 方法二：类型断言，告诉解析器该变量的类型，不用报错</span>
+amount = other <span class="hljs-keyword">as</span> <span class="hljs-built_in">number</span>
+<span class="hljs-comment">// 与上等同</span>
+amount = &lt;<span class="hljs-built_in">number</span>&gt;other</code></pre>
+<p>补充类型断言语法：</p>
+<pre><code class="hljs">变量 <span class="hljs-keyword">as</span> 类型
+&lt;类型&gt; 变量</code></pre>
+<h2 id="void">void</h2>
+<p>表示空，例如函数的返回：</p>
+<pre><code class="hljs"><span class="hljs-comment">// 指定函数没有返回值，可为null</span>
+<span class="hljs-function">function <span class="hljs-title">fn</span>(): <span class="hljs-keyword">void</span></span> {
+
+}</code></pre>
+<h2 id="never">never</h2>
+<p>表示没有值类型，连null都不行，如程序报错，就没有返回</p>
+<pre><code class="hljs"><span class="hljs-keyword">function</span> <span class="hljs-title function_">fn</span>(<span class="hljs-params"></span>): never {
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;报错&#x27;</span>)
+}</code></pre>
+<h2 id="联合类型">联合类型</h2>
+<pre><code class="hljs"><span class="hljs-comment">// 可以使用 | 实现联合类型</span>
+<span class="hljs-keyword">let</span> <span class="hljs-attr">other</span>: <span class="hljs-built_in">number</span> | <span class="hljs-built_in">string</span>;</code></pre>
+<p><code>undefined</code>和<code>null</code>是以上类型的子集，如果没有开启语法严格模式可以赋值</p>
+<h2 id="object">object</h2>
+<pre><code class="hljs"><span class="hljs-comment">// {} 用来指定对象可以包含哪些属性，为对象</span>
+let people: {name: string}
+<span class="hljs-comment">// 在属性后加 ? 表示该属性可选</span>
+let people: {name?: string}
+<span class="hljs-comment">// 对于其他参数可传又不固定的情况，可不限制其他传入</span>
+let people: {name: string, [propName: string]: any}
+
+<span class="hljs-comment">// 同理可对函数结构进行定义，指定参数类型和返回值类型</span>
+let <span class="hljs-function"><span class="hljs-keyword">fun</span>: <span class="hljs-params">(a: <span class="hljs-type">number</span>, b: <span class="hljs-type">number</span>)</span></span> =&gt; number
+<span class="hljs-function"><span class="hljs-keyword">fun</span> = <span class="hljs-title">function</span><span class="hljs-params">(a, b)</span></span> {
+  <span class="hljs-keyword">return</span> a + b;
+}</code></pre>
+<h2 id="数组">数组</h2>
+<pre><code class="hljs">方式<span class="hljs-number">1</span>
+<span class="hljs-keyword">let</span> <span class="hljs-attr">arr</span>:number[] = [<span class="hljs-number">10</span>,<span class="hljs-number">20</span>,<span class="hljs-number">30</span>]
+方式<span class="hljs-number">2</span>（泛型）
+<span class="hljs-keyword">let</span> <span class="hljs-attr">arr</span>:<span class="hljs-title class_">Array</span>&lt;number&gt; = [<span class="hljs-number">10</span>,<span class="hljs-number">20</span>,<span class="hljs-number">30</span>]</code></pre>
+<h2 id="元组">元组</h2>
+<p>允许不同的数据类型</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> <span class="hljs-attr">arr</span>:[string,number,boolean] = [<span class="hljs-string">&#x27;文字&#x27;</span>,<span class="hljs-number">10</span>,<span class="hljs-literal">false</span>]</code></pre>
+<h2 id="枚举">枚举</h2>
+<pre><code class="hljs">enum <span class="hljs-title class_">Gender</span> {
+  man   = <span class="hljs-number">0</span>,
+  woman = <span class="hljs-number">1</span>
+}</code></pre>
+<h1 id="类型断言（只作用在编译阶段）">类型断言（只作用在编译阶段）</h1>
+<pre><code class="hljs">方式<span class="hljs-number">1</span>
+<span class="hljs-keyword">if</span> ((&lt;string&gt;str).<span class="hljs-property">length</span>) {}
+方式<span class="hljs-number">2</span>
+<span class="hljs-keyword">if</span> ((str <span class="hljs-keyword">as</span> string).<span class="hljs-property">length</span>) {}</code></pre>
+<h1 id="类">类</h1>
+<pre><code class="hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Person</span> {
+  <span class="hljs-comment">// 属性</span>
+  <span class="hljs-attr">name</span>:string
+
+  <span class="hljs-comment">// 构造函数</span>
+  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">name:string</span>) {
+    <span class="hljs-variable language_">this</span>.<span class="hljs-property">name</span> = name
+  }
+
+  <span class="hljs-comment">// 方法</span>
+  <span class="hljs-title function_">say</span>(<span class="hljs-params">str:string</span>) {
+    xxx
+  }
+}
+
+<span class="hljs-comment">// 对象的创建</span>
+<span class="hljs-keyword">const</span> person = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Persion</span>()；</code></pre>
+<h2 id="静态属性">静态属性</h2>
+<p>可直接访问</p>
+<pre><code class="hljs"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> {
+  <span class="hljs-comment">// 属性</span>
+  <span class="hljs-keyword">static</span> name:<span class="hljs-built_in">string</span>;
+}</code></pre>
+<h1 id="继承">继承</h1>
+<pre><code class="hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Animal</span> {
+
+}
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Dog</span> <span class="hljs-title">extends</span> <span class="hljs-title">Animal</span> {
+
+}</code></pre>
+<h1 id="接口">接口</h1>
+<pre><code class="hljs">interface <span class="hljs-title class_">IPerson</span> {
+  readonly <span class="hljs-attr">id</span>:number,  <span class="hljs-comment">// 只读属性</span>
+  <span class="hljs-attr">name</span>:string,
+  sex?:string          <span class="hljs-comment">// 可选</span>
+}</code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#TypeScript介绍">TypeScript介绍</a></div><div id="outline-1" style="padding-left:0px"><a href="#环境安装">环境安装</a></div><div id="outline-2" style="padding-left:0px"><a href="#编译">编译</a></div><div id="outline-3" style="padding-left:0px"><a href="#类型">类型</a></div><div id="outline-4" style="padding-left:20px"><a href="#number">number</a></div><div id="outline-5" style="padding-left:20px"><a href="#string">string</a></div><div id="outline-6" style="padding-left:20px"><a href="#boolean">boolean</a></div><div id="outline-7" style="padding-left:20px"><a href="#字面量">字面量</a></div><div id="outline-8" style="padding-left:20px"><a href="#any">any</a></div><div id="outline-9" style="padding-left:20px"><a href="#unknown">unknown</a></div><div id="outline-10" style="padding-left:20px"><a href="#void">void</a></div><div id="outline-11" style="padding-left:20px"><a href="#never">never</a></div><div id="outline-12" style="padding-left:20px"><a href="#联合类型">联合类型</a></div><div id="outline-13" style="padding-left:20px"><a href="#object">object</a></div><div id="outline-14" style="padding-left:20px"><a href="#数组">数组</a></div><div id="outline-15" style="padding-left:20px"><a href="#元组">元组</a></div><div id="outline-16" style="padding-left:20px"><a href="#枚举">枚举</a></div><div id="outline-17" style="padding-left:0px"><a href="#类型断言（只作用在编译阶段）">类型断言（只作用在编译阶段）</a></div><div id="outline-18" style="padding-left:0px"><a href="#类">类</a></div><div id="outline-19" style="padding-left:20px"><a href="#静态属性">静态属性</a></div><div id="outline-20" style="padding-left:0px"><a href="#继承">继承</a></div><div id="outline-21" style="padding-left:0px"><a href="#接口">接口</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +697,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

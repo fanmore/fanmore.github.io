@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628183013.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,116 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><h1 id="官网">官网</h1>
+<p><a href="https://threejs.org/">three.js</a>，文档在<code>documentation</code>中</p>
+<p><a href="https://ambientcg.com/">ambientcg材质网</a>：免费下载材质包</p>
+<p><a href="https://www.sharetextures.com/">sharetextures材质网</a></p>
+<h1 id="基于Vue搭建开发">基于Vue搭建开发</h1>
+<p>threejs是模块化开发</p>
+<pre><code class="hljs"><span class="hljs-comment">// 脚手架</span>
+yarn create vite my-vue-app --<span class="hljs-keyword">template</span> vue
+<span class="hljs-comment">// 依赖</span>
+yarn add three</code></pre>
+<p>注意：图片模型等放入<code>public</code>下</p>
+<h1 id="示例">示例</h1>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> <span class="hljs-variable constant_">THREE</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;three&#x27;</span>
+<span class="hljs-comment">// 创建场景</span>
+<span class="hljs-keyword">const</span> scene = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">Scene</span>()
+<span class="hljs-comment">// scene.background = new THREE.Color(&#x27;rgb(242, 243, 244)&#x27;) // 背景颜色</span>
+<span class="hljs-keyword">const</span> loader = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">TextureLoader</span>()
+loader.<span class="hljs-title function_">load</span>(<span class="hljs-string">&#x27;../img/01.jpg&#x27;</span>, <span class="hljs-keyword">function</span> (<span class="hljs-params">texture</span>) {
+  <span class="hljs-comment">// 球形，要使用360度VR全景图</span>
+  <span class="hljs-comment">// texture.mapping = THREE.EquirectangularReflectionMapping;</span>
+  <span class="hljs-comment">// 空间颜色</span>
+  <span class="hljs-comment">// texture.colorSpace = THREE.SRGBColorSpace;</span>
+  scene.<span class="hljs-property">background</span> = texture
+  <span class="hljs-comment">// 加载图片为背景，如果不使用动画requestAnimationFrame()，</span>
+  <span class="hljs-comment">// 需要在此处手动执行一次renderer.render(scene, camera)，原因是此次异步，后出现</span>
+})
+<span class="hljs-comment">// 创建相机</span>
+<span class="hljs-keyword">const</span> camera = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">PerspectiveCamera</span>(
+  <span class="hljs-number">45</span>,
+  <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span> / <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>,
+  <span class="hljs-number">0.1</span>,
+  <span class="hljs-number">1000</span>
+)
+camera.<span class="hljs-property">position</span>.<span class="hljs-property">z</span> = <span class="hljs-number">7</span>  <span class="hljs-comment">// 观察位置</span>
+camera.<span class="hljs-property">position</span>.<span class="hljs-property">x</span> = <span class="hljs-number">2</span>
+camera.<span class="hljs-property">position</span>.<span class="hljs-property">y</span> = <span class="hljs-number">2</span>
+camera.<span class="hljs-title function_">lookAt</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>) <span class="hljs-comment">// 观察方向</span>
+<span class="hljs-comment">// 创建渲染器</span>
+<span class="hljs-keyword">const</span> renderer = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">WebGLRenderer</span>()
+renderer.<span class="hljs-title function_">setSize</span>(<span class="hljs-variable language_">window</span>.<span class="hljs-property">innerWidth</span>, <span class="hljs-variable language_">window</span>.<span class="hljs-property">innerHeight</span>)
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(renderer.<span class="hljs-property">domElement</span>)
+
+<span class="hljs-comment">// 物体</span>
+<span class="hljs-keyword">const</span> cube = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">Mesh</span>(
+  <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">BoxGeometry</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>),
+  <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">MeshBasicMaterial</span>()
+)
+scene.<span class="hljs-title function_">add</span>(cube) <span class="hljs-comment">// 可以添加任意数量物体，如：scene.add(cube, cube2)</span>
+
+<span class="hljs-keyword">const</span> cube2 = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">Mesh</span>(
+  <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">BoxGeometry</span>(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>),
+  <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">MeshBasicMaterial</span>({
+    <span class="hljs-attr">color</span>: <span class="hljs-number">0xff0000</span>
+  })
+)
+cube2.<span class="hljs-property">position</span>.<span class="hljs-property">x</span> = <span class="hljs-number">2</span>
+scene.<span class="hljs-title function_">add</span>(cube2)
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">animate</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-title function_">requestAnimationFrame</span>(animate) <span class="hljs-comment">// 下一帧调用animate函数</span>
+  cube.<span class="hljs-property">rotation</span>.<span class="hljs-property">x</span> += <span class="hljs-number">0.01</span>
+  cube.<span class="hljs-property">rotation</span>.<span class="hljs-property">y</span> += <span class="hljs-number">0.01</span>
+  renderer.<span class="hljs-title function_">render</span>(scene, camera)
+}
+
+<span class="hljs-title function_">animate</span>()</code></pre>
+<h1 id="场景">场景</h1>
+<p>Scene：容器</p>
+<h1 id="相机">相机</h1>
+<p>Camera：观察</p>
+<ul>
+<li>透视相机：模拟人眼</li>
+<li>正交相机</li>
+<li>立方相机</li>
+<li>立体相机</li>
+</ul>
+<h2 id="位置设置">位置设置</h2>
+<pre><code class="hljs">方式一：
+camera.<span class="hljs-property">position</span>.<span class="hljs-property">z</span> = <span class="hljs-number">7</span>
+camera.<span class="hljs-property">position</span>.<span class="hljs-property">x</span> = <span class="hljs-number">2</span>
+camera.<span class="hljs-property">position</span>.<span class="hljs-property">y</span> = <span class="hljs-number">2</span>
+camera.<span class="hljs-title function_">lookAt</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>) <span class="hljs-comment">// 观察点</span>
+
+方式二：
+camera.<span class="hljs-property">position</span>.<span class="hljs-title function_">set</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">7</span>)
+camera.<span class="hljs-title function_">lookAt</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>) <span class="hljs-comment">// 观察点</span></code></pre>
+<h2 id="圆周运动">圆周运动</h2>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> angle = <span class="hljs-number">0</span>
+<span class="hljs-keyword">const</span> radius = <span class="hljs-number">9</span> <span class="hljs-comment">// 距离</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">animate</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-title function_">requestAnimationFrame</span>(animate)
+  cube.<span class="hljs-property">rotation</span>.<span class="hljs-property">x</span> += <span class="hljs-number">0.01</span>
+  cube.<span class="hljs-property">rotation</span>.<span class="hljs-property">y</span> += <span class="hljs-number">0.01</span>
+  angle += <span class="hljs-number">0.005</span>
+  camera.<span class="hljs-property">position</span>.<span class="hljs-property">x</span> = radius * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">cos</span>(angle)
+  camera.<span class="hljs-property">position</span>.<span class="hljs-property">z</span> = radius * <span class="hljs-title class_">Math</span>.<span class="hljs-title function_">sin</span>(angle)
+  camera.<span class="hljs-title function_">lookAt</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+  renderer.<span class="hljs-title function_">render</span>(scene, camera)
+}</code></pre>
+<h1 id="渲染器">渲染器</h1>
+<p>Renderer：将场景和相机组合</p>
+<p>可以指定渲染容器：</p>
+<pre><code class="hljs">&lt;canvas <span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;box&quot;</span>&gt;&lt;/canvas&gt;
+
+<span class="hljs-keyword">const</span> renderer = <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">THREE</span>.<span class="hljs-title class_">WebGLRenderer</span>({
+  <span class="hljs-attr">canvas</span>: <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.box&#x27;</span>)
+})</code></pre>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#官网">官网</a></div><div id="outline-1" style="padding-left:0px"><a href="#基于Vue搭建开发">基于Vue搭建开发</a></div><div id="outline-2" style="padding-left:0px"><a href="#示例">示例</a></div><div id="outline-3" style="padding-left:0px"><a href="#场景">场景</a></div><div id="outline-4" style="padding-left:0px"><a href="#相机">相机</a></div><div id="outline-5" style="padding-left:20px"><a href="#位置设置">位置设置</a></div><div id="outline-6" style="padding-left:20px"><a href="#圆周运动">圆周运动</a></div><div id="outline-7" style="padding-left:0px"><a href="#渲染器">渲染器</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +640,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "03";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

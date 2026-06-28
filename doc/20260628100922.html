@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FANMR.CN</title>
+    <link rel="shortcut icon" href="/static/logo.png" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 101vh;
+        color: #3c3c43;
+        line-height: 1.7;
+        font-size: 15px;
+      }
+      html {
+        scroll-padding-top: 60px; /* 顶部导航高度 */
+      }
+      /* 头部 */
+      .header {
+        height: 60px;
+        border-bottom: 1px solid #c2c2c4;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+      }
+      .header-left a {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: #3c3c43;
+      }
+      .header-left img {
+        width: 30px;
+        position: relative;
+        top: -2px;
+      }
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .header-right a {
+        text-decoration: none;
+        color: #3c3c43;
+      }
+
+      /* 分类 */
+      .cate {
+        position: fixed;
+        top: 60px;
+        bottom: 0;
+        width: 320px;
+        border-right: 1px solid #c2c2c4;
+        padding: 16px;
+        font-size: 13px;
+        color: #333;
+      }
+      .cate-parent {
+        padding: 2px 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .cate-parent span:nth-child(2) {
+        margin-left: auto;
+      }
+      .cate-parent:hover {
+        color: #299764;
+      }
+      .cate-item-box {
+        padding-left: 24px;
+        display: none;
+      }
+      .cate-item-box a {
+        display: block;
+        text-decoration: none;
+        color: #3c3c43;
+        padding: 2px 0;
+      }
+      .cate-item-box a:hover {
+        color: #299764;
+      }
+      /* 内容 */
+      .content {
+        width: 840px;
+        margin: 0 auto;
+        padding: 20px 0 40px 0;
+      }
+
+      /* 大纲 */
+      .outline {
+        position: fixed;
+        top: 100px;
+        right: 0;
+        width: 300px;
+        padding: 0 16px;
+        border-left: 1px solid #c2c2c4;
+      }
+      .outline a {
+        text-decoration: none;
+        color: #3c3c43;
+        font-size: 13px;
+        padding: 2px 0;
+        display: block;
+      }
+      .outline a:hover {
+        color: #299764;
+      }
+      .outline-active a {
+        color: #299764 !important;
+      }
+
+      /* 高亮代码 */
+      pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1em;
+      }
+      code.hljs {
+        padding: 3px 5px;
+      }
+      .hljs {
+        color: #383a42;
+        background: #fafafa;
+      }
+      .hljs-comment,
+      .hljs-quote {
+        color: #a0a1a7;
+        font-style: italic;
+      }
+      .hljs-doctag,
+      .hljs-formula,
+      .hljs-keyword {
+        color: #a626a4;
+      }
+      .hljs-deletion,
+      .hljs-name,
+      .hljs-section,
+      .hljs-selector-tag,
+      .hljs-subst {
+        color: #e45649;
+      }
+      .hljs-literal {
+        color: #0184bb;
+      }
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string,
+      .hljs-regexp,
+      .hljs-string {
+        color: #50a14f;
+      }
+      .hljs-attr,
+      .hljs-number,
+      .hljs-selector-attr,
+      .hljs-selector-class,
+      .hljs-selector-pseudo,
+      .hljs-template-variable,
+      .hljs-type,
+      .hljs-variable {
+        color: #986801;
+      }
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-symbol,
+      .hljs-title {
+        color: #4078f2;
+      }
+      .hljs-built_in,
+      .hljs-class .hljs-title,
+      .hljs-title.class_ {
+        color: #c18401;
+      }
+      .hljs-emphasis {
+        font-style: italic;
+      }
+      .hljs-strong {
+        font-weight: 700;
+      }
+      .hljs-link {
+        text-decoration: underline;
+      }
+
+      /* 代码复制 */
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        cursor: pointer;
+        color: #999;
+        font-size: 12px;
+        transition: all 0.2s;
+        opacity: 0;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 2px 6px;
+        background-color: #fff;
+      }
+
+      .copy-btn:hover {
+        color: #fc6423;
+      }
+
+
+      /* 图片放大遮罩 */
+      .img-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .img-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        transition: transform 0.1s;
+      }
+
+      /* 文章样式 */
+
+      /* 1级标题 */
+      #content h1 {
+        font-size: 22px;
+        padding-top: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      /* 2级标题 */
+      #content h2 {
+        font-size: 18px;
+      }
+      /* 引用 */
+      #content blockquote {
+        border: 1px solid rgb(165, 194, 255);
+        background: linear-gradient(
+          137deg,
+          rgb(245, 238, 255) 0%,
+          rgb(230, 244, 255) 52%,
+          rgb(236, 240, 255) 97%
+        );
+        padding: 15px;
+        margin: 10px 0;
+        color: rgb(97, 92, 237);
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      #content blockquote p {
+        margin: 0;
+      }
+      /* 图片 */
+      #content img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        cursor: pointer;
+        border: 1px solid #eee;
+      }
+      /* 代码 */
+      #content pre {
+        background-color: #f5f6f7;
+        overflow: auto;
+        padding: 1em;
+        position: relative;
+        border-radius: 6px;
+        padding: 0 0 0 0;
+      }
+      #content pre code {
+        font-size: 13px;
+        font-family:
+          "SF Mono", "Consolas", "Roboto Mono", "Monaco", "Courier New",
+          "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+      }
+      #content code {
+        border-radius: 3px;
+        background-color: #f5f6f7;
+      }
+      #content p code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      #content li code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      /* 表格 */
+      #content table {
+        width: 100%;
+        border-right: 1px solid #ebeef5;
+        border-top: 1px solid #ebeef5;
+        border-collapse: collapse;
+      }
+      #content th,
+      #content td {
+        text-align: left;
+        border-left: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+        padding: 7px 10px !important;
+      }
+      #content th {
+        font-weight: bold !important;
+        background-color: #f8f8f8;
+      }
+      #content a {
+        color: #65a1d6;
+        text-decoration: none;
+        margin: 0 2px;
+        border-bottom: 1px solid #65a1d6;
+      }
+      #content a:hover {
+        color: #ff7600;
+      }
+      /* 有序列表 */
+      #content ol {
+        padding-left: 50px;
+      }
+      /* 代办事项 */
+      #content input {
+        position: relative;
+        top: 1px;
+      }
+      #content input[type="checkbox"] {
+        position: relative;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+        left: -20px;
+        margin-right: -16px;
+      }
+      #content input[type="checkbox"]::after {
+        border-radius: 3px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        color: #000;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        visibility: visible;
+        padding-left: 0;
+        text-align: center;
+        content: " ";
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+      #content input[type="checkbox"]:checked::before {
+        content: "✓";
+        font-size: 12px;
+        font-weight: bold;
+        color: #7459ee;
+        position: absolute;
+        display: inline-block;
+        z-index: 10;
+        top: -1px;
+        left: 3px;
+      }
+    </style>
+    <style>.cate-item-box a[href="/doc/20260628100922.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="01"]{display:block}</style>
+  </head>
+  <body>
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-left">
+        <a href="/">
+          <img src="/static/logo.png" alt="logo" />
+          <span>FANMR.CN</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <a href="/nav.html">网址收集</a>
+        <a href="/author.html">关于作者</a>
+        <a href="https://github.com/fanmore" target="_blank">Github</a>
+        <a href="https://gitee.com/riskfan" target="_blank">Gitee</a>
+      </div>
+    </div>
+    <!-- 分类 -->
+    <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
+    <!-- 内容 -->
+    <div class="content" id="content"><blockquote>
+<p>Next是Hexo静态博客生成器下的一款博客展示主题样式，该主题相较而言比较好看，功能也比较全，博客网站拥有的功能都有所具备，同时也支持其他功能的扩展，文章使用版本为8.27.0</p>
+</blockquote>
+<h1 id="官网及下载">官网及下载</h1>
+<p><a href="http://theme-next.iissnan.com/">Next官网</a>，下载方式到<a href="https://github.com/next-theme/hexo-theme-next">最新的Next仓库</a>拉取或直接下载，然后放到<code>themes</code>下，在配置文件中启用</p>
+<pre><code class="hljs"><span class="hljs-comment">// 这里是文件夹名字</span>
+theme: next</code></pre>
+<p>Next主题的所有配置在Next目录下的<code>_config.yml</code>中，更改文件即会生效，不需要重启。如需清除Next冗余文件，下面为Next的必须文件</p>
+<pre><code class="hljs"><span class="hljs-built_in">next</span>
+  |<span class="hljs-comment">--languages</span>
+  |<span class="hljs-comment">--layout</span>
+  |<span class="hljs-comment">--scripts</span>
+  |<span class="hljs-comment">--source</span>
+  |<span class="hljs-comment">--_config.yml</span>
+  |<span class="hljs-comment">--_vendors.yml</span>
+  |<span class="hljs-comment">--package.json</span></code></pre>
+<p>之后的配置都在<code>_config.yml</code>中进行</p>
+<h1 id="主题选择">主题选择</h1>
+<pre><code class="hljs"><span class="hljs-comment"># Schemes</span>
+<span class="hljs-comment">#scheme: Muse</span>
+<span class="hljs-comment">#scheme: Mist</span>
+<span class="hljs-attr">scheme:</span> <span class="hljs-string">Pisces</span>
+<span class="hljs-comment">#scheme: Gemini</span></code></pre>
+<h1 id="网站图标">网站图标</h1>
+<pre><code class="hljs"><span class="hljs-attr">favicon:</span>
+  <span class="hljs-attr">small:</span> <span class="hljs-string">https://s1.ax1x.com/2020/11/10/BqTOfA.png</span>
+  <span class="hljs-attr">medium:</span> <span class="hljs-string">https://s1.ax1x.com/2020/11/10/BqTOfA.png</span>
+  <span class="hljs-attr">apple_touch_icon:</span> <span class="hljs-string">https://s1.ax1x.com/2020/11/10/BqTOfA.png</span>
+  <span class="hljs-attr">safari_pinned_tab:</span> <span class="hljs-string">https://s1.ax1x.com/2020/11/10/BqTOfA.png</span></code></pre>
+<h1 id="菜单配置">菜单配置</h1>
+<pre><code class="hljs"><span class="hljs-attr">menu:</span>
+  <span class="hljs-attr">home:</span> <span class="hljs-string">/</span> <span class="hljs-string">||</span> <span class="hljs-string">fa</span> <span class="hljs-string">fa-home</span>
+  <span class="hljs-string">导航:</span> <span class="hljs-string">/nav</span> <span class="hljs-string">||</span> <span class="hljs-string">fa</span> <span class="hljs-string">fa-paper-plane</span>
+  <span class="hljs-attr">categories:</span> <span class="hljs-string">/categories</span> <span class="hljs-string">||</span> <span class="hljs-string">fa</span> <span class="hljs-string">fa-th</span>
+  <span class="hljs-attr">archives:</span> <span class="hljs-string">/archives</span> <span class="hljs-string">||</span> <span class="hljs-string">fa</span> <span class="hljs-string">fa-archive</span>
+  <span class="hljs-string">作者:</span> <span class="hljs-string">/author</span> <span class="hljs-string">||</span> <span class="hljs-string">fa</span> <span class="hljs-string">fa-user</span></code></pre>
+<p>通过命令<code>hexo n page nav</code>创建与路径同名的文件，然后进行配置：</p>
+<pre><code class="hljs"><span class="hljs-meta">---</span>
+<span class="hljs-attr">title:</span> <span class="hljs-string">标签</span>
+<span class="hljs-attr">date:</span> <span class="hljs-number">2020-11-10 13:57:59</span>
+<span class="hljs-attr">type:</span> <span class="hljs-string">&quot;tags&quot;</span>
+<span class="hljs-attr">comments:</span> <span class="hljs-literal">false</span>
+<span class="hljs-meta">---</span></code></pre>
+<p>Next使用的图标为<a href="https://fontawesome.dashgame.com/">Font Awesome</a>，可根据喜欢自行选择</p>
+<h1 id="侧边头像">侧边头像</h1>
+<pre><code class="hljs"><span class="hljs-comment"># Sidebar Avatar</span>
+<span class="hljs-attr">avatar:</span>
+  <span class="hljs-comment"># Replace the default image and set the url here.</span>
+  <span class="hljs-attr">url:</span> <span class="hljs-string">/images/avatar.png</span>
+  <span class="hljs-comment"># If true, the avatar will be displayed in circle.</span>
+  <span class="hljs-attr">rounded:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-comment"># If true, the avatar will be rotated with the cursor.</span>
+  <span class="hljs-attr">rotated:</span> <span class="hljs-literal">false</span></code></pre>
+<h1 id="侧边社交">侧边社交</h1>
+<pre><code class="hljs"><span class="hljs-attr">social:</span>
+  <span class="hljs-attr">GitHub:</span> <span class="hljs-string">https://github.com/fanmore</span>  <span class="hljs-string">||</span> <span class="hljs-string">fab</span> <span class="hljs-string">fa-github</span>
+  <span class="hljs-attr">Gitee:</span> <span class="hljs-string">https://gitee.com/riskfan</span>  <span class="hljs-string">||</span> <span class="hljs-string">fab</span> <span class="hljs-string">fa-github-alt</span></code></pre>
+<h1 id="开启版权">开启版权</h1>
+<pre><code class="hljs"><span class="hljs-attr">creative_commons:</span>
+  <span class="hljs-attr">license:</span> <span class="hljs-string">by-nc-sa</span>
+  <span class="hljs-attr">sidebar:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">post:</span> <span class="hljs-literal">false</span>
+  <span class="hljs-attr">language:</span></code></pre>
+<h1 id="浏览进度">浏览进度</h1>
+<p>默认放在右下角，开启后放在文章目录下</p>
+<pre><code class="hljs"><span class="hljs-attr">back2top:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-comment"># Back to top in sidebar. 放在作者下</span>
+  <span class="hljs-attr">sidebar:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-comment"># Scroll percent label in b2t button. 浏览进行百分比</span>
+  <span class="hljs-attr">scrollpercent:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="关闭大纲数字和展示所有">关闭大纲数字和展示所有</h1>
+<pre><code class="hljs"><span class="hljs-attr">toc:</span>
+  <span class="hljs-attr">number:</span> <span class="hljs-literal">false</span>
+  <span class="hljs-attr">expand_all:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="底部运行时间">底部运行时间</h1>
+<pre><code class="hljs"><span class="hljs-attr">footer:</span>
+  <span class="hljs-comment"># Specify the year when the site was setup. If not defined, current year will be used.</span>
+  <span class="hljs-attr">since:</span> <span class="hljs-number">2021</span></code></pre>
+<h1 id="备案号">备案号</h1>
+<pre><code class="hljs"><span class="hljs-attr">beian:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">icp:</span> <span class="hljs-string">黔ICP备2021005697号</span></code></pre>
+<h1 id="背景彩带">背景彩带</h1>
+<p>解决页面整体黑白调的问题</p>
+<pre><code class="hljs"><span class="hljs-attr">canvas_ribbon:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">size:</span> <span class="hljs-number">100</span> <span class="hljs-comment"># The width of the ribbon</span>
+  <span class="hljs-attr">alpha:</span> <span class="hljs-number">0.4</span> <span class="hljs-comment"># The transparency of the ribbon</span>
+  <span class="hljs-attr">zIndex:</span> <span class="hljs-number">-1</span> <span class="hljs-comment"># The display level of the ribbon</span></code></pre>
+<h1 id="关闭首页阅读全文">关闭首页阅读全文</h1>
+<pre><code class="hljs"><span class="hljs-symbol">read_more_btn:</span> <span class="hljs-literal">false</span></code></pre>
+<h1 id="代码复制功能">代码复制功能</h1>
+<pre><code class="hljs"><span class="hljs-attr">copy_button:</span>
+    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="代码样式">代码样式</h1>
+<pre><code class="hljs"><span class="hljs-attr">copy_button:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-comment"># Available values: default | flat | mac</span>
+  <span class="hljs-attr">style:</span> <span class="hljs-string">mac</span></code></pre>
+<p>在<code>source/css/main.styl</code>中加入</p>
+<pre><code class="hljs">// 代码样式
+<span class="hljs-selector-tag">figure</span><span class="hljs-selector-class">.highlight</span> {
+  <span class="hljs-attribute">box-shadow</span>: none;
+}
+<span class="hljs-selector-tag">figure</span><span class="hljs-selector-class">.highlight</span><span class="hljs-selector-pseudo">::before</span> {
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">9px</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">9px</span>;
+}</code></pre>
+<h1 id="异步加载">异步加载</h1>
+<p>相同的数据不在重复加载，加快页面加载，页面转换更流畅</p>
+<pre><code class="hljs"><span class="hljs-comment"># Easily enable fast Ajax navigation on your website.</span>
+<span class="hljs-comment"># For more information: https://github.com/next-theme/pjax</span>
+<span class="hljs-attr">pjax:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="图片放大功能">图片放大功能</h1>
+<pre><code class="hljs"><span class="hljs-attr">mediumzoom:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="图片懒加载">图片懒加载</h1>
+<p>页面滚动到才加载，但是会影响文章侧边导航定位的精确性，有时会因为没有加载图片无法直接到达某个标题</p>
+<pre><code class="hljs"><span class="hljs-comment"># Vanilla JavaScript plugin for lazyloading images.</span>
+<span class="hljs-comment"># For more information: https://apoorv.pro/lozad.js/demo/</span>
+<span class="hljs-attr">lazyload:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="导航开启统计">导航开启统计</h1>
+<pre><code class="hljs"><span class="hljs-attr">menu_settings:</span>
+  <span class="hljs-attr">icons:</span> <span class="hljs-literal">true</span>
+  <span class="hljs-attr">badges:</span> <span class="hljs-literal">true</span></code></pre>
+<p>在进入文章后页面后，导航是没有小点的，这个时候会出现导航右侧空白的情况，不喜欢该风格的情况可以开启导航统计，缓解右侧空白的情况并且导航统计是左右对称的，小点是靠右一丢丢的，与自定义的左侧分类能保持一致的宽度</p>
+<h1 id="标签云配置">标签云配置</h1>
+<pre><code class="hljs"><span class="hljs-attr">tagcloud:</span>
+  <span class="hljs-attr">min:</span> <span class="hljs-number">13</span> <span class="hljs-comment"># Minimum font size in px</span>
+  <span class="hljs-attr">max:</span> <span class="hljs-number">24</span> <span class="hljs-comment"># Maximum font size in px</span>
+  <span class="hljs-attr">amount:</span> <span class="hljs-number">1000</span> <span class="hljs-comment"># Total amount of tags</span>
+  <span class="hljs-attr">orderby:</span> <span class="hljs-string">name</span> <span class="hljs-comment"># Order of tags</span>
+  <span class="hljs-attr">order:</span> <span class="hljs-number">1</span> <span class="hljs-comment"># Sort order</span></code></pre>
+<h1 id="顶部加载条">顶部加载条</h1>
+<pre><code class="hljs"><span class="hljs-attr">pace:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">false</span>
+  <span class="hljs-comment"># All available colors:</span>
+  <span class="hljs-comment"># black | blue | green | orange | pink | purple | red | silver | white | yellow</span>
+  <span class="hljs-attr">color:</span> <span class="hljs-string">blue</span>
+  <span class="hljs-comment"># All available themes:</span>
+  <span class="hljs-comment"># big-counter | bounce | barber-shop | center-atom | center-circle | center-radar | center-simple</span>
+  <span class="hljs-comment"># corner-indicator | fill-left | flat-top | flash | loading-bar | mac-osx | material | minimal</span>
+  <span class="hljs-attr">theme:</span> <span class="hljs-string">minimal</span></code></pre>
+<h1 id="底部驱动">底部驱动</h1>
+<p>个人建议还是开启，毕竟开源需要大家维护</p>
+<pre><code class="hljs"><span class="hljs-string">footer：</span>
+  <span class="hljs-comment"># Powered by Hexo &amp; NexT</span>
+  <span class="hljs-attr">powered:</span> <span class="hljs-literal">true</span></code></pre>
+<h1 id="ICP备案展示">ICP备案展示</h1>
+<pre><code class="hljs"><span class="hljs-attr">footer:</span>
+  <span class="hljs-attr">beian:</span>
+    <span class="hljs-attr">enable:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">icp:</span> <span class="hljs-string">xxxx</span></code></pre>
+<h1 id="文章底部标签图标">文章底部标签图标</h1>
+<pre><code class="hljs"><span class="hljs-comment"># Use icon instead of the symbol # to indicate the tag at the bottom of the post</span>
+<span class="hljs-attr">tag_icon:</span> <span class="hljs-literal">true</span></code></pre>
+<p>默认使用的是<code>#</code>，开启后就有图标了</p>
+<h1 id="文章文字间距固定">文章文字间距固定</h1>
+<p>某些文字间的间距因为页面宽度而增大，手机端尤为严重，是文字的对齐方式造成的，可在配置文件中配置</p>
+<pre><code class="hljs"><span class="hljs-comment"># Set the text alignment in posts / pages.</span>
+<span class="hljs-attr">text_align:</span>
+  <span class="hljs-comment"># Available values: start | end | left | right | center | justify | justify-all | match-parent</span>
+  <span class="hljs-attr">desktop:</span> <span class="hljs-string">left</span>
+  <span class="hljs-attr">mobile:</span> <span class="hljs-string">left</span></code></pre>
+<h1 id="全局字体配置">全局字体配置</h1>
+<pre><code class="hljs"><span class="hljs-attr">font:</span>
+  <span class="hljs-attr">enable:</span> <span class="hljs-literal">false</span>
+
+  <span class="hljs-comment"># Uri of fonts host, e.g. https://fonts.googleapis.com (Default).</span>
+  <span class="hljs-attr">host:</span>
+
+  <span class="hljs-comment"># Font options:</span>
+  <span class="hljs-comment"># `external: true` will load this font family from `host` above.</span>
+  <span class="hljs-comment"># `family: Times New Roman`. Without any quotes.</span>
+  <span class="hljs-comment"># `size: x.x`. Use `em` as unit. Default: 1 (16px)</span>
+
+  <span class="hljs-comment"># Global font settings used for all elements inside &lt;body&gt;.</span>
+  <span class="hljs-attr">global:</span>
+    <span class="hljs-attr">external:</span> <span class="hljs-literal">true</span>
+    <span class="hljs-attr">family:</span> <span class="hljs-string">Helvetica</span> <span class="hljs-comment"># 更改此处</span>
+    <span class="hljs-attr">size:</span></code></pre>
+<h1 id="首页摘要">首页摘要</h1>
+<p><code>Next</code>默认是开启的，在文章的头部加上<code>description:</code>即可，同时可以美化样式</p>
+<pre><code class="hljs">// 摘要
+<span class="hljs-selector-class">.post-description</span> {
+  <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">20px</span>;
+  <span class="hljs-attribute">text-align</span>: left;
+  <span class="hljs-attribute">text-indent</span>: <span class="hljs-number">2em</span>;
+}</code></pre>
+</div>
+    <!-- 大纲 -->
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#官网及下载">官网及下载</a></div><div id="outline-1" style="padding-left:0px"><a href="#主题选择">主题选择</a></div><div id="outline-2" style="padding-left:0px"><a href="#网站图标">网站图标</a></div><div id="outline-3" style="padding-left:0px"><a href="#菜单配置">菜单配置</a></div><div id="outline-4" style="padding-left:0px"><a href="#侧边头像">侧边头像</a></div><div id="outline-5" style="padding-left:0px"><a href="#侧边社交">侧边社交</a></div><div id="outline-6" style="padding-left:0px"><a href="#开启版权">开启版权</a></div><div id="outline-7" style="padding-left:0px"><a href="#浏览进度">浏览进度</a></div><div id="outline-8" style="padding-left:0px"><a href="#关闭大纲数字和展示所有">关闭大纲数字和展示所有</a></div><div id="outline-9" style="padding-left:0px"><a href="#底部运行时间">底部运行时间</a></div><div id="outline-10" style="padding-left:0px"><a href="#备案号">备案号</a></div><div id="outline-11" style="padding-left:0px"><a href="#背景彩带">背景彩带</a></div><div id="outline-12" style="padding-left:0px"><a href="#关闭首页阅读全文">关闭首页阅读全文</a></div><div id="outline-13" style="padding-left:0px"><a href="#代码复制功能">代码复制功能</a></div><div id="outline-14" style="padding-left:0px"><a href="#代码样式">代码样式</a></div><div id="outline-15" style="padding-left:0px"><a href="#异步加载">异步加载</a></div><div id="outline-16" style="padding-left:0px"><a href="#图片放大功能">图片放大功能</a></div><div id="outline-17" style="padding-left:0px"><a href="#图片懒加载">图片懒加载</a></div><div id="outline-18" style="padding-left:0px"><a href="#导航开启统计">导航开启统计</a></div><div id="outline-19" style="padding-left:0px"><a href="#标签云配置">标签云配置</a></div><div id="outline-20" style="padding-left:0px"><a href="#顶部加载条">顶部加载条</a></div><div id="outline-21" style="padding-left:0px"><a href="#底部驱动">底部驱动</a></div><div id="outline-22" style="padding-left:0px"><a href="#ICP备案展示">ICP备案展示</a></div><div id="outline-23" style="padding-left:0px"><a href="#文章底部标签图标">文章底部标签图标</a></div><div id="outline-24" style="padding-left:0px"><a href="#文章文字间距固定">文章文字间距固定</a></div><div id="outline-25" style="padding-left:0px"><a href="#全局字体配置">全局字体配置</a></div><div id="outline-26" style="padding-left:0px"><a href="#首页摘要">首页摘要</a></div></div>
+
+    <script>
+      // 链接新窗口打开
+      document.querySelectorAll("#content a").forEach((item) => {
+        item.setAttribute("target", "_blank");
+      });
+
+      // 图片点击放大（滚轮缩放，点击关闭）
+      (function () {
+        var overlay = null;
+        var scale = 1;
+        document.querySelectorAll("#content img").forEach(function (img) {
+          img.addEventListener("click", function () {
+            overlay = document.createElement("div");
+            overlay.className = "img-overlay";
+            var clone = img.cloneNode(true);
+            clone.removeAttribute("width");
+            clone.style.transform = "scale(1)";
+            scale = 1;
+            overlay.appendChild(clone);
+            // 点击任意位置关闭
+            overlay.addEventListener("click", function () {
+              document.body.removeChild(overlay);
+              overlay = null;
+            });
+            // 滚轮缩放
+            overlay.addEventListener("wheel", function (e) {
+              e.preventDefault();
+              scale += e.deltaY < 0 ? 0.1 : -0.1;
+              scale = Math.max(0.2, Math.min(5, scale));
+              clone.style.transform = "scale(" + scale + ")";
+            });
+            document.body.appendChild(overlay);
+          });
+        });
+      })();
+
+      // 代码复制
+      document.querySelectorAll("#content pre").forEach((item) => {
+        item.innerHTML +=
+          '<div class="copy-btn" onclick="copyCode(this)">复制</div>';
+        item.onmouseover = function () {
+          item.querySelector(".copy-btn").style.opacity = 1;
+        };
+        item.onmouseout = function () {
+          item.querySelector(".copy-btn").style.opacity = 0;
+        };
+      });
+
+      function copyCode(item) {
+        // 获取要复制的代码文本
+        let code = item.parentNode.querySelector("code").innerText;
+
+        // 尝试使用 Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(code)
+            .then(() => {
+              item.innerText = "复制成功";
+              setTimeout(() => {
+                item.innerText = "复制";
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("复制失败，请手动复制:", err);
+              fallbackCopyTextToClipboard(code, item);
+            });
+        } else {
+          // 使用兼容性处理方法
+          fallbackCopyTextToClipboard(code, item);
+        }
+      }
+
+      // 兼容性处理函数
+      function fallbackCopyTextToClipboard(text, item) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // 隐藏textarea元素
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+
+        document.body.appendChild(textArea);
+        textArea.select();
+
+        try {
+          let successful = document.execCommand("copy");
+          let msg = successful ? "成功" : "失败";
+          item.innerText = `复制${msg}`;
+          setTimeout(() => {
+            item.innerText = "复制";
+          }, 2000);
+        } catch (err) {
+          console.error("Fallback: 复制失败，请手动复制:", err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      // 上一次点击
+      document.querySelectorAll(".cate-parent").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          // 先关闭所有
+          document.querySelectorAll(".cate-item-box").forEach((itemOther) => {
+            // 不是当前元素关闭
+            if (itemOther != item.nextElementSibling) {
+              itemOther.style.display = "none";
+            } else {
+              if (itemOther.style.display == "block") {
+                itemOther.style.display = "none";
+              } else {
+                itemOther.style.display = "block";
+              }
+            }
+          });
+        });
+      });
+
+      // 页面加载时展开当前文档所属分类
+      (function () {
+        var cateId = "01";
+        if (cateId) {
+          document
+            .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')
+            .forEach(function (box) {
+              box.style.display = "block";
+            });
+        }
+      })();
+
+      // 当前文档在侧边栏高亮
+      var currentPath = window.location.pathname;
+      document.querySelectorAll(".cate-item-box a").forEach(function (a) {
+        if (a.getAttribute("href") === currentPath) {
+          a.style.color = "#299764";
+        }
+      });
+
+      // 大纲滚动监听
+      var outlineIdList = [];
+      document.querySelectorAll(".outline a").forEach(function (a) {
+        outlineIdList.push(a.getAttribute("href").replace("#", ""));
+      });
+
+      window.addEventListener("scroll", function () {
+        var scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop;
+        var OFFSET = 60; // 顶部导航高度
+        for (var i = 0; i < outlineIdList.length; i++) {
+          var el = document.getElementById(outlineIdList[i]);
+          if (!el) continue;
+          var top = el.getBoundingClientRect().top + scrollTop;
+          // 最后一个标题，或下一个标题元素不存在 → 激活到文档末尾
+          var nextEl =
+            i < outlineIdList.length - 1
+              ? document.getElementById(outlineIdList[i + 1])
+              : null;
+          var isActive =
+            scrollTop > top - OFFSET &&
+            (!nextEl ||
+              scrollTop <
+                nextEl.getBoundingClientRect().top + scrollTop - OFFSET);
+          var outlineEl = document.getElementById("outline-" + i);
+          if (outlineEl) {
+            outlineEl.classList.toggle("outline-active", isActive);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

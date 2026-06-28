@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FANMR.CN</title>
+    <link rel="shortcut icon" href="/static/logo.png" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 101vh;
+        color: #3c3c43;
+        line-height: 1.7;
+        font-size: 15px;
+      }
+      html {
+        scroll-padding-top: 60px; /* 顶部导航高度 */
+      }
+      /* 头部 */
+      .header {
+        height: 60px;
+        border-bottom: 1px solid #c2c2c4;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+      }
+      .header-left a {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: #3c3c43;
+      }
+      .header-left img {
+        width: 30px;
+        position: relative;
+        top: -2px;
+      }
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .header-right a {
+        text-decoration: none;
+        color: #3c3c43;
+      }
+
+      /* 分类 */
+      .cate {
+        position: fixed;
+        top: 60px;
+        bottom: 0;
+        width: 320px;
+        border-right: 1px solid #c2c2c4;
+        padding: 16px;
+        font-size: 13px;
+        color: #333;
+      }
+      .cate-parent {
+        padding: 2px 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .cate-parent span:nth-child(2) {
+        margin-left: auto;
+      }
+      .cate-parent:hover {
+        color: #299764;
+      }
+      .cate-item-box {
+        padding-left: 24px;
+        display: none;
+      }
+      .cate-item-box a {
+        display: block;
+        text-decoration: none;
+        color: #3c3c43;
+        padding: 2px 0;
+      }
+      .cate-item-box a:hover {
+        color: #299764;
+      }
+      /* 内容 */
+      .content {
+        width: 840px;
+        margin: 0 auto;
+        padding: 20px 0 40px 0;
+      }
+
+      /* 大纲 */
+      .outline {
+        position: fixed;
+        top: 100px;
+        right: 0;
+        width: 300px;
+        padding: 0 16px;
+        border-left: 1px solid #c2c2c4;
+      }
+      .outline a {
+        text-decoration: none;
+        color: #3c3c43;
+        font-size: 13px;
+        padding: 2px 0;
+        display: block;
+      }
+      .outline a:hover {
+        color: #299764;
+      }
+      .outline-active a {
+        color: #299764 !important;
+      }
+
+      /* 高亮代码 */
+      pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1em;
+      }
+      code.hljs {
+        padding: 3px 5px;
+      }
+      .hljs {
+        color: #383a42;
+        background: #fafafa;
+      }
+      .hljs-comment,
+      .hljs-quote {
+        color: #a0a1a7;
+        font-style: italic;
+      }
+      .hljs-doctag,
+      .hljs-formula,
+      .hljs-keyword {
+        color: #a626a4;
+      }
+      .hljs-deletion,
+      .hljs-name,
+      .hljs-section,
+      .hljs-selector-tag,
+      .hljs-subst {
+        color: #e45649;
+      }
+      .hljs-literal {
+        color: #0184bb;
+      }
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string,
+      .hljs-regexp,
+      .hljs-string {
+        color: #50a14f;
+      }
+      .hljs-attr,
+      .hljs-number,
+      .hljs-selector-attr,
+      .hljs-selector-class,
+      .hljs-selector-pseudo,
+      .hljs-template-variable,
+      .hljs-type,
+      .hljs-variable {
+        color: #986801;
+      }
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-symbol,
+      .hljs-title {
+        color: #4078f2;
+      }
+      .hljs-built_in,
+      .hljs-class .hljs-title,
+      .hljs-title.class_ {
+        color: #c18401;
+      }
+      .hljs-emphasis {
+        font-style: italic;
+      }
+      .hljs-strong {
+        font-weight: 700;
+      }
+      .hljs-link {
+        text-decoration: underline;
+      }
+
+      /* 代码复制 */
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        cursor: pointer;
+        color: #999;
+        font-size: 12px;
+        transition: all 0.2s;
+        opacity: 0;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 2px 6px;
+        background-color: #fff;
+      }
+
+      .copy-btn:hover {
+        color: #fc6423;
+      }
+
+
+      /* 图片放大遮罩 */
+      .img-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .img-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        transition: transform 0.1s;
+      }
+
+      /* 文章样式 */
+
+      /* 1级标题 */
+      #content h1 {
+        font-size: 22px;
+        padding-top: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      /* 2级标题 */
+      #content h2 {
+        font-size: 18px;
+      }
+      /* 引用 */
+      #content blockquote {
+        border: 1px solid rgb(165, 194, 255);
+        background: linear-gradient(
+          137deg,
+          rgb(245, 238, 255) 0%,
+          rgb(230, 244, 255) 52%,
+          rgb(236, 240, 255) 97%
+        );
+        padding: 15px;
+        margin: 10px 0;
+        color: rgb(97, 92, 237);
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      #content blockquote p {
+        margin: 0;
+      }
+      /* 图片 */
+      #content img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        cursor: pointer;
+        border: 1px solid #eee;
+      }
+      /* 代码 */
+      #content pre {
+        background-color: #f5f6f7;
+        overflow: auto;
+        padding: 1em;
+        position: relative;
+        border-radius: 6px;
+        padding: 0 0 0 0;
+      }
+      #content pre code {
+        font-size: 13px;
+        font-family:
+          "SF Mono", "Consolas", "Roboto Mono", "Monaco", "Courier New",
+          "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+      }
+      #content code {
+        border-radius: 3px;
+        background-color: #f5f6f7;
+      }
+      #content p code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      #content li code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      /* 表格 */
+      #content table {
+        width: 100%;
+        border-right: 1px solid #ebeef5;
+        border-top: 1px solid #ebeef5;
+        border-collapse: collapse;
+      }
+      #content th,
+      #content td {
+        text-align: left;
+        border-left: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+        padding: 7px 10px !important;
+      }
+      #content th {
+        font-weight: bold !important;
+        background-color: #f8f8f8;
+      }
+      #content a {
+        color: #65a1d6;
+        text-decoration: none;
+        margin: 0 2px;
+        border-bottom: 1px solid #65a1d6;
+      }
+      #content a:hover {
+        color: #ff7600;
+      }
+      /* 有序列表 */
+      #content ol {
+        padding-left: 50px;
+      }
+      /* 代办事项 */
+      #content input {
+        position: relative;
+        top: 1px;
+      }
+      #content input[type="checkbox"] {
+        position: relative;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+        left: -20px;
+        margin-right: -16px;
+      }
+      #content input[type="checkbox"]::after {
+        border-radius: 3px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        color: #000;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        visibility: visible;
+        padding-left: 0;
+        text-align: center;
+        content: " ";
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+      #content input[type="checkbox"]:checked::before {
+        content: "✓";
+        font-size: 12px;
+        font-weight: bold;
+        color: #7459ee;
+        position: absolute;
+        display: inline-block;
+        z-index: 10;
+        top: -1px;
+        left: 3px;
+      }
+    </style>
+    <style>.cate-item-box a[href="/doc/20260628183825.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="05"]{display:block}</style>
+  </head>
+  <body>
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-left">
+        <a href="/">
+          <img src="/static/logo.png" alt="logo" />
+          <span>FANMR.CN</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <a href="/nav.html">网址收集</a>
+        <a href="/author.html">关于作者</a>
+        <a href="https://github.com/fanmore" target="_blank">Github</a>
+        <a href="https://gitee.com/riskfan" target="_blank">Gitee</a>
+      </div>
+    </div>
+    <!-- 分类 -->
+    <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
+    <!-- 内容 -->
+    <div class="content" id="content"><h1 id="node-npm">node-npm</h1>
+<p>将源换成淘宝镜像</p>
+<pre><code class="hljs">npm config <span class="hljs-keyword">set</span> registry https:<span class="hljs-comment">//registry.npm.taobao.org（失效）</span>
+
+如果出现 npm WARN config <span class="hljs-keyword">global</span> `--<span class="hljs-keyword">global</span>`, `--local` are deprecated. Use `--location=<span class="hljs-keyword">global</span>` instead.
+编辑node安装目录下的 npm.cmd，将 prefix-g 改为 prefix --location=<span class="hljs-keyword">global</span>
+如果保存时出现管理员问题，右击文件选择属性、安全、改为完全可控
+
+或者更换高版本Node
+
+npm config <span class="hljs-keyword">set</span> registry https:<span class="hljs-comment">//registry.npmmirror.com</span></code></pre>
+<p>常用命令</p>
+<pre><code class="hljs">安装：npm install xxx               -g 全局
+卸载：npm uninstall xxx             -g 全局
+查询版本：npm info sass versions
+重新安装模块：npm rebuild node-sass</code></pre>
+<h1 id="Vite项目创建">Vite项目创建</h1>
+<p><a href="https://github.com/vitejs/vite">Vite官方仓库</a><br><a href="https://cn.vitejs.dev/">Vite官方文档</a></p>
+<p>使用<code>npm -v</code>查看安装的版本</p>
+<pre><code class="hljs"><span class="hljs-comment"># npm 6.x</span>
+npm init vite@latest <span class="hljs-keyword">my</span>-vue-app --template vue
+
+<span class="hljs-comment"># npm 7+, 需要额外的双横线：</span>
+npm init vite@latest <span class="hljs-keyword">my</span>-vue-app -- --template vue
+
+<span class="hljs-comment"># ts版本</span>
+npm create vite@latest <span class="hljs-keyword">my</span>-vue-app -- --template vue-ts
+
+yarn create vite <span class="hljs-keyword">my</span>-vue-app --template vue</code></pre>
+<p><strong>注意</strong>：尽量看官方文档的创建方式</p>
+<p>Vite基于Vue3，想学习更多Vue3知识，可以到<a href="https://v3.cn.vuejs.org/guide/introduction.html">Vue3中文文档</a>查看</p>
+<p>项目目录结构：</p>
+<p><img src="/image/1782643150782.png" width="400"></p>
+<h1 id="sass">sass</h1>
+<pre><code class="hljs">npm install sass</code></pre>
+<p>使用示例</p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">scoped</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;sass&quot;</span>&gt;</span><span class="language-css">
+<span class="hljs-selector-tag">ul</span>
+  <span class="hljs-selector-tag">li</span>
+    <span class="hljs-attribute">list-style</span>: none
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span></code></pre>
+<p>在VSCode的扩展中安装插件Sass才会有代码提示，记得重启VSCode</p>
+<h1 id="router">router</h1>
+<p><a href="https://next.router.vuejs.org/zh/">官方网站</a></p>
+<pre><code class="hljs"><span class="hljs-comment">// 官方安装方式</span>
+npm install vue-<span class="hljs-symbol">router@</span><span class="hljs-number">4</span>
+<span class="hljs-comment">// 指定版本安装方式</span>
+npm install vue-<span class="hljs-symbol">router@</span><span class="hljs-number">4.0</span><span class="hljs-number">.3</span></code></pre>
+<p>创建router/index.js</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> {createRouter, createWebHashHistory} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue-router&#x27;</span>
+
+<span class="hljs-keyword">const</span> router = <span class="hljs-title function_">createRouter</span>({
+  <span class="hljs-comment">// history模式：createWebHistory(), hash模式：createWebHashHistory()</span>
+  <span class="hljs-attr">history</span>: <span class="hljs-title function_">createWebHashHistory</span>(),
+  <span class="hljs-attr">routes</span>: [
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/&#x27;</span>,
+      <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;../components/TestVue.vue&#x27;</span>),
+      <span class="hljs-attr">meta</span>: {
+        <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;范先生&#x27;</span>
+      }
+      <span class="hljs-comment">//redirect: &#x27;/countIndex&#x27;</span>
+    },
+  ],
+})
+
+router.<span class="hljs-title function_">beforeEach</span>(<span class="hljs-function">(<span class="hljs-params">to, <span class="hljs-keyword">from</span>, next</span>) =&gt;</span> {
+    <span class="hljs-comment">/* 路由发生变化修改页面title */</span>
+    <span class="hljs-keyword">if</span> (to.<span class="hljs-property">meta</span>.<span class="hljs-property">title</span>) {
+        <span class="hljs-variable language_">document</span>.<span class="hljs-property">title</span> = to.<span class="hljs-property">meta</span>.<span class="hljs-property">title</span>
+    }
+    <span class="hljs-title function_">next</span>()
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> router</code></pre>
+<p><strong>注意</strong>：引入vue文件时需要全称，不能省略<code>.vue</code></p>
+<p>main.js引用</p>
+<pre><code class="hljs"><span class="hljs-comment">// 也就是router目录，默认index.js，名称不一样需要指定全称</span>
+<span class="hljs-keyword">import</span> router <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./router&#x27;</span>
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>)
+app.<span class="hljs-title function_">use</span>(router)
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>)</code></pre>
+<p>别忘了在<code>App.vue</code>中加上<code>&lt;router-view&gt;&lt;/router-view&gt;</code>，连接使用<code>&lt;router-link to=&quot;/&quot;&gt;首页&lt;/router-link&gt;</code></p>
+<p>添加非菜单路由</p>
+<p>创建<code>router/other.js</code></p>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * 不属于菜单的路由
+ */</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> [
+    {
+        <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;trading/details&#x27;</span>,
+        <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;../components/trading/CollectOrderDetails.vue&#x27;</span>)
+    },
+]</code></pre>
+<p>在<code>index.js</code>中引入</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> other <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;./other&quot;</span>
+...other,</code></pre>
+<p>路由传参</p>
+<pre><code class="hljs"><span class="hljs-comment">// 跳转带参数</span>
+this.<span class="hljs-variable">$router</span>.<span class="hljs-title function_ invoke__">push</span>({<span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/main/school/grade&#x27;</span>, <span class="hljs-attr">query</span>: {<span class="hljs-attr">schoolId</span>: item.schoolId}})
+<span class="hljs-comment">// 获取参数</span>
+this.<span class="hljs-variable">$route</span>.query.activity
+
+<span class="hljs-comment">// V3方式</span>
+router.<span class="hljs-title function_ invoke__">push</span>({<span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/home/nonage_details&#x27;</span>, <span class="hljs-attr">query</span>: {<span class="hljs-attr">id</span>: item.minorId}})
+router.currentRoute.value.query.id
+
+<span class="hljs-comment">// 动态路由</span>
+<span class="hljs-comment">// 第一步</span>
+{
+  path: <span class="hljs-string">&#x27;/article/:id&#x27;</span>,
+  component: () =&gt; <span class="hljs-title function_ invoke__">import</span>(<span class="hljs-string">&#x27;../view/Article.vue&#x27;</span>),
+},
+<span class="hljs-comment">// 第二步</span>
+router.<span class="hljs-title function_ invoke__">push</span>({<span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/article/202301010800&#x27;</span>})
+<span class="hljs-comment">// 第三步</span>
+import { useRoute } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue-router&#x27;</span>
+console.<span class="hljs-title function_ invoke__">log</span>(<span class="hljs-title function_ invoke__">useRoute</span>().params.id)</code></pre>
+<h2 id="路由变化页面不刷新问题">路由变化页面不刷新问题</h2>
+<p>找到的方法是给<code>router-view</code>绑定一个<code>key</code>，来保证路由的唯一性</p>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">router-view</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;routerFullPath&quot;</span>/&gt;</span>
+
+let routerFullPath = ref(&#x27;&#x27;)
+
+watch(router.currentRoute, () =&gt; {
+  routerFullPath.value = router.currentRoute.value.fullPath
+})</code></pre>
+<p>修复锚点使用也会刷新问题，没有使用到锚点可不做处理</p>
+<pre><code class="hljs">watch(router.currentRoute, () =&gt; {
+  let fullPath = router.currentRoute.value.fullPath
+  let index = fullPath.indexOf(&#x27;#&#x27;);
+  if (index &gt; -1) {
+    fullPath = fullPath.substring(0, index)
+  }
+  routerFullPath.value = fullPath
+})</code></pre>
+<h2 id="首页重定向问题">首页重定向问题</h2>
+<p>如果想首页重定向到某个组件，而又不想地址栏变化，可以使用子路由加空路由实现</p>
+<pre><code class="hljs">{
+  <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/&#x27;</span>,
+  <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;../views/Home.vue&#x27;</span>),
+  <span class="hljs-attr">meta</span>: {
+    <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;FANMR.CN&#x27;</span>
+  },
+  <span class="hljs-comment">// redirect: &#x27;/index&#x27;,</span>
+  <span class="hljs-attr">children</span>: [
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;&#x27;</span>,
+      <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;../views/Index.vue&#x27;</span>),
+      <span class="hljs-attr">meta</span>: {
+        <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;FANMR.CN&#x27;</span>
+      }
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;article/:id&#x27;</span>,
+      <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;../views/Article.vue&#x27;</span>),
+      <span class="hljs-attr">meta</span>: {
+        <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;详情&#x27;</span>
+      }
+    }
+  ]
+},</code></pre>
+<h2 id="动态加载路由组件">动态加载路由组件</h2>
+<pre><code class="hljs"><span class="hljs-comment">// 动态加载路由</span>
+<span class="hljs-keyword">const</span> components = <span class="hljs-keyword">import</span>.<span class="hljs-property">meta</span>.<span class="hljs-title function_">glob</span>(<span class="hljs-string">&#x27;../components/**.vue&#x27;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(components)) {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(key)
+  <span class="hljs-keyword">const</span> name = key.<span class="hljs-title function_">slice</span>(key.<span class="hljs-title function_">lastIndexOf</span>(<span class="hljs-string">&#x27;/&#x27;</span>) + <span class="hljs-number">1</span>, key.<span class="hljs-title function_">lastIndexOf</span>(<span class="hljs-string">&#x27;.&#x27;</span>))
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(name)
+  router.<span class="hljs-title function_">addRoute</span>(<span class="hljs-string">&#x27;system&#x27;</span>, {
+    <span class="hljs-attr">path</span>: name,
+    <span class="hljs-attr">component</span>: <span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-comment">/* @vite-ignore */</span> key) <span class="hljs-comment">// 路由按需加载</span>
+  })
+}</code></pre>
+<p>修复打包无法使用问题</p>
+<pre><code class="hljs"><span class="hljs-comment">// 动态加载路由 - 适配 /schoolweb/ 基础路径</span>
+<span class="hljs-keyword">const</span> base = <span class="hljs-string">&#x27;/schoolweb/&#x27;</span>
+<span class="hljs-keyword">const</span> components = <span class="hljs-keyword">import</span>.<span class="hljs-property">meta</span>.<span class="hljs-title function_">glob</span>(<span class="hljs-string">&#x27;../components/**/*.vue&#x27;</span>)
+
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> [path, component] <span class="hljs-keyword">of</span> <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">entries</span>(components)) {
+  <span class="hljs-comment">// 提取组件名称</span>
+  <span class="hljs-keyword">const</span> name = path.<span class="hljs-title function_">slice</span>(path.<span class="hljs-title function_">lastIndexOf</span>(<span class="hljs-string">&#x27;/&#x27;</span>) + <span class="hljs-number">1</span>, path.<span class="hljs-title function_">lastIndexOf</span>(<span class="hljs-string">&#x27;.&#x27;</span>))
+  <span class="hljs-keyword">const</span> routePath = <span class="hljs-string">`<span class="hljs-subst">${name.toLowerCase()}</span>`</span> <span class="hljs-comment">// 相对路径</span>
+  router.<span class="hljs-title function_">addRoute</span>(<span class="hljs-string">&#x27;sites&#x27;</span>, {
+    <span class="hljs-attr">path</span>: routePath, <span class="hljs-comment">// 相对路径</span>
+    <span class="hljs-attr">name</span>: name,
+    <span class="hljs-attr">component</span>: component,
+    <span class="hljs-attr">props</span>: <span class="hljs-literal">true</span>
+  })
+}</code></pre>
+<h1 id="Vuex">Vuex</h1>
+<pre><code class="hljs">npm install vuex<span class="hljs-keyword">@next</span></code></pre>
+<p><a href="https://vuex.vuejs.org/zh/installation.html">官方文档</a></p>
+<p>创建<code>store/index.js</code></p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> {createStore} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vuex&#x27;</span>
+
+<span class="hljs-keyword">const</span> store = <span class="hljs-title function_">createStore</span>({
+  <span class="hljs-comment">// 数据</span>
+  <span class="hljs-attr">state</span>: {
+    <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>,
+  },
+  <span class="hljs-comment">// 数据变动方法</span>
+  <span class="hljs-attr">mutations</span>: {
+    <span class="hljs-title function_">increment</span>(<span class="hljs-params">state</span>) {
+      state.<span class="hljs-property">count</span>++;
+    },
+    <span class="hljs-comment">// 同步处理，state中的属性值，只能在这里修改</span>
+    <span class="hljs-title function_">updateValue</span>(<span class="hljs-params">state, value</span>) {
+      state.<span class="hljs-property">testValue</span> = value
+    }
+  },
+  <span class="hljs-attr">actions</span>: {
+  },
+  <span class="hljs-attr">modules</span>: {
+  }
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store</code></pre>
+<p>在<code>main.ts</code>中使用，也可单独引入使用（推荐），不用全局注册，好处是所有地方都能引入并使用，减少依赖</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span>
+
+app.<span class="hljs-title function_">use</span>(store)</code></pre>
+<p>用法</p>
+<pre><code class="hljs"><span class="hljs-comment">// 取</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-property">state</span>.<span class="hljs-property">userData</span>
+&lt;div :<span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;{menuActive: $store.state.menuActiveIndex === &#x27;1&#x27;}&quot;</span> @click=<span class="hljs-string">&quot;menuIndexChange(&#x27;1&#x27;)&quot;</span>&gt;<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-home&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span></span> 首页&lt;/div&gt;
+
+<span class="hljs-comment">// 存</span>
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-title function_">commit</span>(<span class="hljs-string">&#x27;setValue&#x27;</span>,xxx)
+
+<span class="hljs-comment">// 数据变动方法</span>
+<span class="hljs-attr">mutations</span>: {
+<span class="hljs-comment">// 导航激活菜单</span>
+<span class="hljs-title function_">menuActiveIndexChange</span>(<span class="hljs-params">state, index</span>) {
+    state.<span class="hljs-property">menuActiveIndex</span> = index
+  },
+},</code></pre>
+<p>页面刷新数据丢失问题，在app.vue中添加</p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">created</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">/**
+     * 防止页面刷新Vuex数据丢失
+     */</span>
+    <span class="hljs-comment">//在页面加载时读取sessionStorage里的状态信息</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&quot;store&quot;</span>)) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-title function_">replaceState</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, <span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-property">state</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&quot;store&quot;</span>))))
+      <span class="hljs-comment">// 清空</span>
+      <span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">clear</span>()
+    }
+    <span class="hljs-comment">//在页面刷新时将vuex里的信息保存到sessionStorage里</span>
+    <span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;beforeunload&quot;</span>, <span class="hljs-function">() =&gt;</span> {
+      <span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">&quot;store&quot;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">$store</span>.<span class="hljs-property">state</span>))
+    })
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre>
+<p>Ts</p>
+<pre><code class="hljs">&lt;template&gt;
+  <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">router-view</span>/&gt;</span></span>
+&lt;/template&gt;
+
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;ts&quot;</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./store&#x27;</span>
+<span class="hljs-comment">/**
+ * 防止页面刷新Vuex数据丢失
+ */</span>
+<span class="hljs-comment">// 在页面加载时读取sessionStorage里的状态信息</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&quot;sw_hostel_store&quot;</span>)) {
+  store.<span class="hljs-title function_">replaceState</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>({}, store.<span class="hljs-property">state</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&quot;sw_hostel_store&quot;</span>))))
+  <span class="hljs-comment">// 清空</span>
+  <span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">clear</span>()
+}
+<span class="hljs-comment">// 在页面刷新时将vuex里的信息保存到sessionStorage里</span>
+<span class="hljs-variable language_">window</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&quot;beforeunload&quot;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-variable language_">sessionStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">&quot;sw_hostel_store&quot;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(store.<span class="hljs-property">state</span>))
+})
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span>
+
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">style</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;sass&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span></code></pre>
+<h1 id="elementplus">elementplus</h1>
+<p>官网有详细文档：<a href="https://element-plus.gitee.io/#/zh-CN/component/installation">element plus</a></p>
+<p><a href="https://element-plus.org/">https://element-plus.org/</a></p>
+<pre><code class="hljs">npm install element-plus <span class="hljs-attr">--save</span></code></pre>
+<p>使用</p>
+<p><code>main.js</code>中使用</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> <span class="hljs-title class_">ElementPlus</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;element-plus&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;element-plus/lib/theme-chalk/index.css&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>)
+app.<span class="hljs-title function_">use</span>(<span class="hljs-title class_">ElementPlus</span>)
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>)</code></pre>
+<p><strong>注意</strong>：在版本<code>^1.0.2-beta.41</code>发现，如果使用的是Vite，请使用JavaScript语言而不要使用TypeScript语言，否则打包会出错导致无法打包</p>
+<p><strong>注意</strong>：如果出现图标无法正常显示的情况，在引入css的下面再次引入scss，但是要确保安装了sass解析</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;element-plus/packages/theme-chalk/src/base.scss&#x27;</span></code></pre>
+<p><strong>自动导入功能</strong></p>
+<p>测试版本：<code>1.2.0-beta.3</code>，</p>
+<p>安装插件<code>npm install unplugin-vue-components</code></p>
+<p>在Vite中添加配置</p>
+<pre><code class="hljs"><span class="hljs-comment">// vite.config.ts</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Components</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;unplugin-vue-components/vite&#x27;</span>
+<span class="hljs-keyword">import</span> { <span class="hljs-title class_">ElementPlusResolver</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;unplugin-vue-components/resolvers&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">plugins</span>: [
+    <span class="hljs-comment">// ...</span>
+    <span class="hljs-title class_">Components</span>({
+      <span class="hljs-attr">resolvers</span>: [<span class="hljs-title class_">ElementPlusResolver</span>()],
+    }),
+  ],
+}</code></pre>
+<p>该方法不需要再<code>main.js</code>中进行任何配置，直接使用，不需要导入</p>
+<h1 id="Axios">Axios</h1>
+<p><a href="http://www.axios-js.com/">官方网站</a></p>
+<pre><code class="hljs">npm install axios</code></pre>
+<p>配置文件<code>http.js</code></p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;axios&#x27;</span>
+
+<span class="hljs-comment">// 1-本地，2-测试，3-正式</span>
+<span class="hljs-keyword">let</span> env = <span class="hljs-number">2</span>
+
+<span class="hljs-keyword">let</span> api = <span class="hljs-string">&#x27;&#x27;</span>
+
+<span class="hljs-keyword">switch</span> (env) {
+  <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
+    api = <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-keyword">break</span>
+  <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
+    api = <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-keyword">break</span>
+  <span class="hljs-attr">default</span>:
+    api = <span class="hljs-string">&#x27;http://localhost&#x27;</span>
+}
+
+<span class="hljs-comment">// axios配置</span>
+<span class="hljs-keyword">const</span> http = axios.<span class="hljs-title function_">create</span>({
+  <span class="hljs-attr">baseURL</span>: api,
+  <span class="hljs-attr">timeout</span>: <span class="hljs-number">1000</span> * <span class="hljs-number">30</span>, <span class="hljs-comment">// 请求超时，秒</span>
+  <span class="hljs-comment">// 携带cookie</span>
+  <span class="hljs-attr">withCredentials</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-comment">// headers: {&#x27;content-type&#x27;: &#x27;application/x-www-form-urlencoded&#x27;} // 请求数据类型 默认application/json</span>
+})
+
+<span class="hljs-comment">// 请求拦截器</span>
+http.<span class="hljs-property">interceptors</span>.<span class="hljs-property">request</span>.<span class="hljs-title function_">use</span>(<span class="hljs-function"><span class="hljs-params">config</span> =&gt;</span> {
+  <span class="hljs-comment">// 如果要携带头部数据，如token，在此写，不要写在create中，create启动就会创建，需要刷新才会更新</span>
+  config.<span class="hljs-property">headers</span>[<span class="hljs-string">&#x27;token&#x27;</span>] = <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&#x27;token&#x27;</span>)
+  <span class="hljs-keyword">return</span> config;
+}, <span class="hljs-keyword">function</span> (<span class="hljs-params">error</span>) {
+  <span class="hljs-comment">// 请求错误的执行</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(error);
+});
+
+<span class="hljs-comment">// 响应拦截器</span>
+http.<span class="hljs-property">interceptors</span>.<span class="hljs-property">response</span>.<span class="hljs-title function_">use</span>(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> response;
+}, <span class="hljs-keyword">function</span> (<span class="hljs-params">error</span>) {
+  <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">reject</span>(error);
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> http</code></pre>
+<p>绑定到Vue</p>
+<pre><code class="hljs">app.<span class="hljs-property">config</span>.<span class="hljs-property">globalProperties</span>.<span class="hljs-property">http</span> = http
+
+使用
+<span class="hljs-variable language_">this</span>.<span class="hljs-property">http</span></code></pre>
+<p>POST请求示例</p>
+<pre><code class="hljs">proxy.http.post(<span class="hljs-string">&#x27;/admin/details&#x27;</span>, {
+  pageIndex: listData.pageIndex,
+  pageSize: listData.pageSize,
+}).then(res =&gt; {
+  <span class="hljs-keyword">if</span> (res.code === <span class="hljs-number">200</span>) {
+    listData.list = res.<span class="hljs-keyword">data</span>.list
+    listData.count = res.<span class="hljs-keyword">data</span>.count
+  } <span class="hljs-keyword">else</span> {
+    proxy.msg(res)
+  }
+  proxy.loadingClose()
+}).<span class="hljs-keyword">catch</span>(() =&gt; {
+  proxy.msg({})
+  proxy.loadingClose()
+})</code></pre>
+<h1 id="图标FontAwesome">图标Font Awesome</h1>
+<p><a href="https://fontawesome.dashgame.com/">官方网站</a></p>
+<pre><code class="hljs">npm install font-awesome
+
+<span class="hljs-comment">// main中</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">&#x27;font-awesome/css/font-awesome.css&#x27;</span></code></pre>
+<h1 id="配置">配置</h1>
+<p>在项目根目录下创建<code>vite.config.ts</code>或<code>vite.config.js</code></p>
+<pre><code class="hljs"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-comment">// 代理，最重要，其他的都可以有默认配置</span>
+    <span class="hljs-attr">proxy</span>: {
+      <span class="hljs-string">&#x27;/api&#x27;</span>: {
+        <span class="hljs-attr">target</span>: <span class="hljs-string">&#x27;http://localhost:80&#x27;</span>,
+        <span class="hljs-attr">changeOrigin</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">rewrite</span>: <span class="hljs-function"><span class="hljs-params">path</span> =&gt;</span> path.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/^\/api/</span>, <span class="hljs-string">&#x27;&#x27;</span>)
+      }
+    },
+    <span class="hljs-comment">// 打包后的跟路径</span>
+    <span class="hljs-attr">base</span>: <span class="hljs-string">&#x27;/&#x27;</span>,
+    <span class="hljs-comment">// 端口</span>
+    <span class="hljs-comment">// port: 3001,</span>
+    <span class="hljs-comment">// 是否自动开启浏览器</span>
+    <span class="hljs-attr">open</span>: <span class="hljs-literal">true</span>,
+  }
+}</code></pre>
+<h1 id="热更新问题">热更新问题</h1>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> {defineConfig} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vite&#x27;</span>
+<span class="hljs-keyword">import</span> vue <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@vitejs/plugin-vue&#x27;</span>
+
+<span class="hljs-comment">// https://vitejs.dev/config/</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>({
+  <span class="hljs-attr">plugins</span>: [<span class="hljs-title function_">vue</span>()],
+  <span class="hljs-attr">devServer</span>: {
+    <span class="hljs-attr">contentBase</span>: <span class="hljs-string">&#x27;./dist&#x27;</span>, <span class="hljs-comment">//为./dist目录中的静态页面文件提供本地服务渲染，有热更新作用，不指定样式文件需要刷新</span>
+    <span class="hljs-comment">//open: true          //启动服务后自动打开浏览器网页</span>
+  }
+})</code></pre>
+<h1 id="解耦问题">解耦问题</h1>
+<p>在Vue3正式版发布之后，也尝试了对旧项目进行升级，记录以下问题</p>
+<ul>
+<li>项目中使用的任何组件最好都进行封装，即便是套个壳，在将来换组件时也能在封装层进行调整和更换，禁止在Vue页面代码中大量直接使用某个三方组件，在后期的维护和改造中工作量将非常大</li>
+</ul>
+<h1 id="接口">接口</h1>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * 接口
+ */</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+
+  <span class="hljs-comment">// 登录</span>
+  login: <span class="hljs-string">&#x27;/login&#x27;</span>,
+
+}</code></pre>
+<p>或者</p>
+<pre><code class="hljs">import http <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./http&#x27;</span>
+
+export <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loginAdminHandle</span>(<span class="hljs-params">query</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">http</span>({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;/api/login&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;post&#x27;</span>,
+    <span class="hljs-attr">data</span>: query
+  })
+}
+
+export <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loginStatusAdminHandle</span>(<span class="hljs-params">query</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">http</span>({
+    <span class="hljs-attr">url</span>: <span class="hljs-string">&#x27;/api/loginStatus&#x27;</span>,
+    <span class="hljs-attr">method</span>: <span class="hljs-string">&#x27;post&#x27;</span>,
+    <span class="hljs-attr">data</span>: query
+  })
+}</code></pre>
+<h1 id="Vue前端验证插件">Vue前端验证插件</h1>
+<p><a href="https://www.npmjs.com/package/vue-puzzle-vcode">Vue前端验证插件</a></p>
+<h1 id="基于vue3的组织架构图">基于vue3的组织架构图</h1>
+<p><a href="https://sangtian152.github.io/vue3-tree-org/">vue3-tree-org：基于vue3.x的组织架构图</a></p>
+<p><a href="https://gitee.com/sangtian152/vue3-tree-org?_from=gitee_search">Gitee地址</a></p>
+<p><img src="/image/1782643195938.png" width="500"></p>
+<h1 id="多环境配置">多环境配置</h1>
+<p>在配置文件<code>vite.config.js</code>中配置环境配置文件位置，默认在根路径下</p>
+<pre><code class="hljs"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineConfig</span>({
+  <span class="hljs-attr">envDir</span>: <span class="hljs-string">&quot;./viteEnv&quot;</span>, <span class="hljs-comment">// 指定环境配置文件路径，相对路径、绝对路径都可以</span>
+  <span class="hljs-attr">envPrefix</span>: [<span class="hljs-string">&quot;vite&quot;</span>, <span class="hljs-string">&quot;env&quot;</span>], <span class="hljs-comment">// 指定环境配置文件要读的开头前缀，默认只有VITE</span>
+})</code></pre>
+<p>创建<code>viteEnv</code>目录，并根据自己的需要配置环境文件，<strong>注意</strong>：与<code>vite.config.js</code>文件同级位置</p>
+<pre><code class="hljs">/viteEnv
+  |<span class="hljs-comment">--.env.dev</span>
+  |<span class="hljs-comment">--.env.test</span>
+  |<span class="hljs-comment">--.env.prod</span></code></pre>
+<p>在各环境文件中指定需要的变量</p>
+<pre><code class="hljs"><span class="hljs-comment">// 环境标识</span>
+vite_env = dev
+<span class="hljs-comment">// 接口请求地址</span>
+env_http_api = http:<span class="hljs-comment">//localhost:19099</span>
+<span class="hljs-comment">// 一张网请求地址</span>
+env_visual_http = http:<span class="hljs-comment">//localhost:5500/main.html</span></code></pre>
+<p>编辑<code>package.json</code>根据启动命令来指定环境，注意指定名称与配置的名称一致</p>
+<pre><code class="hljs"><span class="hljs-attr">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;dev&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite --mode dev&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;test&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite --mode test&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;prod&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite --mode prod&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build:test&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite build --mode test&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;build:prod&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite build --mode prod&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;preview&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;vite preview&quot;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></code></pre>
+<p>最后配置的环境变量会在<code>import.meta.env</code>变量中暴露使用，如：</p>
+<pre><code class="hljs"><span class="hljs-type">let</span> <span class="hljs-variable">api</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">import</span>.meta.env.env_http_api</code></pre>
+<h1 id="Pinia">Pinia</h1>
+<p><a href="https://pinia.vuejs.org/">Pinia</a>也是状态管理，与Vuex不同的是：</p>
+<ul>
+<li>Pinia支持Vue3的选项式API和组合式API</li>
+<li>Pinia没有mutations，只有state、getters、actions</li>
+<li>Pinia分模块不需要modules</li>
+<li>TypeScript支持很好</li>
+<li>自动化代码拆分</li>
+<li>Pinia体积更小，性能更好</li>
+</ul>
+<p>其中的没有mutations，能直接修改和使用数据，更加方便</p>
+<pre><code class="hljs"><span class="hljs-comment">// 安装</span>
+npm install pinia
+
+<span class="hljs-comment">// 在main中使用</span>
+<span class="hljs-keyword">import</span> { createPinia } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">createPinia</span>())
+
+<span class="hljs-comment">// 定义（store/index.js）</span>
+<span class="hljs-keyword">import</span> {defineStore} <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;storeId&#x27;</span>, {
+  <span class="hljs-comment">// 推荐使用 完整类型推断的箭头函数</span>
+  <span class="hljs-attr">state</span>: <span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-comment">// 所有这些属性都将自动推断其类型</span>
+      <span class="hljs-attr">counter</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Eduardo&#x27;</span>,
+      <span class="hljs-attr">isAdmin</span>: <span class="hljs-literal">true</span>,
+    }
+  },
+})
+
+<span class="hljs-comment">// 使用</span>
+<span class="hljs-keyword">import</span> { userStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../store&#x27;</span>
+<span class="hljs-keyword">const</span> store = <span class="hljs-title function_">userStore</span>()
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(store.<span class="hljs-property">count</span>)
+</code></pre>
+<h2 id="分模块">分模块</h2>
+<h2 id="持久化">持久化</h2>
+<p>第一步：通过Pinia插件快速实现持久化存储</p>
+<pre><code class="hljs">npm <span class="hljs-selector-tag">i</span>  pinia-plugin-persistedstate</code></pre>
+<p>第二步：在main.ts中注册</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> persistence <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia-plugin-persistedstate&#x27;</span>
+
+app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">createPinia</span>().<span class="hljs-title function_">use</span>(persistence))</code></pre>
+<p>第三步：模块开启持久化</p>
+<pre><code class="hljs"><span class="hljs-keyword">const</span> useHomeStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&quot;home&quot;</span>,{
+  <span class="hljs-comment">// 开启数据持久化</span>
+  <span class="hljs-attr">persist</span>: <span class="hljs-literal">true</span>
+  <span class="hljs-comment">// ...省略</span>
+  <span class="hljs-comment">// 或者</span>
+  <span class="hljs-attr">persist</span>: {
+    <span class="hljs-attr">enabled</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-comment">// 默认LocalStorage</span>
+    <span class="hljs-attr">storage</span>: <span class="hljs-variable language_">sessionStorage</span>,
+  },
+});</code></pre>
+<h1 id="npm警告">npm警告</h1>
+<p><img src="/image/1782643225081.png" width=""></p>
+<p>解决办法：编辑node安装目录的<code>npm.cmd</code>（给予管理员权限）</p>
+<p>将</p>
+<pre><code class="hljs"><span class="hljs-keyword">prefix</span> <span class="hljs-operator">-</span>g</code></pre>
+<p>更改为</p>
+<pre><code class="hljs">prefix --location=<span class="hljs-keyword">global</span></code></pre>
+<h1 id="yarn">yarn</h1>
+<pre><code class="hljs">npm i -g yarn
+yarn <span class="hljs-comment">--version</span>
+
+yarn init - 初始化新项目并创建 <span class="hljs-built_in">package</span>.json 文件
+yarn add [<span class="hljs-built_in">package</span>] - 将一个或多个包添加到项目中
+yarn <span class="hljs-built_in">remove</span> [<span class="hljs-built_in">package</span>] - 从项目中移除一个或多个包
+yarn install - 安装项目中所有依赖项
+yarn upgrade [<span class="hljs-built_in">package</span>] - 更新一个或多个包至最新版本
+yarn run [script] - 运行在 <span class="hljs-built_in">package</span>.json 中定义的脚本
+yarn build - 执行构建命令以生成生产环境所需的文件
+yarn start - 启动应用程序或服务器
+yarn test - 运行测试套件</code></pre>
+<h1 id="Vu3连续滚动插件">Vu3连续滚动插件</h1>
+<p><a href="https://github.com/xfy520/vue3-seamless-scroll">vue3-seamless-scroll</a></p>
+<h1 id="vue3打印插件">vue3打印插件</h1>
+<p>vue3-print-nb</p>
+<p><a href="https://gitcode.com/gh_mirrors/vu/vue3-print-nb?utm_source=replace_article_gitcode&index=top&type=card&">https://gitcode.com/gh_mirrors/vu/vue3-print-nb?utm_source=replace_article_gitcode&amp;index=top&amp;type=card&amp;</a></p>
+<h1 id="NaiveUI">Naive UI</h1>
+<p><a href="https://www.naiveui.com/zh-CN/light">Naive UI</a></p>
+<p><a href="https://www.xicons.org/#/">xicons</a></p>
+<h1 id="过渡动画出现两个页面">过渡动画出现两个页面</h1>
+<p><a href="https://blog.csdn.net/weixin_42966151/article/details/128384852">https://blog.csdn.net/weixin_42966151/article/details/128384852</a></p>
+<h1 id="v-html中代码高亮方案">v-html中代码高亮方案</h1>
+<p>安装插件<code>yarn add highlight.js</code>，在组件中引入使用，由于是动态插入的，需要在渲染完成后执行</p>
+<pre><code class="hljs"><span class="hljs-keyword">import</span> { nextTick } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">import</span> hljs <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;highlight.js&#x27;</span>
+
+<span class="hljs-comment">// 在需要的地方执行代码高亮</span>
+<span class="hljs-title function_">nextTick</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;pre code&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">el</span>) =&gt;</span> {
+    hljs.<span class="hljs-title function_">highlightElement</span>(el)
+  })
+})
+</code></pre>
+<h1 id="拖拽组件库">拖拽组件库</h1>
+<p><a href="https://www.vue3-dnd.com/">https://www.vue3-dnd.com/</a></p>
+<h1 id="网页版VsCode编辑器">网页版VsCode编辑器</h1>
+<p><a href="https://github.com/microsoft/monaco-editor">https://github.com/microsoft/monaco-editor</a></p>
+<h1 id="大屏分辨率适配插件v-scale-screen">大屏分辨率适配插件v-scale-screen</h1>
+<p>注：vue2请使用<a href="mailto:v-scale-screen@1.0.0">v-scale-screen@1.0.0</a>版本，vue3请使用<a href="mailto:v-scale-screen@2.0.0">v-scale-screen@2.0.0</a>版本</p>
+<pre><code class="hljs">yarn <span class="hljs-keyword">add</span> v-scale-screen</code></pre>
+<p>使用</p>
+<pre><code class="hljs"><span class="language-xml">// main.js
+<span class="hljs-tag">&lt;<span class="hljs-name">v-scale-screen</span> <span class="hljs-attr">width</span>=<span class="hljs-string">&quot;1920&quot;</span> <span class="hljs-attr">height</span>=<span class="hljs-string">&quot;1080&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">v-chart</span>&gt;</span>....<span class="hljs-tag">&lt;/<span class="hljs-name">v-chart</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">v-scale-screen</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">setup</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">VScaleScreen</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;v-scale-screen&#x27;</span>
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre>
+<p>可选配置</p>
+<p><img src="/image/1782643241026.png" width=""></p>
+<h1 id="图表工具">图表工具</h1>
+<p><a href="https://antv.antgroup.com/">https://antv.antgroup.com/</a></p>
+<h1 id="富文本编辑器">富文本编辑器</h1>
+<p><a href="https://www.wangeditor.com/">https://www.wangeditor.com/</a></p>
+<p><a href="https://aieditor.com.cn/zh/">https://aieditor.com.cn/zh/</a></p>
+<p>配合星火模型：<a href="https://www.xfyun.cn/">https://www.xfyun.cn/</a></p>
+<p><a href="https://quilljs.com/">https://quilljs.com/</a></p>
+<h1 id="Markdown编辑器">Markdown编辑器</h1>
+<p><a href="https://github.com/imzbf/md-editor-v3">https://github.com/imzbf/md-editor-v3</a></p>
+</div>
+    <!-- 大纲 -->
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#node-npm">node-npm</a></div><div id="outline-1" style="padding-left:0px"><a href="#Vite项目创建">Vite项目创建</a></div><div id="outline-2" style="padding-left:0px"><a href="#sass">sass</a></div><div id="outline-3" style="padding-left:0px"><a href="#router">router</a></div><div id="outline-4" style="padding-left:20px"><a href="#路由变化页面不刷新问题">路由变化页面不刷新问题</a></div><div id="outline-5" style="padding-left:20px"><a href="#首页重定向问题">首页重定向问题</a></div><div id="outline-6" style="padding-left:20px"><a href="#动态加载路由组件">动态加载路由组件</a></div><div id="outline-7" style="padding-left:0px"><a href="#Vuex">Vuex</a></div><div id="outline-8" style="padding-left:0px"><a href="#elementplus">elementplus</a></div><div id="outline-9" style="padding-left:0px"><a href="#Axios">Axios</a></div><div id="outline-10" style="padding-left:0px"><a href="#图标FontAwesome">图标Font Awesome</a></div><div id="outline-11" style="padding-left:0px"><a href="#配置">配置</a></div><div id="outline-12" style="padding-left:0px"><a href="#热更新问题">热更新问题</a></div><div id="outline-13" style="padding-left:0px"><a href="#解耦问题">解耦问题</a></div><div id="outline-14" style="padding-left:0px"><a href="#接口">接口</a></div><div id="outline-15" style="padding-left:0px"><a href="#Vue前端验证插件">Vue前端验证插件</a></div><div id="outline-16" style="padding-left:0px"><a href="#基于vue3的组织架构图">基于vue3的组织架构图</a></div><div id="outline-17" style="padding-left:0px"><a href="#多环境配置">多环境配置</a></div><div id="outline-18" style="padding-left:0px"><a href="#Pinia">Pinia</a></div><div id="outline-19" style="padding-left:20px"><a href="#分模块">分模块</a></div><div id="outline-20" style="padding-left:20px"><a href="#持久化">持久化</a></div><div id="outline-21" style="padding-left:0px"><a href="#npm警告">npm警告</a></div><div id="outline-22" style="padding-left:0px"><a href="#yarn">yarn</a></div><div id="outline-23" style="padding-left:0px"><a href="#Vu3连续滚动插件">Vu3连续滚动插件</a></div><div id="outline-24" style="padding-left:0px"><a href="#vue3打印插件">vue3打印插件</a></div><div id="outline-25" style="padding-left:0px"><a href="#NaiveUI">Naive UI</a></div><div id="outline-26" style="padding-left:0px"><a href="#过渡动画出现两个页面">过渡动画出现两个页面</a></div><div id="outline-27" style="padding-left:0px"><a href="#v-html中代码高亮方案">v-html中代码高亮方案</a></div><div id="outline-28" style="padding-left:0px"><a href="#拖拽组件库">拖拽组件库</a></div><div id="outline-29" style="padding-left:0px"><a href="#网页版VsCode编辑器">网页版VsCode编辑器</a></div><div id="outline-30" style="padding-left:0px"><a href="#大屏分辨率适配插件v-scale-screen">大屏分辨率适配插件v-scale-screen</a></div><div id="outline-31" style="padding-left:0px"><a href="#图表工具">图表工具</a></div><div id="outline-32" style="padding-left:0px"><a href="#富文本编辑器">富文本编辑器</a></div><div id="outline-33" style="padding-left:0px"><a href="#Markdown编辑器">Markdown编辑器</a></div></div>
+
+    <script>
+      // 链接新窗口打开
+      document.querySelectorAll("#content a").forEach((item) => {
+        item.setAttribute("target", "_blank");
+      });
+
+      // 图片点击放大（滚轮缩放，点击关闭）
+      (function () {
+        var overlay = null;
+        var scale = 1;
+        document.querySelectorAll("#content img").forEach(function (img) {
+          img.addEventListener("click", function () {
+            overlay = document.createElement("div");
+            overlay.className = "img-overlay";
+            var clone = img.cloneNode(true);
+            clone.removeAttribute("width");
+            clone.style.transform = "scale(1)";
+            scale = 1;
+            overlay.appendChild(clone);
+            // 点击任意位置关闭
+            overlay.addEventListener("click", function () {
+              document.body.removeChild(overlay);
+              overlay = null;
+            });
+            // 滚轮缩放
+            overlay.addEventListener("wheel", function (e) {
+              e.preventDefault();
+              scale += e.deltaY < 0 ? 0.1 : -0.1;
+              scale = Math.max(0.2, Math.min(5, scale));
+              clone.style.transform = "scale(" + scale + ")";
+            });
+            document.body.appendChild(overlay);
+          });
+        });
+      })();
+
+      // 代码复制
+      document.querySelectorAll("#content pre").forEach((item) => {
+        item.innerHTML +=
+          '<div class="copy-btn" onclick="copyCode(this)">复制</div>';
+        item.onmouseover = function () {
+          item.querySelector(".copy-btn").style.opacity = 1;
+        };
+        item.onmouseout = function () {
+          item.querySelector(".copy-btn").style.opacity = 0;
+        };
+      });
+
+      function copyCode(item) {
+        // 获取要复制的代码文本
+        let code = item.parentNode.querySelector("code").innerText;
+
+        // 尝试使用 Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(code)
+            .then(() => {
+              item.innerText = "复制成功";
+              setTimeout(() => {
+                item.innerText = "复制";
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("复制失败，请手动复制:", err);
+              fallbackCopyTextToClipboard(code, item);
+            });
+        } else {
+          // 使用兼容性处理方法
+          fallbackCopyTextToClipboard(code, item);
+        }
+      }
+
+      // 兼容性处理函数
+      function fallbackCopyTextToClipboard(text, item) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // 隐藏textarea元素
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+
+        document.body.appendChild(textArea);
+        textArea.select();
+
+        try {
+          let successful = document.execCommand("copy");
+          let msg = successful ? "成功" : "失败";
+          item.innerText = `复制${msg}`;
+          setTimeout(() => {
+            item.innerText = "复制";
+          }, 2000);
+        } catch (err) {
+          console.error("Fallback: 复制失败，请手动复制:", err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      // 上一次点击
+      document.querySelectorAll(".cate-parent").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          // 先关闭所有
+          document.querySelectorAll(".cate-item-box").forEach((itemOther) => {
+            // 不是当前元素关闭
+            if (itemOther != item.nextElementSibling) {
+              itemOther.style.display = "none";
+            } else {
+              if (itemOther.style.display == "block") {
+                itemOther.style.display = "none";
+              } else {
+                itemOther.style.display = "block";
+              }
+            }
+          });
+        });
+      });
+
+      // 页面加载时展开当前文档所属分类
+      (function () {
+        var cateId = "05";
+        if (cateId) {
+          document
+            .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')
+            .forEach(function (box) {
+              box.style.display = "block";
+            });
+        }
+      })();
+
+      // 当前文档在侧边栏高亮
+      var currentPath = window.location.pathname;
+      document.querySelectorAll(".cate-item-box a").forEach(function (a) {
+        if (a.getAttribute("href") === currentPath) {
+          a.style.color = "#299764";
+        }
+      });
+
+      // 大纲滚动监听
+      var outlineIdList = [];
+      document.querySelectorAll(".outline a").forEach(function (a) {
+        outlineIdList.push(a.getAttribute("href").replace("#", ""));
+      });
+
+      window.addEventListener("scroll", function () {
+        var scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop;
+        var OFFSET = 60; // 顶部导航高度
+        for (var i = 0; i < outlineIdList.length; i++) {
+          var el = document.getElementById(outlineIdList[i]);
+          if (!el) continue;
+          var top = el.getBoundingClientRect().top + scrollTop;
+          // 最后一个标题，或下一个标题元素不存在 → 激活到文档末尾
+          var nextEl =
+            i < outlineIdList.length - 1
+              ? document.getElementById(outlineIdList[i + 1])
+              : null;
+          var isActive =
+            scrollTop > top - OFFSET &&
+            (!nextEl ||
+              scrollTop <
+                nextEl.getBoundingClientRect().top + scrollTop - OFFSET);
+          var outlineEl = document.getElementById("outline-" + i);
+          if (outlineEl) {
+            outlineEl.classList.toggle("outline-active", isActive);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260626102416.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="01"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,43 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><blockquote>
+<p>一套纯文本 + 文件夹的 Wiki 管理方案，利用 Node 脚本实现序号整理与静态网页生成</p>
+</blockquote>
+<h1 id="实现功能">实现功能</h1>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 文档序号整理</li>
+<li><input checked="" disabled="" type="checkbox"> 静态网页生成</li>
+<li><input checked="" disabled="" type="checkbox"> 文档无引用图片清理</li>
+</ul>
+<h1 id="实现思路">实现思路</h1>
+<h2 id="文档序号整理">文档序号整理</h2>
+<p>目录结构：</p>
+<pre><code class="hljs">docs/
+├── 01_杂文随笔/
+│   └── 01_基于Node的WIKI管理.md
+├── 03_前端知识/
+└── 05_Vue框架/
+image/
+<span class="hljs-built_in">source</span>/
+target/
+manage.js</code></pre>
+<p>利用 Node 脚本对文档进行序号整理。序号统一使用<strong>奇数</strong>（<code>01</code>、<code>03</code>、<code>05</code>...），偶数位留空，方便后续插入或调整排序</p>
+<ul>
+<li><strong>为什么是01而不是00？</strong> 给最靠前的位置预留空间 —— 如果需要将某篇文档排到第一位，改为 <code>00</code> 后重新整理即可</li>
+<li><strong>为什么都是奇数？</strong> 偶数（<code>02</code>、<code>04</code>...）是给调整排序使用的。每篇文档、每个分类之间都留有排序空隙，移动时只需修改序号再执行脚本，无需手动搬运文件</li>
+</ul>
+<p>纯文本 + 文件夹排序，零依赖，任何编辑器都能维护</p>
+<h2 id="静态网页生成">静态网页生成</h2>
+<p>文档的永久链接通过Markdown头部元信息（frontmatter）中的 <code>createTime</code> 和 <code>updateTime</code> 生成固定ID</p>
+<pre><code class="hljs"><span class="hljs-meta">---</span>
+<span class="hljs-attr">createTime:</span> <span class="hljs-number">2026-06-26 10:24:16</span>
+<span class="hljs-attr">updateTime:</span> <span class="hljs-number">2026-06-26 10:24:16</span>
+<span class="hljs-meta">---</span></code></pre>
+<p>之所以不用文件的创建时间（<code>birthtime</code>），是因为文件在迁移、Git 克隆或拷贝后，系统记录的创建时间会发生变化，导致生成的链接也随之改变。通过显式声明时间戳，确保了文档 ID 的稳定性，无论文件如何移动都不会影响已有链接</p>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#实现功能">实现功能</a></div><div id="outline-1" style="padding-left:0px"><a href="#实现思路">实现思路</a></div><div id="outline-2" style="padding-left:20px"><a href="#文档序号整理">文档序号整理</a></div><div id="outline-3" style="padding-left:20px"><a href="#静态网页生成">静态网页生成</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +567,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "01";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')

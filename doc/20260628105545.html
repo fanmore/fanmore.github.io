@@ -1,0 +1,1121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FANMR.CN</title>
+    <link rel="shortcut icon" href="/static/logo.png" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 101vh;
+        color: #3c3c43;
+        line-height: 1.7;
+        font-size: 15px;
+      }
+      html {
+        scroll-padding-top: 60px; /* 顶部导航高度 */
+      }
+      /* 头部 */
+      .header {
+        height: 60px;
+        border-bottom: 1px solid #c2c2c4;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+      }
+      .header-left a {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: #3c3c43;
+      }
+      .header-left img {
+        width: 30px;
+        position: relative;
+        top: -2px;
+      }
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .header-right a {
+        text-decoration: none;
+        color: #3c3c43;
+      }
+
+      /* 分类 */
+      .cate {
+        position: fixed;
+        top: 60px;
+        bottom: 0;
+        width: 320px;
+        border-right: 1px solid #c2c2c4;
+        padding: 16px;
+        font-size: 13px;
+        color: #333;
+      }
+      .cate-parent {
+        padding: 2px 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .cate-parent span:nth-child(2) {
+        margin-left: auto;
+      }
+      .cate-parent:hover {
+        color: #299764;
+      }
+      .cate-item-box {
+        padding-left: 24px;
+        display: none;
+      }
+      .cate-item-box a {
+        display: block;
+        text-decoration: none;
+        color: #3c3c43;
+        padding: 2px 0;
+      }
+      .cate-item-box a:hover {
+        color: #299764;
+      }
+      /* 内容 */
+      .content {
+        width: 840px;
+        margin: 0 auto;
+        padding: 20px 0 40px 0;
+      }
+
+      /* 大纲 */
+      .outline {
+        position: fixed;
+        top: 100px;
+        right: 0;
+        width: 300px;
+        padding: 0 16px;
+        border-left: 1px solid #c2c2c4;
+      }
+      .outline a {
+        text-decoration: none;
+        color: #3c3c43;
+        font-size: 13px;
+        padding: 2px 0;
+        display: block;
+      }
+      .outline a:hover {
+        color: #299764;
+      }
+      .outline-active a {
+        color: #299764 !important;
+      }
+
+      /* 高亮代码 */
+      pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1em;
+      }
+      code.hljs {
+        padding: 3px 5px;
+      }
+      .hljs {
+        color: #383a42;
+        background: #fafafa;
+      }
+      .hljs-comment,
+      .hljs-quote {
+        color: #a0a1a7;
+        font-style: italic;
+      }
+      .hljs-doctag,
+      .hljs-formula,
+      .hljs-keyword {
+        color: #a626a4;
+      }
+      .hljs-deletion,
+      .hljs-name,
+      .hljs-section,
+      .hljs-selector-tag,
+      .hljs-subst {
+        color: #e45649;
+      }
+      .hljs-literal {
+        color: #0184bb;
+      }
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string,
+      .hljs-regexp,
+      .hljs-string {
+        color: #50a14f;
+      }
+      .hljs-attr,
+      .hljs-number,
+      .hljs-selector-attr,
+      .hljs-selector-class,
+      .hljs-selector-pseudo,
+      .hljs-template-variable,
+      .hljs-type,
+      .hljs-variable {
+        color: #986801;
+      }
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-symbol,
+      .hljs-title {
+        color: #4078f2;
+      }
+      .hljs-built_in,
+      .hljs-class .hljs-title,
+      .hljs-title.class_ {
+        color: #c18401;
+      }
+      .hljs-emphasis {
+        font-style: italic;
+      }
+      .hljs-strong {
+        font-weight: 700;
+      }
+      .hljs-link {
+        text-decoration: underline;
+      }
+
+      /* 代码复制 */
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        cursor: pointer;
+        color: #999;
+        font-size: 12px;
+        transition: all 0.2s;
+        opacity: 0;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 2px 6px;
+        background-color: #fff;
+      }
+
+      .copy-btn:hover {
+        color: #fc6423;
+      }
+
+
+      /* 图片放大遮罩 */
+      .img-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .img-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        transition: transform 0.1s;
+      }
+
+      /* 文章样式 */
+
+      /* 1级标题 */
+      #content h1 {
+        font-size: 22px;
+        padding-top: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      /* 2级标题 */
+      #content h2 {
+        font-size: 18px;
+      }
+      /* 引用 */
+      #content blockquote {
+        border: 1px solid rgb(165, 194, 255);
+        background: linear-gradient(
+          137deg,
+          rgb(245, 238, 255) 0%,
+          rgb(230, 244, 255) 52%,
+          rgb(236, 240, 255) 97%
+        );
+        padding: 15px;
+        margin: 10px 0;
+        color: rgb(97, 92, 237);
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      #content blockquote p {
+        margin: 0;
+      }
+      /* 图片 */
+      #content img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        cursor: pointer;
+        border: 1px solid #eee;
+      }
+      /* 代码 */
+      #content pre {
+        background-color: #f5f6f7;
+        overflow: auto;
+        padding: 1em;
+        position: relative;
+        border-radius: 6px;
+        padding: 0 0 0 0;
+      }
+      #content pre code {
+        font-size: 13px;
+        font-family:
+          "SF Mono", "Consolas", "Roboto Mono", "Monaco", "Courier New",
+          "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+      }
+      #content code {
+        border-radius: 3px;
+        background-color: #f5f6f7;
+      }
+      #content p code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      #content li code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      /* 表格 */
+      #content table {
+        width: 100%;
+        border-right: 1px solid #ebeef5;
+        border-top: 1px solid #ebeef5;
+        border-collapse: collapse;
+      }
+      #content th,
+      #content td {
+        text-align: left;
+        border-left: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+        padding: 7px 10px !important;
+      }
+      #content th {
+        font-weight: bold !important;
+        background-color: #f8f8f8;
+      }
+      #content a {
+        color: #65a1d6;
+        text-decoration: none;
+        margin: 0 2px;
+        border-bottom: 1px solid #65a1d6;
+      }
+      #content a:hover {
+        color: #ff7600;
+      }
+      /* 有序列表 */
+      #content ol {
+        padding-left: 50px;
+      }
+      /* 代办事项 */
+      #content input {
+        position: relative;
+        top: 1px;
+      }
+      #content input[type="checkbox"] {
+        position: relative;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+        left: -20px;
+        margin-right: -16px;
+      }
+      #content input[type="checkbox"]::after {
+        border-radius: 3px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        color: #000;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        visibility: visible;
+        padding-left: 0;
+        text-align: center;
+        content: " ";
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+      #content input[type="checkbox"]:checked::before {
+        content: "✓";
+        font-size: 12px;
+        font-weight: bold;
+        color: #7459ee;
+        position: absolute;
+        display: inline-block;
+        z-index: 10;
+        top: -1px;
+        left: 3px;
+      }
+    </style>
+    <style>.cate-item-box a[href="/doc/20260628105545.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="01"]{display:block}</style>
+  </head>
+  <body>
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-left">
+        <a href="/">
+          <img src="/static/logo.png" alt="logo" />
+          <span>FANMR.CN</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <a href="/nav.html">网址收集</a>
+        <a href="/author.html">关于作者</a>
+        <a href="https://github.com/fanmore" target="_blank">Github</a>
+        <a href="https://gitee.com/riskfan" target="_blank">Gitee</a>
+      </div>
+    </div>
+    <!-- 分类 -->
+    <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
+    <!-- 内容 -->
+    <div class="content" id="content"><h1 id="调整导航hover">调整导航hover</h1>
+<pre><code class="hljs">// 导航背景
+<span class="hljs-selector-class">.menu-item</span> {
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">0</span> <span class="hljs-number">10px</span>;
+}
+<span class="hljs-selector-class">.menu-item</span> <span class="hljs-selector-tag">a</span> {
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">3px</span>;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">5px</span> <span class="hljs-number">10px</span> <span class="hljs-meta">!important</span>;
+}</code></pre>
+<h1 id="增加背景图片">增加背景图片</h1>
+<pre><code class="hljs"><span class="hljs-selector-tag">body</span> {
+  // 字体调整
+  <span class="hljs-attribute">font-family</span>: Helvetica, <span class="hljs-string">&#x27;PingFang SC&#x27;</span>, <span class="hljs-string">&#x27;Hiragino Sans GB&#x27;</span>, <span class="hljs-string">&#x27;Microsoft YaHei&#x27;</span>, <span class="hljs-string">&#x27;微软雅黑&#x27;</span>, Arial, sans-serif;
+  // 防止页面因没有滚动条导致的右移现象
+  <span class="hljs-attribute">min-height</span>: <span class="hljs-number">100.1vh</span>;
+
+  <span class="hljs-attribute">background-image</span>: <span class="hljs-built_in">url</span>(<span class="hljs-string">&quot;/images/20260429104201.svg&quot;</span>);
+  <span class="hljs-attribute">background-position</span>: center center;
+  <span class="hljs-attribute">background-repeat</span>: no-repeat;
+  <span class="hljs-attribute">background-size</span>: cover;
+  <span class="hljs-attribute">background-attachment</span>: fixed;
+}</code></pre>
+<h1 id="左中右布局">左中右布局</h1>
+<p>编辑<code>layout/_layout.njk</code></p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;{{ page.lang }}&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  {{ partial(&#x27;_partials/head/head.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+  {%- include &#x27;_partials/head/head-unique.njk&#x27; -%}
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>{% block title %}{% endblock %}<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  {{ partial(&#x27;_third-party/analytics/index.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+  {{ partial(&#x27;_scripts/index.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+  {{ partial(&#x27;_third-party/index.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+  {{ partial(&#x27;_third-party/statistics/index.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+  {%- include &#x27;_third-party/math/index.njk&#x27; -%}
+  {%- include &#x27;_third-party/quicklink.njk&#x27; -%}
+  {{- next_inject(&#x27;head&#x27;) }}
+  <span class="hljs-tag">&lt;<span class="hljs-name">noscript</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;stylesheet&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(theme.css) }}/noscript.css&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">noscript</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/WebPage&quot;</span>{% <span class="hljs-attr">if</span> <span class="hljs-attr">theme.motion.enable</span> %} <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;use-motion&quot;</span>{% <span class="hljs-attr">endif</span> %}&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;headband&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">main</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;column&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header&quot;</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/WPHeader&quot;</span>&gt;</span>
+        {%- include &#x27;_partials/header/index.njk&#x27; -%}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+
+      {# 自定义分类 #}
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;header-inner myCate sidebar animated fadeInUp&quot;</span>&gt;</span>{% include &#x27;_partials/page/categoriesCustom.njk&#x27; %}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+     
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;main-inner {% block class %}{% endblock %}&quot;</span>&gt;</span>
+      {%- include &#x27;_partials/header/sub-menu.njk&#x27; -%}
+      {% block content %}{% endblock %}
+      {%- include &#x27;_partials/comments.njk&#x27; -%}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;column&quot;</span>&gt;</span>
+      {%- if theme.sidebar.display !== &#x27;remove&#x27; %}
+        {% block sidebar %}{% endblock %}
+      {%- endif %}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">footer</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;footer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;footer-inner&quot;</span>&gt;</span>
+      {%- include &#x27;_partials/languages.njk&#x27; -%}
+      {{ partial(&#x27;_partials/footer.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">footer</span>&gt;</span>
+
+  {{ partial(&#x27;_partials/widgets.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+
+  {{- next_inject(&#x27;bodyEnd&#x27;) }}
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span></code></pre>
+<p>页面宽度调整为1400px，加上中间宽度计算css</p>
+<pre><code class="hljs">// 左中右布局
+<span class="hljs-selector-class">.main-inner</span> {
+    <span class="hljs-attribute">width</span>: <span class="hljs-built_in">calc</span>(<span class="hljs-number">100%</span> - <span class="hljs-number">504px</span>);
+}</code></pre>
+<h1 id="侧边标签改运行天数">侧边标签改运行天数</h1>
+<p>因为使用不到标签，同时不想为文章加标签，也从来没有通过标签查找过文章，所以将侧边标签改为了运行天数展示</p>
+<p>首先将文件<code>layout/_partials/sidebar/site-overview.njk</code>中的以下代码：</p>
+<pre><code class="hljs">{%- if site.tags.length &gt; 0 %}
+  {%- set tagsPageQuery = site.pages.find({type: &#x27;tags&#x27;}, {lean: true}) %}
+  {%- set hasTagsPage = tagsPageQuery.length &gt; 0 %}
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;site-state-item site-state-tags&quot;</span>&gt;</span>
+    {%- set tag_dir = theme.menu.tags.split(&#x27;||&#x27;)[0] | trim if theme.menu.tags else config.tag_dir + &#x27;/&#x27; %}
+    {%- if hasTagsPage %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(tag_dir) }}&quot;</span>&gt;</span>
+    {%- endif %}
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;site-state-item-count&quot;</span>&gt;</span>{{ site.tags.length }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;site-state-item-name&quot;</span>&gt;</span>{{ __(&#x27;state.tags&#x27;) }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+    {%- if hasTagsPage %}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>{% endif %}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+{%- endif %}</code></pre>
+<p>替换为：</p>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;site-state-item site-state-tags&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;site-state-item-count run-days&quot;</span>&gt;</span>0<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;site-state-item-name&quot;</span>&gt;</span>运行<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>然后在文件<code>layout/_layout.njk</code>中body结束前加上以下代码：</p>
+<pre><code class="hljs"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-comment">// 运行时长</span>
+  <span class="hljs-keyword">let</span> timer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>().<span class="hljs-title function_">getTime</span>() - <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-string">&#x27;2026-04-28 00:00:00&#x27;</span>)
+  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.run-days&#x27;</span>).<span class="hljs-property">innerHTML</span> = <span class="hljs-built_in">parseInt</span>(timer / <span class="hljs-number">1000</span> / <span class="hljs-number">60</span> / <span class="hljs-number">60</span> / <span class="hljs-number">24</span>)
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<h1 id="美化代办事项样式">美化代办事项样式</h1>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 自定义代办列表样式（去掉小黑点，重新加方框样式）</li>
+<li><input disabled="" type="checkbox"> 美化浏览器滚动条（第三方插件）</li>
+<li><input disabled="" type="checkbox"> 测试加密方式是否安全（能否从页面获取到所有内容）</li>
+<li><input disabled="" type="checkbox"> 固定彩带背景</li>
+</ul>
+<pre><code class="hljs"><span class="hljs-comment">/* 代办事项 */</span>
+<span class="hljs-selector-class">.main-inner</span> <span class="hljs-selector-tag">input</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">top</span>: <span class="hljs-number">1px</span>;
+}
+<span class="hljs-selector-class">.main-inner</span> <span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span> {
+  <span class="hljs-attribute">position</span>: relative;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">4px</span>;
+}
+<span class="hljs-selector-class">.main-inner</span> <span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span><span class="hljs-selector-pseudo">::after</span> {
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">top</span>: -<span class="hljs-number">1px</span>;
+  <span class="hljs-attribute">background-color</span>: white;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#000</span>;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">16px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">16px</span>;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">visibility</span>: visible;
+  <span class="hljs-attribute">padding-left</span>: <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">text-align</span>: center;
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot; &quot;</span>;
+  <span class="hljs-attribute">box-sizing</span>: border-box;
+  <span class="hljs-attribute">border</span>: <span class="hljs-number">1px</span> solid <span class="hljs-number">#ccc</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">2px</span>;
+}
+<span class="hljs-selector-tag">ul</span> {
+  <span class="hljs-attribute">list-style</span>: none;
+  <span class="hljs-attribute">padding-left</span>: <span class="hljs-number">28px</span>;
+}
+<span class="hljs-comment">/* 仅为不含 input 的 li 手动添加黑点（模拟默认样式） */</span>
+<span class="hljs-selector-tag">ul</span> <span class="hljs-selector-tag">li</span><span class="hljs-selector-pseudo">:not</span>(<span class="hljs-selector-pseudo">:has</span>(<span class="hljs-selector-tag">input</span>))<span class="hljs-selector-pseudo">::before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;&quot;</span>;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attribute">vertical-align</span>: middle;
+  <span class="hljs-attribute">background-color</span>: <span class="hljs-number">#333</span>;
+  <span class="hljs-attribute">margin-right</span>: <span class="hljs-number">12px</span>;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">40px</span>;
+  <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">8px</span>;
+}
+<span class="hljs-selector-class">.main-inner</span> <span class="hljs-selector-tag">input</span><span class="hljs-selector-attr">[type=<span class="hljs-string">&quot;checkbox&quot;</span>]</span><span class="hljs-selector-pseudo">:checked</span><span class="hljs-selector-pseudo">::before</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;✓&quot;</span>;
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">12px</span>;
+  <span class="hljs-attribute">font-weight</span>: bold;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#7459ee</span>;
+  <span class="hljs-attribute">position</span>: absolute;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">z-index</span>: <span class="hljs-number">10</span>;
+  <span class="hljs-attribute">top</span>: <span class="hljs-number">1px</span>;
+  <span class="hljs-attribute">left</span>: <span class="hljs-number">4px</span>;
+}
+<span class="hljs-selector-tag">ol</span> {
+  <span class="hljs-attribute">padding-left</span>: <span class="hljs-number">62px</span>;
+}
+<span class="hljs-selector-tag">ol</span> <span class="hljs-selector-tag">ol</span> {
+  <span class="hljs-attribute">padding-left</span>: <span class="hljs-number">28px</span>;
+}</code></pre>
+<h1 id="标题美化">标题美化</h1>
+<pre><code class="hljs">// 标题美化
+<span class="hljs-selector-class">.post-body</span> <span class="hljs-selector-tag">h1</span> <span class="hljs-selector-tag">a</span>,<span class="hljs-selector-class">.post-body</span> <span class="hljs-selector-tag">h2</span> <span class="hljs-selector-tag">a</span>, {
+  <span class="hljs-attribute">display</span>: none;
+}
+<span class="hljs-comment">/* 1级标题 */</span>
+<span class="hljs-selector-class">.post-body</span> <span class="hljs-selector-tag">h1</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.4em</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">padding-top</span>: <span class="hljs-number">10px</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">border-bottom</span>: <span class="hljs-number">1px</span> solid <span class="hljs-number">#eee</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">padding-bottom</span>: <span class="hljs-number">10px</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.5</span> <span class="hljs-meta">!important</span>;
+}
+
+<span class="hljs-selector-class">.post-body</span> <span class="hljs-selector-tag">h1</span><span class="hljs-selector-pseudo">:after</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;h1&quot;</span>;
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.2</span>);
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attribute">vertical-align</span>: top;
+}
+
+<span class="hljs-comment">/* 2级标题 */</span>
+<span class="hljs-selector-class">.post-body</span> <span class="hljs-selector-tag">h2</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1.2em</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">1.5</span> <span class="hljs-meta">!important</span>;
+}
+
+<span class="hljs-selector-class">.post-body</span> <span class="hljs-selector-tag">h2</span><span class="hljs-selector-pseudo">:after</span> {
+  <span class="hljs-attribute">content</span>: <span class="hljs-string">&quot;h2&quot;</span>;
+  <span class="hljs-attribute">color</span>: <span class="hljs-built_in">rgba</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.2</span>);
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">14px</span>;
+  <span class="hljs-attribute">display</span>: inline-block;
+  <span class="hljs-attribute">margin-left</span>: <span class="hljs-number">5px</span>;
+  <span class="hljs-attribute">vertical-align</span>: top;
+}</code></pre>
+<h1 id="优化文章管理">优化文章管理</h1>
+<p>Hexo配合VsCode写文档最麻烦的就是文章管理问题，不好做排序，而利于文章查看的也只有文件夹方式，而排序就只能选择序号</p>
+<p><img src="/image/1782615398891.png" width="240"></p>
+<p>手动维护肯定是很麻烦的，所有利用<code>Node</code>执行js脚本完成比较方便。创建<code>manage.js</code>脚本，需要维护的时候执行<code>node manage.js</code>即可</p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;fs&quot;</span>);
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">start</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;开始执行...&quot;</span>);
+  <span class="hljs-keyword">let</span> folderRoot = <span class="hljs-string">&quot;./source/_posts&quot;</span>;
+  <span class="hljs-comment">// 读取文件夹</span>
+  <span class="hljs-keyword">let</span> folderList = fs.<span class="hljs-title function_">readdirSync</span>(folderRoot);
+  <span class="hljs-comment">// 序号</span>
+  <span class="hljs-keyword">let</span> sort = <span class="hljs-number">110</span>;
+  <span class="hljs-comment">// 遍历</span>
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> item <span class="hljs-keyword">of</span> folderList) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(item);
+    <span class="hljs-keyword">let</span> newName = sort + item.<span class="hljs-title function_">substring</span>(<span class="hljs-number">3</span>, item.<span class="hljs-property">length</span>);
+    <span class="hljs-comment">// 文件夹重命名</span>
+    <span class="hljs-keyword">if</span> (item.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>) != sort) {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;重命名文件夹：&quot;</span> + item + <span class="hljs-string">&quot; -&gt; &quot;</span> + newName);
+      fs.<span class="hljs-title function_">renameSync</span>(folderRoot + <span class="hljs-string">&quot;/&quot;</span> + item, folderRoot + <span class="hljs-string">&quot;/&quot;</span> + newName);
+    }
+
+    <span class="hljs-comment">// 读取文件</span>
+    <span class="hljs-keyword">let</span> fileList = fs.<span class="hljs-title function_">readdirSync</span>(folderRoot + <span class="hljs-string">&quot;/&quot;</span> + newName);
+    <span class="hljs-keyword">let</span> fileSort = <span class="hljs-number">110</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> file <span class="hljs-keyword">of</span> fileList) {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(file);
+      <span class="hljs-keyword">let</span> newFileName = fileSort + file.<span class="hljs-title function_">substring</span>(<span class="hljs-number">3</span>, file.<span class="hljs-property">length</span>);
+      <span class="hljs-keyword">if</span> (file.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>) != fileSort) {
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;重命名文件：&quot;</span> + file + <span class="hljs-string">&quot; -&gt; &quot;</span> + newFileName);
+        fs.<span class="hljs-title function_">renameSync</span>(
+          folderRoot + <span class="hljs-string">&quot;/&quot;</span> + newName + <span class="hljs-string">&quot;/&quot;</span> + file,
+          folderRoot + <span class="hljs-string">&quot;/&quot;</span> + newName + <span class="hljs-string">&quot;/&quot;</span> + newFileName,
+        );
+      }
+      <span class="hljs-comment">// 更新文件内容</span>
+      <span class="hljs-keyword">let</span> fileContent = <span class="hljs-title function_">readFile</span>(
+        folderRoot + <span class="hljs-string">&quot;/&quot;</span> + newName + <span class="hljs-string">&quot;/&quot;</span> + newFileName,
+      );
+      <span class="hljs-keyword">let</span> fileContentLine = fileContent.<span class="hljs-title function_">split</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+      fileContentLine[<span class="hljs-number">1</span>] = <span class="hljs-string">&quot;title: &quot;</span> + file.<span class="hljs-title function_">substring</span>(<span class="hljs-number">4</span>, file.<span class="hljs-property">length</span> - <span class="hljs-number">3</span>);
+      fileContentLine[<span class="hljs-number">2</span>] = <span class="hljs-string">&quot;categories: &quot;</span> + newName;
+      fileContentLine[<span class="hljs-number">3</span>] = <span class="hljs-string">&quot;sort: &quot;</span> + fileSort;
+      fileContent = fileContentLine.<span class="hljs-title function_">join</span>(<span class="hljs-string">&quot;\n&quot;</span>);
+      <span class="hljs-title function_">writeFile</span>(folderRoot + <span class="hljs-string">&quot;/&quot;</span> + newName + <span class="hljs-string">&quot;/&quot;</span> + newFileName, fileContent);
+      fileSort += <span class="hljs-number">10</span>;
+    }
+
+    sort += <span class="hljs-number">10</span>;
+  }
+
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;执行完毕...&quot;</span>);
+}
+
+<span class="hljs-comment">/**
+ * 读取数据
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">readFile</span>(<span class="hljs-params">path</span>) {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">return</span> fs.<span class="hljs-title function_">readFileSync</span>(path, { <span class="hljs-attr">encoding</span>: <span class="hljs-string">&quot;utf-8&quot;</span> });
+  } <span class="hljs-keyword">catch</span> (e) {
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>;
+  }
+}
+
+<span class="hljs-comment">/**
+ * 写入数据
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">writeFile</span>(<span class="hljs-params">path, content</span>) {
+  fs.<span class="hljs-title function_">writeFileSync</span>(path, content);
+}
+
+<span class="hljs-comment">// 执行</span>
+<span class="hljs-title function_">start</span>();</code></pre>
+<p><strong>注意</strong>：使用过程中需要强烈注意文件夹和文件的命名风格为<code>110_xxx</code>，否则不会执行，从110开始每次加10是给后面重命名和排序留缓冲，可以将某个文件改到指定位置后执行脚本修复</p>
+<h1 id="取消分类序号">取消分类序号</h1>
+<p>由于使用了序号给分类和文章进行排序，在页面展示是多余的，需要去除，在<code>layout/_partials/post/post-meta.njk</code>中给加class名<code>category-head-item </code></p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;about&quot;</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/Thing&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(cat.path) }}&quot;</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;url&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;category-head-item&quot;</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;name&quot;</span>&gt;</span>{{ cat.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span></code></pre>
+<p>然后在<code>layout/_layout.njk</code>中加入处理逻辑代码，body结束前</p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;text/javascript&quot;</span> <span class="hljs-attr">data-pjax</span>&gt;</span><span class="language-javascript">
+  <span class="hljs-comment">// 去除分类名前的序号</span>
+  <span class="hljs-title function_">deleteSort</span>()
+  <span class="hljs-keyword">function</span> <span class="hljs-title function_">deleteSort</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">// 匹配3位数字加下划线的正则（例如 110_）</span>
+    <span class="hljs-keyword">const</span> reg = <span class="hljs-regexp">/^\d{3}_/g</span>;
+
+    <span class="hljs-comment">// 文章头部分类</span>
+    <span class="hljs-keyword">let</span> allItem1 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.main .category-head-item&#x27;</span>)
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> allItem1) {
+        item.<span class="hljs-property">textContent</span> = item.<span class="hljs-property">textContent</span>.<span class="hljs-title function_">replace</span>(reg, <span class="hljs-string">&#x27;&#x27;</span>)
+    }
+    <span class="hljs-comment">// 分类页面中</span>
+    <span class="hljs-keyword">let</span> allItem2 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.main .category-list-link&#x27;</span>)
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> allItem2) {
+        item.<span class="hljs-property">textContent</span> = item.<span class="hljs-property">textContent</span>.<span class="hljs-title function_">replace</span>(reg, <span class="hljs-string">&#x27;&#x27;</span>)
+    }
+    <span class="hljs-comment">// xxx分类下文章页</span>
+    <span class="hljs-keyword">let</span> allItem3 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.main .collection-header&#x27;</span>)
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> allItem3) {
+        item.<span class="hljs-property">textContent</span> = item.<span class="hljs-property">textContent</span>.<span class="hljs-title function_">replace</span>(reg, <span class="hljs-string">&#x27;&#x27;</span>)
+    }
+  }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre>
+<h1 id="魔改摘要和封面">魔改摘要和封面</h1>
+<p>在<code>layout/_macro/post.njk</code>中，将内容更改为：</p>
+<pre><code class="hljs"><span class="language-xml">{##################}
+{### POST BLOCK ###}
+{##################}
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-block&quot;</span>&gt;</span>
+  {# Gallery support #}
+  
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">article</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/Article&quot;</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-content&quot;</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">&quot;{{ post.lang }}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;mainEntityOfPage&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ post.permalink }}&quot;</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">hidden</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;author&quot;</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/Person&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;image&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;{{ url_for(theme.avatar.url or theme.images + &#x27;/avatar.gif&#x27;) }}&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;{{ author }}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">hidden</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;publisher&quot;</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/Organization&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;{{ title }}&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;description&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;{{ description }}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">hidden</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;post&quot;</span> <span class="hljs-attr">itemscope</span> <span class="hljs-attr">itemtype</span>=<span class="hljs-string">&quot;http://schema.org/CreativeWork&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;name&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;{{ escape_html(page.title or &#x27;&#x27;) + &#x27; | &#x27; + title }}&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;description&quot;</span> <span class="hljs-attr">content</span>=<span class="hljs-string">&quot;{{ escape_html(page.description or &#x27;&#x27;) }}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+
+    {%- if post.header !== false %}
+      <span class="hljs-tag">&lt;<span class="hljs-name">header</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-header&quot;</span>&gt;</span>
+        &lt;{% if is_index %}h2{% else %}h1{% endif %} class=&quot;post-title{% if post.direction and post.direction.toLowerCase() === &#x27;rtl&#x27; %} rtl{% endif %}&quot; itemprop=&quot;name headline&quot;&gt;
+          {# Link posts #}
+          {%- if post.link %}
+            {%- if post.sticky &gt; 0 %}
+              <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-sticky-flag&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;{{ __(&#x27;post.sticky&#x27;) }}&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-thumbtack&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+            {%- endif %}
+            {%- set postTitleIcon = &#x27;<span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-external-link-alt&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>&#x27; %}
+            {%- set postText = post.title or post.link %}
+            {{- next_url(post.link, postText + postTitleIcon, {class: &#x27;post-title-link post-title-link-external&#x27;, itemprop: &#x27;url&#x27;}) }}
+          {% elif is_index %}
+            {%- if post.sticky &gt; 0 %}
+              <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-sticky-flag&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;{{ __(&#x27;post.sticky&#x27;) }}&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-thumbtack&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+            {%- endif %}
+            {{- next_url(post.path, post.title or __(&#x27;post.untitled&#x27;), {class: &#x27;post-title-link&#x27;, itemprop: &#x27;url&#x27;}) }}
+          {%- else %}
+            {{- post.title }}
+            {{- post_edit(post.source) }}
+          {%- endif %}
+        &lt;/{% if is_index %}h2{% else %}h1{% endif %}&gt;
+
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-meta-container&quot;</span>&gt;</span>
+          {{ partial(&#x27;_partials/post/post-meta.njk&#x27;) }}
+
+          {%- if post.description and (not theme.excerpt_description or not is_index) %}
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-description&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;my-cover&quot;</span>&gt;</span>
+                {{ post_gallery(post.photos) }}
+                <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ post.description }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          {%- endif %}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+    {%- endif %}
+
+    {#################}
+    {### POST BODY ###}
+    {#################}
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-body{% if post.direction and post.direction.toLowerCase() === &#x27;rtl&#x27; %} rtl{% endif %}&quot;</span> <span class="hljs-attr">itemprop</span>=<span class="hljs-string">&quot;articleBody&quot;</span>&gt;</span>
+      {%- if is_index %}
+        {%- if post.description and theme.excerpt_description %}
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;my-cover&quot;</span>&gt;</span>
+            {{ post_gallery(post.photos) }}
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ post.description }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          <span class="hljs-comment">&lt;!--noindex--&gt;</span>
+          {%- if theme.read_more_btn %}
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-button&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(post.path) }}&quot;</span>&gt;</span>
+                {{ __(&#x27;post.read_more&#x27;) }} <span class="hljs-symbol">&amp;raquo;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          {%- endif %}
+          <span class="hljs-comment">&lt;!--/noindex--&gt;</span>
+        {% elif post.excerpt %}
+          {{ post.excerpt }}
+          <span class="hljs-comment">&lt;!--noindex--&gt;</span>
+          {%- if theme.read_more_btn %}
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-button&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;btn&quot;</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(post.path) }}#more&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;contents&quot;</span>&gt;</span>
+                {{ __(&#x27;post.read_more&#x27;) }} <span class="hljs-symbol">&amp;raquo;</span>
+              <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          {%- endif %}
+          <span class="hljs-comment">&lt;!--/noindex--&gt;</span>
+        {% else %}
+          {{ post.content }}
+        {%- endif %}
+      {% else %}
+        {{- next_inject(&#x27;postBodyStart&#x27;) }}
+        {{- post.content }}
+      {%- endif %}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+    {#####################}
+    {### END POST BODY ###}
+    {#####################}
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">footer</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-footer&quot;</span>&gt;</span>
+      {%- if is_index %}
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-eof&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      {% else %}
+        {{- next_inject(&#x27;postBodyEnd&#x27;) }}
+
+        {%- if post.reward_settings.enable %}
+          {{ partial(&#x27;_partials/post/post-reward.njk&#x27;) }}
+        {%- endif %}
+
+        {%- if theme.creative_commons.license and theme.creative_commons.post and post.copyright !== false %}
+          {{ partial(&#x27;_partials/post/post-copyright.njk&#x27;) }}
+        {%- endif %}
+
+        {%- if theme.follow_me %}
+          {{ partial(&#x27;_partials/post/post-followme.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+        {%- endif %}
+
+        {%- if post.tags and post.tags.length %}
+          {%- set tag_indicate = &#x27;<span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-tag&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>&#x27; if theme.tag_icon else &#x27;#&#x27; %}
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-tags&quot;</span>&gt;</span>
+            {%- for tag in post.tags.toArray() %}
+              <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(tag.path) }}&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;tag&quot;</span>&gt;</span>{{ tag_indicate }} {{ tag.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+            {%- endfor %}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        {%- endif %}
+
+        {{ partial(&#x27;_partials/post/post-share.njk&#x27;, {}, {cache: theme.cache.enable}) }}
+
+        {%- if theme.post_navigation and (post.prev or post.next) %}
+          {%- set prev = post.prev if theme.post_navigation === &#x27;right&#x27; else post.next %}
+          {%- set next = post.next if theme.post_navigation === &#x27;right&#x27; else post.prev %}
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-nav&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-nav-item&quot;</span>&gt;</span>
+              {%- if prev %}
+                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(prev.path) }}&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;prev&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;{{ escape_html(prev.title or &#x27;&#x27;) }}&quot;</span>&gt;</span>
+                  <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-angle-left&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span> {{ prev.title }}
+                <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+              {%- endif %}
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;post-nav-item&quot;</span>&gt;</span>
+              {%- if next %}
+                <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">&quot;{{ url_for(next.path) }}&quot;</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">&quot;next&quot;</span> <span class="hljs-attr">title</span>=<span class="hljs-string">&quot;{{ escape_html(next.title or &#x27;&#x27;) }}&quot;</span>&gt;</span>
+                  {{ next.title }} <span class="hljs-tag">&lt;<span class="hljs-name">i</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;fa fa-angle-right&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">i</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+              {%- endif %}
+            <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        {%- endif %}
+
+      {%- endif %}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">footer</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">article</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+{######################}
+{### END POST BLOCK ###}
+{######################}</span></code></pre>
+<p>并增加样式：</p>
+<pre><code class="hljs">// 摘要
+<span class="hljs-selector-class">.post-description</span> {
+  <span class="hljs-attribute">margin-bottom</span>: <span class="hljs-number">20px</span>;
+  <span class="hljs-attribute">text-align</span>: left;
+}
+// 摘要和封面
+<span class="hljs-selector-class">.my-cover</span> {
+  <span class="hljs-attribute">display</span>: flex;
+  <span class="hljs-attribute">align-items</span>: center;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">200px</span>;
+  <span class="hljs-attribute">overflow</span>: hidden;
+}
+<span class="hljs-selector-class">.my-cover</span> <span class="hljs-selector-class">.post-gallery</span> { 
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">260px</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">160px</span>  <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">padding</span>: <span class="hljs-number">1em</span> <span class="hljs-number">0</span>;
+  <span class="hljs-attribute">align-self</span>: flex-start;
+}
+<span class="hljs-selector-class">.my-cover</span> <span class="hljs-selector-tag">img</span> {
+  <span class="hljs-attribute">width</span>: <span class="hljs-number">100%</span>;
+  <span class="hljs-attribute">height</span>: <span class="hljs-number">148px</span> <span class="hljs-meta">!important</span>;
+  <span class="hljs-attribute">object-fit</span>: cover;
+  <span class="hljs-attribute">border-radius</span>: <span class="hljs-number">4px</span>;
+}
+<span class="hljs-selector-class">.my-cover</span> <span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">align-self</span>: flex-start;
+  <span class="hljs-attribute">flex</span>: <span class="hljs-number">1</span>;
+  <span class="hljs-attribute">padding-left</span>: <span class="hljs-number">20px</span>;
+  <span class="hljs-attribute">line-height</span>: <span class="hljs-number">2</span>;
+  <span class="hljs-attribute">letter-spacing</span>: <span class="hljs-number">0.02em</span>;
+  <span class="hljs-attribute">color</span>: <span class="hljs-number">#888</span> <span class="hljs-meta">!important</span>;
+}
+<span class="hljs-selector-class">.post-description</span> {
+  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">1em</span> <span class="hljs-meta">!important</span>;
+}
+<span class="hljs-selector-class">.post-description</span> <span class="hljs-selector-tag">p</span> {
+  <span class="hljs-attribute">margin-top</span>: <span class="hljs-number">20px</span>;
+}
+<span class="hljs-selector-class">.post-eof</span> {
+  <span class="hljs-attribute">margin</span>: <span class="hljs-number">12px</span> auto <span class="hljs-number">20px</span>;
+}</code></pre>
+</div>
+    <!-- 大纲 -->
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#调整导航hover">调整导航hover</a></div><div id="outline-1" style="padding-left:0px"><a href="#增加背景图片">增加背景图片</a></div><div id="outline-2" style="padding-left:0px"><a href="#左中右布局">左中右布局</a></div><div id="outline-3" style="padding-left:0px"><a href="#侧边标签改运行天数">侧边标签改运行天数</a></div><div id="outline-4" style="padding-left:0px"><a href="#美化代办事项样式">美化代办事项样式</a></div><div id="outline-5" style="padding-left:0px"><a href="#标题美化">标题美化</a></div><div id="outline-6" style="padding-left:0px"><a href="#优化文章管理">优化文章管理</a></div><div id="outline-7" style="padding-left:0px"><a href="#取消分类序号">取消分类序号</a></div><div id="outline-8" style="padding-left:0px"><a href="#魔改摘要和封面">魔改摘要和封面</a></div></div>
+
+    <script>
+      // 链接新窗口打开
+      document.querySelectorAll("#content a").forEach((item) => {
+        item.setAttribute("target", "_blank");
+      });
+
+      // 图片点击放大（滚轮缩放，点击关闭）
+      (function () {
+        var overlay = null;
+        var scale = 1;
+        document.querySelectorAll("#content img").forEach(function (img) {
+          img.addEventListener("click", function () {
+            overlay = document.createElement("div");
+            overlay.className = "img-overlay";
+            var clone = img.cloneNode(true);
+            clone.removeAttribute("width");
+            clone.style.transform = "scale(1)";
+            scale = 1;
+            overlay.appendChild(clone);
+            // 点击任意位置关闭
+            overlay.addEventListener("click", function () {
+              document.body.removeChild(overlay);
+              overlay = null;
+            });
+            // 滚轮缩放
+            overlay.addEventListener("wheel", function (e) {
+              e.preventDefault();
+              scale += e.deltaY < 0 ? 0.1 : -0.1;
+              scale = Math.max(0.2, Math.min(5, scale));
+              clone.style.transform = "scale(" + scale + ")";
+            });
+            document.body.appendChild(overlay);
+          });
+        });
+      })();
+
+      // 代码复制
+      document.querySelectorAll("#content pre").forEach((item) => {
+        item.innerHTML +=
+          '<div class="copy-btn" onclick="copyCode(this)">复制</div>';
+        item.onmouseover = function () {
+          item.querySelector(".copy-btn").style.opacity = 1;
+        };
+        item.onmouseout = function () {
+          item.querySelector(".copy-btn").style.opacity = 0;
+        };
+      });
+
+      function copyCode(item) {
+        // 获取要复制的代码文本
+        let code = item.parentNode.querySelector("code").innerText;
+
+        // 尝试使用 Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(code)
+            .then(() => {
+              item.innerText = "复制成功";
+              setTimeout(() => {
+                item.innerText = "复制";
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("复制失败，请手动复制:", err);
+              fallbackCopyTextToClipboard(code, item);
+            });
+        } else {
+          // 使用兼容性处理方法
+          fallbackCopyTextToClipboard(code, item);
+        }
+      }
+
+      // 兼容性处理函数
+      function fallbackCopyTextToClipboard(text, item) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // 隐藏textarea元素
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+
+        document.body.appendChild(textArea);
+        textArea.select();
+
+        try {
+          let successful = document.execCommand("copy");
+          let msg = successful ? "成功" : "失败";
+          item.innerText = `复制${msg}`;
+          setTimeout(() => {
+            item.innerText = "复制";
+          }, 2000);
+        } catch (err) {
+          console.error("Fallback: 复制失败，请手动复制:", err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      // 上一次点击
+      document.querySelectorAll(".cate-parent").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          // 先关闭所有
+          document.querySelectorAll(".cate-item-box").forEach((itemOther) => {
+            // 不是当前元素关闭
+            if (itemOther != item.nextElementSibling) {
+              itemOther.style.display = "none";
+            } else {
+              if (itemOther.style.display == "block") {
+                itemOther.style.display = "none";
+              } else {
+                itemOther.style.display = "block";
+              }
+            }
+          });
+        });
+      });
+
+      // 页面加载时展开当前文档所属分类
+      (function () {
+        var cateId = "01";
+        if (cateId) {
+          document
+            .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')
+            .forEach(function (box) {
+              box.style.display = "block";
+            });
+        }
+      })();
+
+      // 当前文档在侧边栏高亮
+      var currentPath = window.location.pathname;
+      document.querySelectorAll(".cate-item-box a").forEach(function (a) {
+        if (a.getAttribute("href") === currentPath) {
+          a.style.color = "#299764";
+        }
+      });
+
+      // 大纲滚动监听
+      var outlineIdList = [];
+      document.querySelectorAll(".outline a").forEach(function (a) {
+        outlineIdList.push(a.getAttribute("href").replace("#", ""));
+      });
+
+      window.addEventListener("scroll", function () {
+        var scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop;
+        var OFFSET = 60; // 顶部导航高度
+        for (var i = 0; i < outlineIdList.length; i++) {
+          var el = document.getElementById(outlineIdList[i]);
+          if (!el) continue;
+          var top = el.getBoundingClientRect().top + scrollTop;
+          // 最后一个标题，或下一个标题元素不存在 → 激活到文档末尾
+          var nextEl =
+            i < outlineIdList.length - 1
+              ? document.getElementById(outlineIdList[i + 1])
+              : null;
+          var isActive =
+            scrollTop > top - OFFSET &&
+            (!nextEl ||
+              scrollTop <
+                nextEl.getBoundingClientRect().top + scrollTop - OFFSET);
+          var outlineEl = document.getElementById("outline-" + i);
+          if (outlineEl) {
+            outlineEl.classList.toggle("outline-active", isActive);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

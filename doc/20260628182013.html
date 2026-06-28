@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FANMR.CN</title>
+    <link rel="shortcut icon" href="/static/logo.png" />
+    <style>
+      body {
+        margin: 0;
+        min-height: 101vh;
+        color: #3c3c43;
+        line-height: 1.7;
+        font-size: 15px;
+      }
+      html {
+        scroll-padding-top: 60px; /* 顶部导航高度 */
+      }
+      /* 头部 */
+      .header {
+        height: 60px;
+        border-bottom: 1px solid #c2c2c4;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+      }
+      .header-left a {
+        font-size: 20px;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        color: #3c3c43;
+      }
+      .header-left img {
+        width: 30px;
+        position: relative;
+        top: -2px;
+      }
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        gap: 24px;
+        align-items: center;
+      }
+      .header-right a {
+        text-decoration: none;
+        color: #3c3c43;
+      }
+
+      /* 分类 */
+      .cate {
+        position: fixed;
+        top: 60px;
+        bottom: 0;
+        width: 320px;
+        border-right: 1px solid #c2c2c4;
+        padding: 16px;
+        font-size: 13px;
+        color: #333;
+      }
+      .cate-parent {
+        padding: 2px 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .cate-parent span:nth-child(2) {
+        margin-left: auto;
+      }
+      .cate-parent:hover {
+        color: #299764;
+      }
+      .cate-item-box {
+        padding-left: 24px;
+        display: none;
+      }
+      .cate-item-box a {
+        display: block;
+        text-decoration: none;
+        color: #3c3c43;
+        padding: 2px 0;
+      }
+      .cate-item-box a:hover {
+        color: #299764;
+      }
+      /* 内容 */
+      .content {
+        width: 840px;
+        margin: 0 auto;
+        padding: 20px 0 40px 0;
+      }
+
+      /* 大纲 */
+      .outline {
+        position: fixed;
+        top: 100px;
+        right: 0;
+        width: 300px;
+        padding: 0 16px;
+        border-left: 1px solid #c2c2c4;
+      }
+      .outline a {
+        text-decoration: none;
+        color: #3c3c43;
+        font-size: 13px;
+        padding: 2px 0;
+        display: block;
+      }
+      .outline a:hover {
+        color: #299764;
+      }
+      .outline-active a {
+        color: #299764 !important;
+      }
+
+      /* 高亮代码 */
+      pre code.hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 1em;
+      }
+      code.hljs {
+        padding: 3px 5px;
+      }
+      .hljs {
+        color: #383a42;
+        background: #fafafa;
+      }
+      .hljs-comment,
+      .hljs-quote {
+        color: #a0a1a7;
+        font-style: italic;
+      }
+      .hljs-doctag,
+      .hljs-formula,
+      .hljs-keyword {
+        color: #a626a4;
+      }
+      .hljs-deletion,
+      .hljs-name,
+      .hljs-section,
+      .hljs-selector-tag,
+      .hljs-subst {
+        color: #e45649;
+      }
+      .hljs-literal {
+        color: #0184bb;
+      }
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string,
+      .hljs-regexp,
+      .hljs-string {
+        color: #50a14f;
+      }
+      .hljs-attr,
+      .hljs-number,
+      .hljs-selector-attr,
+      .hljs-selector-class,
+      .hljs-selector-pseudo,
+      .hljs-template-variable,
+      .hljs-type,
+      .hljs-variable {
+        color: #986801;
+      }
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-symbol,
+      .hljs-title {
+        color: #4078f2;
+      }
+      .hljs-built_in,
+      .hljs-class .hljs-title,
+      .hljs-title.class_ {
+        color: #c18401;
+      }
+      .hljs-emphasis {
+        font-style: italic;
+      }
+      .hljs-strong {
+        font-weight: 700;
+      }
+      .hljs-link {
+        text-decoration: underline;
+      }
+
+      /* 代码复制 */
+      .copy-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        cursor: pointer;
+        color: #999;
+        font-size: 12px;
+        transition: all 0.2s;
+        opacity: 0;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        padding: 2px 6px;
+        background-color: #fff;
+      }
+
+      .copy-btn:hover {
+        color: #fc6423;
+      }
+
+
+      /* 图片放大遮罩 */
+      .img-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .img-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        transition: transform 0.1s;
+      }
+
+      /* 文章样式 */
+
+      /* 1级标题 */
+      #content h1 {
+        font-size: 22px;
+        padding-top: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        font-weight: bold;
+      }
+      /* 2级标题 */
+      #content h2 {
+        font-size: 18px;
+      }
+      /* 引用 */
+      #content blockquote {
+        border: 1px solid rgb(165, 194, 255);
+        background: linear-gradient(
+          137deg,
+          rgb(245, 238, 255) 0%,
+          rgb(230, 244, 255) 52%,
+          rgb(236, 240, 255) 97%
+        );
+        padding: 15px;
+        margin: 10px 0;
+        color: rgb(97, 92, 237);
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      #content blockquote p {
+        margin: 0;
+      }
+      /* 图片 */
+      #content img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        cursor: pointer;
+        border: 1px solid #eee;
+      }
+      /* 代码 */
+      #content pre {
+        background-color: #f5f6f7;
+        overflow: auto;
+        padding: 1em;
+        position: relative;
+        border-radius: 6px;
+        padding: 0 0 0 0;
+      }
+      #content pre code {
+        font-size: 13px;
+        font-family:
+          "SF Mono", "Consolas", "Roboto Mono", "Monaco", "Courier New",
+          "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC",
+          "Microsoft YaHei", sans-serif;
+      }
+      #content code {
+        border-radius: 3px;
+        background-color: #f5f6f7;
+      }
+      #content p code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      #content li code {
+        background-color: rgb(226, 227, 255);
+        color: #7459ee;
+        margin: 0 3px;
+        display: inline-block;
+        padding: 0 5px;
+        font-size: 14px;
+      }
+      /* 表格 */
+      #content table {
+        width: 100%;
+        border-right: 1px solid #ebeef5;
+        border-top: 1px solid #ebeef5;
+        border-collapse: collapse;
+      }
+      #content th,
+      #content td {
+        text-align: left;
+        border-left: 1px solid #ebeef5;
+        border-bottom: 1px solid #ebeef5;
+        padding: 7px 10px !important;
+      }
+      #content th {
+        font-weight: bold !important;
+        background-color: #f8f8f8;
+      }
+      #content a {
+        color: #65a1d6;
+        text-decoration: none;
+        margin: 0 2px;
+        border-bottom: 1px solid #65a1d6;
+      }
+      #content a:hover {
+        color: #ff7600;
+      }
+      /* 有序列表 */
+      #content ol {
+        padding-left: 50px;
+      }
+      /* 代办事项 */
+      #content input {
+        position: relative;
+        top: 1px;
+      }
+      #content input[type="checkbox"] {
+        position: relative;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+        left: -20px;
+        margin-right: -16px;
+      }
+      #content input[type="checkbox"]::after {
+        border-radius: 3px;
+        position: absolute;
+        top: 0;
+        background-color: white;
+        color: #000;
+        width: 15px;
+        height: 15px;
+        display: inline-block;
+        visibility: visible;
+        padding-left: 0;
+        text-align: center;
+        content: " ";
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+      #content input[type="checkbox"]:checked::before {
+        content: "✓";
+        font-size: 12px;
+        font-weight: bold;
+        color: #7459ee;
+        position: absolute;
+        display: inline-block;
+        z-index: 10;
+        top: -1px;
+        left: 3px;
+      }
+    </style>
+    <style>.cate-item-box a[href="/doc/20260628182013.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="03"]{display:block}</style>
+  </head>
+  <body>
+    <!-- 头部 -->
+    <div class="header">
+      <div class="header-left">
+        <a href="/">
+          <img src="/static/logo.png" alt="logo" />
+          <span>FANMR.CN</span>
+        </a>
+      </div>
+      <div class="header-right">
+        <a href="/nav.html">网址收集</a>
+        <a href="/author.html">关于作者</a>
+        <a href="https://github.com/fanmore" target="_blank">Github</a>
+        <a href="https://gitee.com/riskfan" target="_blank">Gitee</a>
+      </div>
+    </div>
+    <!-- 分类 -->
+    <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
+    <!-- 内容 -->
+    <div class="content" id="content"><h1 id="页面所有资源加载完成后">页面所有资源加载完成后</h1>
+<p><code>window.onload</code>事件在页面中的所有资源（包括图片、样式表、脚本等）完全加载完成后触发</p>
+<pre><code class="hljs"><span class="hljs-variable language_">window</span>.<span class="hljs-property">onload</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">// 页面资源加载完成后的代码</span>
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;所有资源加载完成&quot;</span>);
+};</code></pre>
+<h1 id="页面链接新窗口打开">页面链接新窗口打开</h1>
+<p>当页面出现三方链接的情况下，点击会将原网站的内容覆盖，如果想保留原页面的窗口就可以这样操作</p>
+<pre><code class="hljs"><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;#content a&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+  item.<span class="hljs-title function_">setAttribute</span>(<span class="hljs-string">&#x27;target&#x27;</span>, <span class="hljs-string">&#x27;_blank&#x27;</span>)
+})</code></pre>
+<h1 id="返回页面顶部">返回页面顶部</h1>
+<pre><code class="hljs"><span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-property">scrollTop</span> = <span class="hljs-number">0</span>
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">documentElement</span>.<span class="hljs-property">scrollTop</span> = <span class="hljs-number">0</span></code></pre>
+<h1 id="动态设置网页标题">动态设置网页标题</h1>
+<pre><code class="hljs"><span class="hljs-variable language_">document</span>.<span class="hljs-property">title</span> = <span class="hljs-string">&#x27;首页&#x27;</span></code></pre>
+<h1 id="页面上下滚动事件">页面上下滚动事件</h1>
+<pre><code class="hljs"><span class="hljs-keyword">var</span> scrollFunc = <span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) {
+  e = e || <span class="hljs-variable language_">window</span>.<span class="hljs-property">event</span>;
+  <span class="hljs-keyword">if</span> (e.<span class="hljs-property">wheelDelta</span>) { <span class="hljs-comment">//第一步：先判断浏览器IE，谷歌滑轮事件</span>
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">wheelDelta</span> &gt; <span class="hljs-number">0</span>) { <span class="hljs-comment">//当滑轮向上滚动时</span>
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;滑轮向上滚动&quot;</span>);
+    }
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">wheelDelta</span> &lt; <span class="hljs-number">0</span>) { <span class="hljs-comment">//当滑轮向下滚动时</span>
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;滑轮向下滚动&quot;</span>);
+    }
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (e.<span class="hljs-property">detail</span>) { <span class="hljs-comment">//Firefox滑轮事件</span>
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">detail</span> &gt; <span class="hljs-number">0</span>) { <span class="hljs-comment">//当滑轮向上滚动时</span>
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;滑轮向上滚动&quot;</span>);
+    }
+    <span class="hljs-keyword">if</span> (e.<span class="hljs-property">detail</span> &lt; <span class="hljs-number">0</span>) { <span class="hljs-comment">//当滑轮向下滚动时</span>
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;滑轮向下滚动&quot;</span>);
+    }
+  }
+}
+<span class="hljs-comment">//给页面绑定滑轮滚动事件</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-variable language_">document</span>.<span class="hljs-property">addEventListener</span>) {<span class="hljs-comment">//firefox</span>
+  <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;DOMMouseScroll&#x27;</span>, scrollFunc, <span class="hljs-literal">false</span>);
+}
+<span class="hljs-comment">//滚动滑轮触发scrollFunc方法 //ie 谷歌</span>
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">onmousewheel</span> = <span class="hljs-variable language_">document</span>.<span class="hljs-property">onmousewheel</span> = scrollFunc;</code></pre>
+<h1 id="filter过滤">filter过滤</h1>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>]
+arr = arr.<span class="hljs-title function_">filter</span>(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> item != <span class="hljs-number">1</span>
+})</code></pre>
+<h1 id="数组转字符">数组转字符</h1>
+<pre><code class="hljs"><span class="hljs-keyword">var</span> a = [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]
+a.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;&#x27;</span>).<span class="hljs-title function_">toString</span>()) <span class="hljs-comment">// 自定义拼接，结果：123</span>
+a.<span class="hljs-title function_">join</span>(<span class="hljs-string">&#x27;-&#x27;</span>).<span class="hljs-title function_">toString</span>()) <span class="hljs-comment">// 自定义拼接，结果：1-2-3</span></code></pre>
+<h1 id="下载视频">下载视频</h1>
+<pre><code class="hljs"><span class="hljs-keyword">function</span> <span class="hljs-title function_">videoDownload</span>(<span class="hljs-params">filePath, fileName</span>) {
+  <span class="hljs-keyword">const</span> a = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;a&#x27;</span>);
+  <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">append</span>(a);
+  a.<span class="hljs-property">style</span>.<span class="hljs-property">display</span> = <span class="hljs-string">&#x27;none&#x27;</span>;
+  a.<span class="hljs-property">href</span> = filePath
+  a.<span class="hljs-property">download</span> = fileName;
+  a.<span class="hljs-title function_">click</span>();
+  <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">removeChild</span>(a);
+  }, <span class="hljs-number">300</span>);
+}</code></pre>
+<h1 id="对象数组排序">对象数组排序</h1>
+<pre><code class="hljs">allArticleArray.<span class="hljs-title function_">sort</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params">a, b</span>) {
+  <span class="hljs-keyword">return</span> b.<span class="hljs-property">time</span> - a.<span class="hljs-property">time</span>
+})</code></pre>
+<h1 id="js三种弹窗">js三种弹窗</h1>
+<p>浏览器自带对象</p>
+<pre><code class="hljs"><span class="hljs-comment">// 提示框</span>
+alert(<span class="hljs-string">&#x27;提示内容&#x27;</span>)
+<span class="hljs-comment">// 确认框，返回布尔值</span>
+confirm(<span class="hljs-string">&#x27;文字提示&#x27;</span>)
+<span class="hljs-comment">// 输入框（第二个参数可选）</span>
+<span class="hljs-keyword">var</span> name = prompt(<span class="hljs-string">&#x27;新的分类名称&#x27;</span>, oldName)</code></pre>
+<h1 id="操作URL">操作URL</h1>
+<pre><code class="hljs"><span class="hljs-comment">// 发起GET请求</span>
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">href</span> = <span class="hljs-string">&#x27;/hello&#x27;</span>
+<span class="hljs-comment">// 刷新本页（可以保存URL中的参数刷新）</span>
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-title function_">reload</span>()
+<span class="hljs-comment">// 返回上一页</span>
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>.<span class="hljs-title function_">back</span>()
+<span class="hljs-comment">// 获取上一页URL（含有上一页面的参数）</span>
+<span class="hljs-variable language_">document</span>.<span class="hljs-property">referrer</span>
+<span class="hljs-comment">// 更改URL不刷新</span>
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">history</span>.<span class="hljs-title function_">pushState</span>({}, <span class="hljs-number">0</span>,  <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">href</span> + <span class="hljs-string">&#x27;?type=china&#x27;</span>);</code></pre>
+<h1 id="解析地址栏参数">解析地址栏参数</h1>
+<pre><code class="hljs"><span class="hljs-comment">// 解析参数</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">getQuery</span>(<span class="hljs-params">url</span>) {
+  <span class="hljs-comment">// result为存储参数键值的集合</span>
+  <span class="hljs-keyword">const</span> result = {}
+  <span class="hljs-keyword">if</span> (url.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;?&#x27;</span>) &gt; -<span class="hljs-number">1</span>) {
+    <span class="hljs-comment">// str为？之后的参数部分字符串</span>
+    <span class="hljs-keyword">const</span> str = url.<span class="hljs-title function_">substr</span>(url.<span class="hljs-title function_">indexOf</span>(<span class="hljs-string">&#x27;?&#x27;</span>) + <span class="hljs-number">1</span>)
+    <span class="hljs-comment">// arr每个元素都是完整的参数键值</span>
+    <span class="hljs-keyword">const</span> arr = str.<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;&amp;&#x27;</span>)
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.<span class="hljs-property">length</span>; i++) {
+      <span class="hljs-comment">// item的两个元素分别为参数名和参数值</span>
+      <span class="hljs-keyword">const</span> item = arr[i].<span class="hljs-title function_">split</span>(<span class="hljs-string">&#x27;=&#x27;</span>)
+      result[item[<span class="hljs-number">0</span>]] = item[<span class="hljs-number">1</span>]
+    }
+  }
+  <span class="hljs-keyword">return</span> result
+}
+
+<span class="hljs-comment">// 获取地址栏完整路径</span>
+<span class="hljs-keyword">let</span> urlFull = <span class="hljs-variable language_">window</span>.<span class="hljs-property">location</span>.<span class="hljs-property">href</span></code></pre>
+<h1 id="原生事件">原生事件</h1>
+<pre><code class="hljs"><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.btn&#x27;</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+})</code></pre>
+<p>事件类型：</p>
+<ul>
+<li>鼠标事件<ul>
+<li>click：鼠标点击</li>
+<li>mouseEnter：鼠标经过</li>
+<li>mouseLeave：鼠标离开</li>
+</ul>
+</li>
+<li>焦点事件<ul>
+<li>focus：获得焦点</li>
+<li>blur：失去焦点</li>
+</ul>
+</li>
+<li>键盘事件<ul>
+<li>keyDown：键盘按下触发</li>
+<li>keyUp：键盘弹起触发</li>
+</ul>
+</li>
+<li>文本事件  表单输入触发<ul>
+<li>input：用户输入事件（获取输入数据：input.value）</li>
+</ul>
+</li>
+</ul>
+<h1 id="获取所有子元素">获取所有子元素</h1>
+<pre><code class="hljs"><span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.editor&#x27;</span>).<span class="hljs-property">childNodes</span></code></pre>
+<h1 id="Yaml插件">Yaml插件</h1>
+<p>Js读取和加载Yaml文件</p>
+<pre><code class="hljs">npm inastall yamljs
+
+const yaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;yamljs&#x27;</span>)
+let <span class="hljs-built_in">config</span> = yaml.<span class="hljs-built_in">load</span>(<span class="hljs-string">&#x27;../config.yaml&#x27;</span>)
+console.<span class="hljs-built_in">log</span>(<span class="hljs-built_in">config</span>);</code></pre>
+<p>第二种插件下载地址：<a href="https://www.bootcdn.cn/js-yaml/">https://www.bootcdn.cn/js-yaml/</a></p>
+<pre><code class="hljs"><span class="hljs-keyword">let</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>)
+<span class="hljs-keyword">let</span> yaml = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./lib/js-yaml.min&#x27;</span>)
+<span class="hljs-comment">// 加载配置文件</span>
+<span class="hljs-keyword">const</span> config = yaml.<span class="hljs-title function_">load</span>(fs.<span class="hljs-title function_">readFileSync</span>(<span class="hljs-string">&#x27;config.yml&#x27;</span>, <span class="hljs-string">&#x27;utf8&#x27;</span>));
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(config);</code></pre>
+<h1 id="获取当前日期时间串">获取当前日期时间串</h1>
+<pre><code class="hljs">new <span class="hljs-built_in">Date</span>()<span class="hljs-selector-class">.toISOString</span>()<span class="hljs-selector-class">.slice</span>(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>)</code></pre>
+<h1 id="textarea回车跳到顶部修复">textarea回车跳到顶部修复</h1>
+<pre><code class="hljs">&lt;textarea id=<span class="hljs-string">&quot;myTextarea&quot;</span> rows=<span class="hljs-string">&quot;10&quot;</span> cols=<span class="hljs-string">&quot;30&quot;</span>&gt;&lt;/textarea&gt;
+ 
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&#x27;myTextarea&#x27;</span>).<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;keydown&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) {
+    <span class="hljs-keyword">if</span> (event.<span class="hljs-property">key</span> === <span class="hljs-string">&#x27;Enter&#x27;</span>) {
+        <span class="hljs-comment">// 阻止默认行为以避免换行</span>
+        event.<span class="hljs-title function_">preventDefault</span>();
+        <span class="hljs-comment">// 在当前光标位置插入文本，例如换行符或者特定格式的文本</span>
+        <span class="hljs-keyword">const</span> startPos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">selectionStart</span>; <span class="hljs-comment">// 获取光标位置</span>
+        <span class="hljs-keyword">const</span> endPos = <span class="hljs-variable language_">this</span>.<span class="hljs-property">selectionEnd</span>; <span class="hljs-comment">// 获取光标位置结束点（通常与开始点相同）</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>.<span class="hljs-title function_">substring</span>(<span class="hljs-number">0</span>, startPos) + <span class="hljs-string">&#x27;\n&#x27;</span> + <span class="hljs-variable language_">this</span>.<span class="hljs-property">value</span>.<span class="hljs-title function_">substring</span>(endPos); <span class="hljs-comment">// 插入换行符</span>
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">selectionStart</span> = <span class="hljs-variable language_">this</span>.<span class="hljs-property">selectionEnd</span> = startPos + <span class="hljs-number">1</span>; <span class="hljs-comment">// 设置新的光标位置</span>
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (event.<span class="hljs-property">key</span> === <span class="hljs-string">&#x27; &#x27;</span>) {
+        <span class="hljs-comment">// 处理空格键的逻辑，例如不进行任何操作或添加特定文本等</span>
+    }
+});
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre>
+<h1 id="复制到剪贴板">复制到剪贴板</h1>
+<pre><code class="hljs"><span class="hljs-comment">// 代码复制</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">copyCodeBtn</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// 代码复制</span>
+  <span class="hljs-keyword">if</span> (!store.<span class="hljs-property">editMode</span>) {
+    <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelectorAll</span>(<span class="hljs-string">&#x27;.aie-content pre&#x27;</span>).<span class="hljs-title function_">forEach</span>(<span class="hljs-function">(<span class="hljs-params">item</span>) =&gt;</span> {
+      <span class="hljs-comment">// 已经添加过按钮的跳过</span>
+      <span class="hljs-keyword">if</span> (!item.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;.copy-btn&#x27;</span>)) {
+        item.<span class="hljs-property">innerHTML</span> +=
+          <span class="hljs-string">&#x27;&lt;div contenteditable=&quot;false&quot; class=&quot;copy-btn&quot; onclick=&quot;copyCode(this)&quot;&gt;复制&lt;/div&gt;&#x27;</span>
+      }
+    })
+  }
+}
+
+<span class="hljs-variable language_">window</span>.<span class="hljs-property">copyCode</span> = <span class="hljs-keyword">function</span> <span class="hljs-title function_">copyCode</span>(<span class="hljs-params">item</span>) {
+  <span class="hljs-comment">// 获取要复制的代码文本</span>
+  <span class="hljs-keyword">let</span> code = item.<span class="hljs-property">parentNode</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&#x27;code&#x27;</span>).<span class="hljs-property">innerText</span>
+  <span class="hljs-comment">// 尝试使用 Clipboard API</span>
+  <span class="hljs-keyword">if</span> (navigator.<span class="hljs-property">clipboard</span> &amp;&amp; <span class="hljs-variable language_">window</span>.<span class="hljs-property">isSecureContext</span>) {
+    navigator.<span class="hljs-property">clipboard</span>
+      .<span class="hljs-title function_">writeText</span>(code)
+      .<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> {
+        item.<span class="hljs-property">innerText</span> = <span class="hljs-string">&#x27;复制成功&#x27;</span>
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+          item.<span class="hljs-property">innerText</span> = <span class="hljs-string">&#x27;复制&#x27;</span>
+        }, <span class="hljs-number">2000</span>)
+      })
+      .<span class="hljs-title function_">catch</span>(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> {
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;复制失败，请手动复制:&#x27;</span>, err)
+        <span class="hljs-title function_">fallbackCopyTextToClipboard</span>(code, item)
+      })
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// 使用兼容性处理方法</span>
+    <span class="hljs-title function_">fallbackCopyTextToClipboard</span>(code, item)
+  }
+}
+
+<span class="hljs-comment">// 兼容性处理函数</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">fallbackCopyTextToClipboard</span>(<span class="hljs-params">text, item</span>) {
+  <span class="hljs-keyword">let</span> textArea = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">createElement</span>(<span class="hljs-string">&#x27;textarea&#x27;</span>)
+  textArea.<span class="hljs-property">value</span> = text
+  <span class="hljs-comment">// 隐藏textarea元素</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">position</span> = <span class="hljs-string">&#x27;fixed&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">top</span> = <span class="hljs-string">&#x27;0&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">left</span> = <span class="hljs-string">&#x27;0&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">width</span> = <span class="hljs-string">&#x27;2em&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">height</span> = <span class="hljs-string">&#x27;2em&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">padding</span> = <span class="hljs-string">&#x27;0&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">border</span> = <span class="hljs-string">&#x27;none&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">outline</span> = <span class="hljs-string">&#x27;none&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">boxShadow</span> = <span class="hljs-string">&#x27;none&#x27;</span>
+  textArea.<span class="hljs-property">style</span>.<span class="hljs-property">background</span> = <span class="hljs-string">&#x27;transparent&#x27;</span>
+  <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">appendChild</span>(textArea)
+  textArea.<span class="hljs-title function_">select</span>()
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">let</span> successful = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">execCommand</span>(<span class="hljs-string">&#x27;copy&#x27;</span>)
+    <span class="hljs-keyword">let</span> msg = successful ? <span class="hljs-string">&#x27;成功&#x27;</span> : <span class="hljs-string">&#x27;失败&#x27;</span>
+    item.<span class="hljs-property">innerText</span> = <span class="hljs-string">`复制<span class="hljs-subst">${msg}</span>`</span>
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+      item.<span class="hljs-property">innerText</span> = <span class="hljs-string">&#x27;复制&#x27;</span>
+    }, <span class="hljs-number">2000</span>)
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;Fallback: 复制失败，请手动复制:&#x27;</span>, err)
+  }
+  <span class="hljs-variable language_">document</span>.<span class="hljs-property">body</span>.<span class="hljs-title function_">removeChild</span>(textArea)
+}</code></pre>
+<h1 id="通用AJAX请求">通用AJAX请求</h1>
+<p>方法：</p>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * 简洁版通用 AJAX 请求方法（不兼容 IE5/6）
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} <span class="hljs-variable">method</span> - 请求方式 (&#x27;GET&#x27; 或 &#x27;POST&#x27;)
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">string</span>} <span class="hljs-variable">url</span> - 请求地址（GET请求请直接将参数拼在url里）
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">object|null</span>} <span class="hljs-variable">data</span> - 发送的数据（仅POST请求时传入对象，GET请求传null）
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} <span class="hljs-variable">successCallback</span> - 请求成功的回调函数
+ * <span class="hljs-doctag">@param</span> {<span class="hljs-type">function</span>} <span class="hljs-variable">errorCallback</span> - 请求失败的回调函数
+ */</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">sendRequest</span>(<span class="hljs-params">method, url, data, successCallback, errorCallback</span>) {
+    <span class="hljs-keyword">const</span> xhr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">XMLHttpRequest</span>();
+
+    xhr.<span class="hljs-property">onreadystatechange</span> = <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-keyword">if</span> (xhr.<span class="hljs-property">readyState</span> === <span class="hljs-number">4</span>) {
+            <span class="hljs-keyword">if</span> ((xhr.<span class="hljs-property">status</span> &gt;= <span class="hljs-number">200</span> &amp;&amp; xhr.<span class="hljs-property">status</span> &lt; <span class="hljs-number">300</span>) || xhr.<span class="hljs-property">status</span> === <span class="hljs-number">304</span>) {
+                <span class="hljs-keyword">let</span> result = xhr.<span class="hljs-property">responseText</span>;
+                <span class="hljs-keyword">try</span> {
+                    result = <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(xhr.<span class="hljs-property">responseText</span>);
+                } <span class="hljs-keyword">catch</span> (e) {}
+                <span class="hljs-title function_">successCallback</span>(result);
+            } <span class="hljs-keyword">else</span> {
+                errorCallback &amp;&amp; <span class="hljs-title function_">errorCallback</span>(xhr.<span class="hljs-property">status</span>, xhr.<span class="hljs-property">statusText</span>);
+            }
+        }
+    };
+
+    xhr.<span class="hljs-title function_">open</span>(method.<span class="hljs-title function_">toUpperCase</span>(), url, <span class="hljs-literal">true</span>);
+
+    <span class="hljs-keyword">if</span> (method.<span class="hljs-title function_">toUpperCase</span>() === <span class="hljs-string">&#x27;POST&#x27;</span>) {
+        xhr.<span class="hljs-title function_">setRequestHeader</span>(<span class="hljs-string">&#x27;Content-Type&#x27;</span>, <span class="hljs-string">&#x27;application/json&#x27;</span>);
+        xhr.<span class="hljs-title function_">send</span>(<span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(data));
+    } <span class="hljs-keyword">else</span> {
+        xhr.<span class="hljs-title function_">send</span>();
+    }
+}</code></pre>
+<p>调用：</p>
+<pre><code class="hljs"><span class="hljs-comment">// GET</span>
+<span class="hljs-title function_">sendRequest</span>(<span class="hljs-string">&#x27;GET&#x27;</span>, <span class="hljs-string">&#x27;https://example.com/api/getData?id=123&amp;type=user&#x27;</span>, <span class="hljs-literal">null</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;GET请求成功：&#x27;</span>, res);
+}, <span class="hljs-keyword">function</span>(<span class="hljs-params">status, msg</span>) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;GET请求失败：&#x27;</span>, status, msg);
+});
+
+<span class="hljs-comment">// POST</span>
+<span class="hljs-keyword">const</span> postData = { <span class="hljs-attr">username</span>: <span class="hljs-string">&#x27;admin&#x27;</span>, <span class="hljs-attr">password</span>: <span class="hljs-string">&#x27;123456&#x27;</span> };
+<span class="hljs-title function_">sendRequest</span>(<span class="hljs-string">&#x27;POST&#x27;</span>, <span class="hljs-string">&#x27;https://example.com/api/login&#x27;</span>, postData, <span class="hljs-keyword">function</span>(<span class="hljs-params">res</span>) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;POST请求成功：&#x27;</span>, res);
+}, <span class="hljs-keyword">function</span>(<span class="hljs-params">status, msg</span>) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;POST请求失败：&#x27;</span>, status, msg);
+});</code></pre>
+<h1 id="data-xx">data-xx</h1>
+<p>HTML5 引入的自定义数据属性，它允许开发者在不影响页面显示效果的情况下，将额外的自定义数据或元数据直接存储在 HTML 元素内部，以便后续通过 JavaScript 或 CSS 进行访问和操作</p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-comment">&lt;!-- 存储用户ID --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;user&quot;</span> <span class="hljs-attr">data-id</span>=<span class="hljs-string">&quot;12345&quot;</span> <span class="hljs-attr">data-user-role</span>=<span class="hljs-string">&quot;admin&quot;</span>&gt;</span>用户信息<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- 存储配置参数 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">data-action</span>=<span class="hljs-string">&quot;submit&quot;</span> <span class="hljs-attr">data-page</span>=<span class="hljs-string">&quot;3&quot;</span>&gt;</span>提交<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span></code></pre>
+<p>如何通过 JavaScript 访问与修改</p>
+<pre><code class="hljs"><span class="hljs-title class_">JavaScript</span> 通过 <span class="hljs-variable constant_">DOM</span> 元素的 dataset 属性来暴露这些自定义数据。注意：带有连字符的属性名会自动转换为驼峰命名法（camelCase）
+
+<span class="hljs-keyword">const</span> el = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">getElementById</span>(<span class="hljs-string">&quot;user&quot;</span>);
+
+<span class="hljs-comment">// 读取数据</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(el.<span class="hljs-property">dataset</span>.<span class="hljs-property">id</span>);       <span class="hljs-comment">// 输出: &quot;12345&quot;</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(el.<span class="hljs-property">dataset</span>.<span class="hljs-property">userRole</span>); <span class="hljs-comment">// 输出: &quot;admin&quot; (data-user-role 转换为 userRole)</span>
+
+<span class="hljs-comment">// 修改/设置数据</span>
+el.<span class="hljs-property">dataset</span>.<span class="hljs-property">id</span> = <span class="hljs-string">&quot;67890&quot;</span>; 
+
+<span class="hljs-comment">// 删除数据属性</span>
+<span class="hljs-keyword">delete</span> el.<span class="hljs-property">dataset</span>.<span class="hljs-property">userRole</span>;</code></pre>
+<p>如何通过 CSS 进行样式控制</p>
+<pre><code class="hljs">可以利用 CSS 的属性选择器，根据 data-id 的值来动态应用样式，而无需额外添加 class
+
+<span class="hljs-selector-tag">button</span><span class="hljs-selector-attr">[data-action=<span class="hljs-string">&quot;submit&quot;</span>]</span> {
+    <span class="hljs-attribute">background-color</span>: green;
+    <span class="hljs-attribute">color</span>: white;
+}</code></pre>
+<h1 id="鼠标事件">鼠标事件</h1>
+<pre><code class="hljs"><span class="hljs-comment">// 点击事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;click&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})
+<span class="hljs-comment">// 双击事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;dblclick&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})
+<span class="hljs-comment">// 按下事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mousedown&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})
+<span class="hljs-comment">// 松开事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mouseup&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})
+<span class="hljs-comment">// 移入事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mouseenter&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})
+<span class="hljs-comment">// 移出事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mouseleave&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})
+<span class="hljs-comment">// 移动事件</span>
+docment.<span class="hljs-title function_">addEventListener</span>(<span class="hljs-string">&#x27;mousemove&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+
+})</code></pre>
+</div>
+    <!-- 大纲 -->
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#页面所有资源加载完成后">页面所有资源加载完成后</a></div><div id="outline-1" style="padding-left:0px"><a href="#页面链接新窗口打开">页面链接新窗口打开</a></div><div id="outline-2" style="padding-left:0px"><a href="#返回页面顶部">返回页面顶部</a></div><div id="outline-3" style="padding-left:0px"><a href="#动态设置网页标题">动态设置网页标题</a></div><div id="outline-4" style="padding-left:0px"><a href="#页面上下滚动事件">页面上下滚动事件</a></div><div id="outline-5" style="padding-left:0px"><a href="#filter过滤">filter过滤</a></div><div id="outline-6" style="padding-left:0px"><a href="#数组转字符">数组转字符</a></div><div id="outline-7" style="padding-left:0px"><a href="#下载视频">下载视频</a></div><div id="outline-8" style="padding-left:0px"><a href="#对象数组排序">对象数组排序</a></div><div id="outline-9" style="padding-left:0px"><a href="#js三种弹窗">js三种弹窗</a></div><div id="outline-10" style="padding-left:0px"><a href="#操作URL">操作URL</a></div><div id="outline-11" style="padding-left:0px"><a href="#解析地址栏参数">解析地址栏参数</a></div><div id="outline-12" style="padding-left:0px"><a href="#原生事件">原生事件</a></div><div id="outline-13" style="padding-left:0px"><a href="#获取所有子元素">获取所有子元素</a></div><div id="outline-14" style="padding-left:0px"><a href="#Yaml插件">Yaml插件</a></div><div id="outline-15" style="padding-left:0px"><a href="#获取当前日期时间串">获取当前日期时间串</a></div><div id="outline-16" style="padding-left:0px"><a href="#textarea回车跳到顶部修复">textarea回车跳到顶部修复</a></div><div id="outline-17" style="padding-left:0px"><a href="#复制到剪贴板">复制到剪贴板</a></div><div id="outline-18" style="padding-left:0px"><a href="#通用AJAX请求">通用AJAX请求</a></div><div id="outline-19" style="padding-left:0px"><a href="#data-xx">data-xx</a></div><div id="outline-20" style="padding-left:0px"><a href="#鼠标事件">鼠标事件</a></div></div>
+
+    <script>
+      // 链接新窗口打开
+      document.querySelectorAll("#content a").forEach((item) => {
+        item.setAttribute("target", "_blank");
+      });
+
+      // 图片点击放大（滚轮缩放，点击关闭）
+      (function () {
+        var overlay = null;
+        var scale = 1;
+        document.querySelectorAll("#content img").forEach(function (img) {
+          img.addEventListener("click", function () {
+            overlay = document.createElement("div");
+            overlay.className = "img-overlay";
+            var clone = img.cloneNode(true);
+            clone.removeAttribute("width");
+            clone.style.transform = "scale(1)";
+            scale = 1;
+            overlay.appendChild(clone);
+            // 点击任意位置关闭
+            overlay.addEventListener("click", function () {
+              document.body.removeChild(overlay);
+              overlay = null;
+            });
+            // 滚轮缩放
+            overlay.addEventListener("wheel", function (e) {
+              e.preventDefault();
+              scale += e.deltaY < 0 ? 0.1 : -0.1;
+              scale = Math.max(0.2, Math.min(5, scale));
+              clone.style.transform = "scale(" + scale + ")";
+            });
+            document.body.appendChild(overlay);
+          });
+        });
+      })();
+
+      // 代码复制
+      document.querySelectorAll("#content pre").forEach((item) => {
+        item.innerHTML +=
+          '<div class="copy-btn" onclick="copyCode(this)">复制</div>';
+        item.onmouseover = function () {
+          item.querySelector(".copy-btn").style.opacity = 1;
+        };
+        item.onmouseout = function () {
+          item.querySelector(".copy-btn").style.opacity = 0;
+        };
+      });
+
+      function copyCode(item) {
+        // 获取要复制的代码文本
+        let code = item.parentNode.querySelector("code").innerText;
+
+        // 尝试使用 Clipboard API
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard
+            .writeText(code)
+            .then(() => {
+              item.innerText = "复制成功";
+              setTimeout(() => {
+                item.innerText = "复制";
+              }, 2000);
+            })
+            .catch((err) => {
+              console.error("复制失败，请手动复制:", err);
+              fallbackCopyTextToClipboard(code, item);
+            });
+        } else {
+          // 使用兼容性处理方法
+          fallbackCopyTextToClipboard(code, item);
+        }
+      }
+
+      // 兼容性处理函数
+      function fallbackCopyTextToClipboard(text, item) {
+        let textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        // 隐藏textarea元素
+        textArea.style.position = "fixed";
+        textArea.style.top = "0";
+        textArea.style.left = "0";
+        textArea.style.width = "2em";
+        textArea.style.height = "2em";
+        textArea.style.padding = "0";
+        textArea.style.border = "none";
+        textArea.style.outline = "none";
+        textArea.style.boxShadow = "none";
+        textArea.style.background = "transparent";
+
+        document.body.appendChild(textArea);
+        textArea.select();
+
+        try {
+          let successful = document.execCommand("copy");
+          let msg = successful ? "成功" : "失败";
+          item.innerText = `复制${msg}`;
+          setTimeout(() => {
+            item.innerText = "复制";
+          }, 2000);
+        } catch (err) {
+          console.error("Fallback: 复制失败，请手动复制:", err);
+        }
+
+        document.body.removeChild(textArea);
+      }
+
+      // 上一次点击
+      document.querySelectorAll(".cate-parent").forEach((item) => {
+        item.addEventListener("click", function (e) {
+          // 先关闭所有
+          document.querySelectorAll(".cate-item-box").forEach((itemOther) => {
+            // 不是当前元素关闭
+            if (itemOther != item.nextElementSibling) {
+              itemOther.style.display = "none";
+            } else {
+              if (itemOther.style.display == "block") {
+                itemOther.style.display = "none";
+              } else {
+                itemOther.style.display = "block";
+              }
+            }
+          });
+        });
+      });
+
+      // 页面加载时展开当前文档所属分类
+      (function () {
+        var cateId = "03";
+        if (cateId) {
+          document
+            .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')
+            .forEach(function (box) {
+              box.style.display = "block";
+            });
+        }
+      })();
+
+      // 当前文档在侧边栏高亮
+      var currentPath = window.location.pathname;
+      document.querySelectorAll(".cate-item-box a").forEach(function (a) {
+        if (a.getAttribute("href") === currentPath) {
+          a.style.color = "#299764";
+        }
+      });
+
+      // 大纲滚动监听
+      var outlineIdList = [];
+      document.querySelectorAll(".outline a").forEach(function (a) {
+        outlineIdList.push(a.getAttribute("href").replace("#", ""));
+      });
+
+      window.addEventListener("scroll", function () {
+        var scrollTop =
+          document.documentElement.scrollTop || document.body.scrollTop;
+        var OFFSET = 60; // 顶部导航高度
+        for (var i = 0; i < outlineIdList.length; i++) {
+          var el = document.getElementById(outlineIdList[i]);
+          if (!el) continue;
+          var top = el.getBoundingClientRect().top + scrollTop;
+          // 最后一个标题，或下一个标题元素不存在 → 激活到文档末尾
+          var nextEl =
+            i < outlineIdList.length - 1
+              ? document.getElementById(outlineIdList[i + 1])
+              : null;
+          var isActive =
+            scrollTop > top - OFFSET &&
+            (!nextEl ||
+              scrollTop <
+                nextEl.getBoundingClientRect().top + scrollTop - OFFSET);
+          var outlineEl = document.getElementById("outline-" + i);
+          if (outlineEl) {
+            outlineEl.classList.toggle("outline-active", isActive);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

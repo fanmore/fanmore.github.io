@@ -380,8 +380,8 @@
         left: 3px;
       }
     </style>
-     
-    
+    <style>.cate-item-box a[href="/doc/20260628100321.html"]{color:#299764}</style> 
+    <style>.cate-item-box[data-cate="01"]{display:block}</style>
   </head>
   <body>
     <!-- 头部 -->
@@ -402,17 +402,144 @@
     <!-- 分类 -->
     <div class="cate"><div class="cate-parent"><span>杂文随笔</span><span>5</span></div><div class="cate-item-box" data-cate="01"><a href="/doc/20260628100321.html">博客系列：Hexo静态博客</a><a href="/doc/20260628100922.html">博客系列：Hexo搭配Next主题</a><a href="/doc/20260628105507.html">博客系列：Hexo搭配Next进阶使用</a><a href="/doc/20260628105545.html">博客系列：Hexo搭配Next高级配置</a><a href="/doc/20260626102416.html">基于Node的WIKI管理</a></div><div class="cate-parent"><span>前端知识</span><span>16</span></div><div class="cate-item-box" data-cate="03"><a href="/doc/20260628131247.html">HTML常用知识</a><a href="/doc/20260628131403.html">CSS常用知识</a><a href="/doc/20260628102429.html">CSS美化checkbox复选框</a><a href="/doc/20260628182013.html">JavaScript常用知识</a><a href="/doc/20260628182244.html">JavaScript格式化时间戳</a><a href="/doc/20260628182333.html">JavaScript窗口宽高处理</a><a href="/doc/20260628182446.html">JavaScript黑夜主题切换实现方案</a><a href="/doc/20260628182525.html">JavaScript数字转大写</a><a href="/doc/20260628104602.html">简易图片查看器</a><a href="/doc/20260628182619.html">TypeScript基础知识</a><a href="/doc/20260628183013.html">Threejs基础三要素</a><a href="/doc/20260628183123.html">Threejs网格辅助和轨道控制器</a><a href="/doc/20260628183215.html">Threejs物体绘制</a><a href="/doc/20260628183431.html">Electron基础使用</a><a href="/doc/20260628183501.html">Nodejs基础知识</a><a href="/doc/20260628183636.html">animate.css页面动画</a></div><div class="cate-parent"><span>Vue框架</span><span>2</span></div><div class="cate-item-box" data-cate="05"><a href="/doc/20260628183825.html">Vite的使用及扩展</a><a href="/doc/20260628184156.html">Vue3父子组件</a></div></div>
     <!-- 内容 -->
-    <div class="content" id="content"><h1 id="笔记，不是博客">笔记，不是博客</h1>
-<p>写给自己看的，如果能帮到你，那是意外之喜。</p>
-<p>做了多年开发，Java为主，Spring全家桶那套。前端擅长Vue那套，UniApp或管理后台。</p>
-<p>最近两年开始折腾AI——不是追潮流，是觉得会有更多可能性。</p>
-<p>搭建这个笔记，是拿Node.js手写了一套。功能不多：Markdown、侧边栏分类、文档大纲、代码高亮、文档管理。但每一行都知道在干什么，改起来不心虚。</p>
-<h1 id="过程、结果都重要">过程、结果都重要</h1>
-<p>记录笔记的历程，是对知识的认识、沉淀、应用，大脑容量有限，易忘是常事，但走过的路还记得，把它们都收集起来，就是完整的你。</p>
-<p>能把它们再转化为更有价值的结果，就是升华。</p>
+    <div class="content" id="content"><blockquote>
+<p>静态博客网页生成器，相较于其他生成器来说速度较快，功能相对完善，官网有较多的主题和插件来丰富网站展示。本文使用Hexo版本为8.1.1，记录Hexo在使用过程中涉及的知识和遇到的问题</p>
+</blockquote>
+<h1 id="Hexo安装">Hexo安装</h1>
+<p><a href="https://hexo.io/zh-cn/">Hexo</a>静态博客生成器需要<a href="https://nodejs.org/en/">Node.js</a>环境，官网建议使用<code>Node.js 12.0</code>及以上版本，同时可以安装<a href="https://git-scm.com/download/win">Git</a>来进行代码管理</p>
+<pre><code class="hljs"><span class="hljs-comment">// 默认安装最新的版本</span>
+npm install hexo-cli -g
+<span class="hljs-comment">// 指定版本进行安装</span>
+npm install -g <span class="hljs-symbol">hexo@</span><span class="hljs-number">8.1</span><span class="hljs-number">.1</span></code></pre>
+<p>这里的<code>-g</code>表示全局安装（系统任何地方可使用），不建议局部安装（仅项目文件夹中可用），局部安装无法直接使用<code>hexo</code>命令，需要配置环境变量，较为复杂，安装完成后可以使用<code>npm view hexo version</code>查看安装的版本</p>
+<p>然后在某个文件夹中打开终端执行<code>hexo init</code>即可初始化一个博客模板，使用<code>hexo s</code>就能运行，之后的一切操作都是在这个模板上进行，其中</p>
+<ul>
+<li><code>source/_posts</code>；该文件夹下放文章的Markdown文件</li>
+<li><code>themes</code>：该文件夹下放主题，可在Hexo官网中找到</li>
+<li><code>_config.yml</code>：该文件为配置文件</li>
+</ul>
+<p>使用<code>hexo init</code>初始化文档项目时可能因为网络原因较为慢（国外网址），建议多尝试几次</p>
+<h1 id="Hexo相关命令">Hexo相关命令</h1>
+<ul>
+<li>项目生成：<code>hexo init [name]</code></li>
+<li>本地启动：<code>hexo s</code></li>
+<li>本地打包：<code>hexo g</code></li>
+<li>清除打包：<code>hexo clean</code></li>
+<li>部署网站：<code>hexo d</code></li>
+<li>创建页面：<code>hexo n page [name]</code></li>
+</ul>
+<h1 id="npm相关命令">npm相关命令</h1>
+<ul>
+<li>查看本地Hexo版本：<code>npm view hexo version</code></li>
+<li>查看已发布的Hexo版本：<code>npm info hexo versions</code></li>
+<li>卸载Hexo：<code>npm uninstall -g hexo-cli</code></li>
+<li>查看所有全局安装插件：<code>npm ls -g</code></li>
+</ul>
+<h1 id="网站信息配置">网站信息配置</h1>
+<p>配置文件为目录下<code>_config.yml</code>，<strong>注意</strong>该文件的改动需要重新执行<code>hexo s</code>命令才会生效</p>
+<pre><code class="hljs"><span class="hljs-comment"># Site</span>
+<span class="hljs-attr">title:</span> <span class="hljs-string">FANMR.CN</span>                    <span class="hljs-comment"># 网站名称</span>
+<span class="hljs-attr">subtitle:</span> <span class="hljs-string">因为热爱，所以追求</span>        <span class="hljs-comment"># 副标题</span>
+<span class="hljs-attr">description:</span> <span class="hljs-string">坚持学习新的知识</span>       <span class="hljs-comment"># 描述</span>
+<span class="hljs-attr">keywords:</span> <span class="hljs-string">知识库，博客网站</span>          <span class="hljs-comment"># 网站关键字</span>
+<span class="hljs-attr">author:</span> <span class="hljs-string">FANMR.CN</span>                   <span class="hljs-comment"># 作者</span>
+<span class="hljs-attr">language:</span> <span class="hljs-string">zh-CN</span>                    <span class="hljs-comment"># 语言</span>
+<span class="hljs-attr">timezone:</span> <span class="hljs-string">&#x27;&#x27;</span>                       <span class="hljs-comment"># 时区</span></code></pre>
+<h1 id="个人网址">个人网址</h1>
+<pre><code class="hljs"><span class="hljs-attr">url:</span> <span class="hljs-string">https://fanmr.cn</span></code></pre>
+<p>用于版权声明等情况，注意使用<code>http</code>或<code>https</code>开头</p>
+<h1 id="永久链接">永久链接</h1>
+<pre><code class="hljs"><span class="hljs-attr">permalink:</span> <span class="hljs-string">/article/:year:month:day:hour:minute:second.html</span></code></pre>
+<p>默认的文章路径为<code>:year/:month/:day/:title/</code>，即文章发布时间加文章名字，如果文章的名字有所调整，那么文章原有的链接就无法访问该文章，对于收藏和分享来说是不友好的</p>
+<p>以上方式将文章的链接改为了文章发布时间，只要不对发布时间做调整，文章就可以被永久访问到</p>
+<h1 id="文章创建及格式">文章创建及格式</h1>
+<p>文章放在<code>source/_posts</code>下，采用Markdown语法格式，可以随意创建文件夹，文章的完整格式如下：</p>
+<pre><code class="hljs"><span class="hljs-meta">---</span>
+<span class="hljs-attr">title:</span> <span class="hljs-string">文章名</span>
+<span class="hljs-attr">categories:</span> <span class="hljs-string">分类名称</span>                 <span class="hljs-comment"># 分类，支持多级，同tags </span>
+<span class="hljs-attr">sort:</span> <span class="hljs-number">1</span>                              <span class="hljs-comment"># 排序号，需要启用</span>
+<span class="hljs-attr">date:</span> <span class="hljs-number">2026-04-29 10:47:55</span>            <span class="hljs-comment"># 发表日期，改为永久链接后这个就不要改动了</span>
+<span class="hljs-attr">updated:</span> <span class="hljs-number">2026-04-29 10:47:55</span>         <span class="hljs-comment"># 更新日期</span>
+<span class="hljs-attr">tags:</span>                                <span class="hljs-comment"># 标签</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">Hexo</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-string">博客系列</span>
+<span class="hljs-attr">photos:</span>                              <span class="hljs-comment"># 顶部图片</span>
+<span class="hljs-meta">---
+</span>
+<span class="hljs-comment"># 正文从这里开始</span></code></pre>
+<h1 id="阅读全文">阅读全文</h1>
+<p>在文章合适的位置加上分割标志，在VsCode编辑器中可以使用<code>CTRL+/</code>快速打出注释</p>
+<pre><code class="hljs"><span class="language-xml"><span class="hljs-comment">&lt;!--more--&gt;</span>
+以下内容不会展示在首页</span></code></pre>
+<h1 id="本地图片">本地图片</h1>
+<p>默认情况下发现本地图片是无法显示的，网上的解决方案大部分都是使用<code>hexo-asset-image</code>插件，但是我发现<code>source</code>下非<code>_posts</code>的目录是被打包的，利用这个特性，即可实现本地图片的使用。在<code>source</code>下创建图片目录，如<code>images</code>，将图片放入其中，在引用的文章中直接使用Markdown的图片语法即可，如：</p>
+<pre><code class="hljs"><span class="hljs-comment">// 绝对路径（仅网站可用）</span>
+!<span class="hljs-selector-attr">[]</span>(/images/<span class="hljs-number">20211227093201</span>.png)
+<span class="hljs-comment">// 相对路径（不影响编辑器直接查询文章），VsCode会提示</span>
+!<span class="hljs-selector-attr">[]</span>(../../images/<span class="hljs-number">20211227144740</span>.png)</code></pre>
+<h1 id="VsCode写Mardown">VsCode写Mardown</h1>
+<p>使用<code>VsCode</code>进行<code>Markdown</code>写作时，个人其中使用的一些必要插件：</p>
+<ul>
+<li>Markdown All in One：VsCode对<code>Markdown</code>的语法支持</li>
+<li>Markdown Image：直接粘贴图片到本地（或Githud图床），建议改为时间命名，记得调整格式和位置，默认快捷键冲突，搜索<code>markdown image</code>调整为<code>ctrl + shift + alt + v</code> 或者自定义</li>
+</ul>
+<p>同时可以使用<a href="https://www.snipaste.com/">Snipaste</a>进行截图操作</p>
+<h1 id="VsCode文章头自动生成">VsCode文章头自动生成</h1>
+<p>使用的是VsCode的代码片段，在<code>设置</code>、<code>代码片段</code>，<code>新建全局代码片段</code>，在其中添加以下配置：</p>
+<pre><code class="hljs">{
+	<span class="hljs-string">&quot;hexo post header info&quot;</span>: {
+		<span class="hljs-string">&quot;prefix&quot;</span>: <span class="hljs-string">&quot;hexo&quot;</span>,
+		<span class="hljs-string">&quot;body&quot;</span>: [
+			<span class="hljs-string">&quot;---&quot;</span>,
+			<span class="hljs-string">&quot;title: xxx&quot;</span>,
+			<span class="hljs-string">&quot;categories: xxx&quot;</span>,
+			<span class="hljs-string">&quot;sort: 1&quot;</span>,
+			<span class="hljs-string">&quot;date: <span class="hljs-variable">${CURRENT_YEAR}</span>-<span class="hljs-variable">${CURRENT_MONTH}</span>-<span class="hljs-variable">${CURRENT_DATE}</span> <span class="hljs-variable">${CURRENT_HOUR}</span>:<span class="hljs-variable">${CURRENT_MINUTE}</span>:<span class="hljs-variable">${CURRENT_SECOND}</span>&quot;</span>,
+			<span class="hljs-string">&quot;updated: <span class="hljs-variable">${CURRENT_YEAR}</span>-<span class="hljs-variable">${CURRENT_MONTH}</span>-<span class="hljs-variable">${CURRENT_DATE}</span> <span class="hljs-variable">${CURRENT_HOUR}</span>:<span class="hljs-variable">${CURRENT_MINUTE}</span>:<span class="hljs-variable">${CURRENT_SECOND}</span>&quot;</span>,
+			<span class="hljs-string">&quot;tags:&quot;</span>,
+			<span class="hljs-string">&quot;  - xx&quot;</span>,
+			<span class="hljs-string">&quot;photos: &quot;</span>,
+			<span class="hljs-string">&quot;---&quot;</span>,
+			<span class="hljs-string">&quot;&quot;</span>,
+			<span class="hljs-string">&quot;&quot;</span>
+		],
+		<span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;hexo post header info template&quot;</span>
+	}
+}</code></pre>
+<p><strong>注意</strong>：此时是无法使用的，VsCode默认并没有开启Markdown的全局片段，在硬盘上搜索<code>C:\Users\Administrator\AppData\Roaming\Code\User\settings.json</code>文件，在其中加入以下配置：</p>
+<pre><code class="hljs">&quot;<span class="hljs-selector-attr">[markdown]</span>&quot;: {
+    &quot;editor<span class="hljs-selector-class">.quickSuggestions</span>&quot;: {
+        &quot;other&quot;: <span class="hljs-string">&quot;on&quot;</span>,
+        <span class="hljs-string">&quot;comments&quot;</span>: <span class="hljs-string">&quot;on&quot;</span>,
+        <span class="hljs-string">&quot;strings&quot;</span>: <span class="hljs-string">&quot;on&quot;</span>
+    }
+}</code></pre>
+<p>然后在头部打<code>hexo</code>就会出现提示，自动生成头部信息</p>
+<h1 id="GithubPages自定义域名">Github Pages自定义域名</h1>
+<p>域名的自定义在开启Pages的仓库中即可绑定，但是前提是添加进了Github的域名管理，点击我的头像<code>Settings</code>、<code>Pages</code>中根据提示添加domains并校验成功，即可使用。同时注意，绑定自定义的域名会在部署仓库下多一个<code>CNAME</code>文件，别忘了放入博客中</p>
+<h1 id="部署GithubPages">部署Github Pages</h1>
+<p>需要先安装部署插件</p>
+<pre><code class="hljs">npm install hexo-deployer-git</code></pre>
+<p>然后配置</p>
+<pre><code class="hljs"><span class="hljs-comment"># Deployment</span>
+<span class="hljs-attr">deploy:</span>
+  <span class="hljs-attr">type:</span> <span class="hljs-string">git</span>
+  <span class="hljs-attr">repo:</span> <span class="hljs-string">https://github.com/fanmore/fanmore.github.io</span>
+  <span class="hljs-attr">branch:</span> <span class="hljs-string">main</span></code></pre>
+<p>最后使用<code>hexo d</code>就能将<code>public</code>中的文件推送到仓库了</p>
+<h1 id="部署阿里云OSS">部署阿里云OSS</h1>
+<p>解决访问慢问题，部署插件：<a href="https://github.com/yedaodao/hexo-deployer-aliyun">hexo-deployer-aliyun</a></p>
+<p>阿里云的配置：</p>
+<ul>
+<li>创建Bucket</li>
+<li>开启静态页面（必须开启子目录首页）</li>
+<li>配置域名管理</li>
+</ul>
+<p>阿里云的Region查阅：<a href="https://www.zyku.net/aliyun/2017.html">https://www.zyku.net/aliyun/2017.html</a></p>
+<p>使用感受：对于图片过大的情况会报错，因为上传机制是上传所有文件，而非Git的更新</p>
 </div>
     <!-- 大纲 -->
-    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#笔记，不是博客">笔记，不是博客</a></div><div id="outline-1" style="padding-left:0px"><a href="#过程、结果都重要">过程、结果都重要</a></div></div>
+    <div class="outline"><div id="outline-0" style="padding-left:0px"><a href="#Hexo安装">Hexo安装</a></div><div id="outline-1" style="padding-left:0px"><a href="#Hexo相关命令">Hexo相关命令</a></div><div id="outline-2" style="padding-left:0px"><a href="#npm相关命令">npm相关命令</a></div><div id="outline-3" style="padding-left:0px"><a href="#网站信息配置">网站信息配置</a></div><div id="outline-4" style="padding-left:0px"><a href="#个人网址">个人网址</a></div><div id="outline-5" style="padding-left:0px"><a href="#永久链接">永久链接</a></div><div id="outline-6" style="padding-left:0px"><a href="#文章创建及格式">文章创建及格式</a></div><div id="outline-7" style="padding-left:0px"><a href="#阅读全文">阅读全文</a></div><div id="outline-8" style="padding-left:0px"><a href="#本地图片">本地图片</a></div><div id="outline-9" style="padding-left:0px"><a href="#VsCode写Mardown">VsCode写Mardown</a></div><div id="outline-10" style="padding-left:0px"><a href="#VsCode文章头自动生成">VsCode文章头自动生成</a></div><div id="outline-11" style="padding-left:0px"><a href="#GithubPages自定义域名">Github Pages自定义域名</a></div><div id="outline-12" style="padding-left:0px"><a href="#部署GithubPages">部署Github Pages</a></div><div id="outline-13" style="padding-left:0px"><a href="#部署阿里云OSS">部署阿里云OSS</a></div></div>
 
     <script>
       // 链接新窗口打开
@@ -541,7 +668,7 @@
 
       // 页面加载时展开当前文档所属分类
       (function () {
-        var cateId = "";
+        var cateId = "01";
         if (cateId) {
           document
             .querySelectorAll('.cate-item-box[data-cate="' + cateId + '"]')
